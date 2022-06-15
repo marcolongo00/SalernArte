@@ -17,12 +17,8 @@ create table UtenteRegistrato(
 
 create table Scolaresca(
 	id int not null auto_increment,  #id per scuole non conviene
-	nome varchar(50) not null,
-    cognome varchar(50) not null,
     email varchar(100) not null unique,
     passwordHash varchar(50) not null,
-    dataDiNascita date not null,    
-    sesso int not null, #0(maschio), 1(femmina), 2(non specificato)
     istituto varchar(100) not null,
     primary key(id)
 );
@@ -84,11 +80,8 @@ create table Fattura(
     totale decimal(10,2) not null,
     idUtente int not null,
     prodotti longtext,
-    rimborso boolean default false,
-    primary key(numOrdine),
-    foreign key(idUtente) references UtenteRegistrato(id)
-		on delete cascade
-        on update cascade
+    tipoUtente boolean not null, #true= utenteRegistrao, false=Scolaresca
+    primary key(numOrdine)
 );
 
 #nel class manca anche il carrello
