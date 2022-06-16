@@ -53,7 +53,6 @@ create table Evento(
     descrizione varchar(320) not null,
     pathFoto varchar(200) not null,
     numBiglietti int not null,
-    #prezzo biglietti, ma lo metterei nel biglietto
     dataInizio date not null,
 	dataFine date not null,
     indirizzo varchar(100) not null unique,
@@ -77,8 +76,8 @@ create table Biglietto(
 create table Fattura(
 	numOrdine int not null auto_increment,
     data date not null,
-    totale decimal(10,2) not null,
-    idUtente int not null,
+    totale decimal(10,2) not null, 
+    idUtente int not null, 
     prodotti longtext,
     tipoUtente boolean not null, #true= utenteRegistrao, false=Scolaresca
     primary key(numOrdine)
