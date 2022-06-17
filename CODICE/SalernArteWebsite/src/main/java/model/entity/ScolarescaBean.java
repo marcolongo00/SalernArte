@@ -8,14 +8,33 @@ import java.security.NoSuchAlgorithmException;
 public class ScolarescaBean {
     private int id;
     private String email, passwordHash, istituto;
+    private boolean hash;
 
     public ScolarescaBean() {
     }
 
-    public ScolarescaBean(int id, String email, String passwordHash, String istituto) {
+    public ScolarescaBean(int id, String email, String passwordHash, String istituto, boolean hash) {
         this.id = id;
         this.email = email;
-        setPasswordHash(passwordHash);
+        if(hash){
+            this.passwordHash=passwordHash;
+            this.hash=hash;
+        }else{
+            setPasswordHash(passwordHash);
+            setHash(true);
+        }
+        this.istituto = istituto;
+    }
+
+    public ScolarescaBean(String email, String passwordHash, String istituto, boolean hash) {
+        this.email = email;
+        if(hash){
+            this.passwordHash=passwordHash;
+            this.hash=hash;
+        }else{
+            setPasswordHash(passwordHash);
+            setHash(true);
+        }
         this.istituto = istituto;
     }
 
@@ -33,6 +52,10 @@ public class ScolarescaBean {
 
     public String getIstituto() {
         return istituto;
+    }
+
+    public boolean isHash() {
+        return hash;
     }
 
     public void setId(int id) {
@@ -57,6 +80,10 @@ public class ScolarescaBean {
 
     public void setIstituto(String istituto) {
         this.istituto = istituto;
+    }
+
+    public void setHash(boolean hash) {
+        this.hash = hash;
     }
 
     @Override

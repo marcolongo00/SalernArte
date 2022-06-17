@@ -10,21 +10,46 @@ public class OrganizzatoreBean {
     private int id,sesso,iban;
     private String nome,cognome,email, passwordHash,biografia,azienda;
     private Date dataDiNascita;
+    private boolean hash;
 
     public OrganizzatoreBean() {
     }
 
-    public OrganizzatoreBean(int id, int sesso, int iban, String nome, String cognome, String email, String passwordHash, String biografia, String azienda, Date dataDiNascita) {
+    public OrganizzatoreBean(int id, int sesso, int iban, String nome, String cognome, String email, String passwordHash, String biografia, String azienda, Date dataDiNascita, boolean hash) {
         this.id = id;
+        this.sesso = sesso;
+        this.iban = iban; //aggiungere controlli
+        this.nome = nome;
+        this.cognome = cognome;
+        this.email = email;
+        if(hash){
+            this.passwordHash=passwordHash;
+        }else{
+            setPasswordHash(passwordHash);
+            setHash(true);
+        }
+        this.biografia = biografia;
+        this.azienda = azienda;
+        this.dataDiNascita = dataDiNascita;
+    }
+
+    public OrganizzatoreBean(int sesso, int iban, String nome, String cognome, String email, String passwordHash, String biografia, String azienda, Date dataDiNascita, boolean hash) {
         this.sesso = sesso;
         this.iban = iban;
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
-        setPasswordHash(passwordHash);
+        if(hash){
+            this.passwordHash=passwordHash;
+            this.hash=hash;
+        }else{
+            setPasswordHash(passwordHash);
+            setHash(true);
+        }
         this.biografia = biografia;
         this.azienda = azienda;
         this.dataDiNascita = dataDiNascita;
+
     }
 
     public int getId() {
@@ -65,6 +90,10 @@ public class OrganizzatoreBean {
 
     public Date getDataDiNascita() {
         return dataDiNascita;
+    }
+
+    public boolean isHash() {
+        return hash;
     }
 
     public void setId(int id) {
@@ -113,6 +142,10 @@ public class OrganizzatoreBean {
 
     public void setDataDiNascita(Date dataDiNascita) {
         this.dataDiNascita = dataDiNascita;
+    }
+
+    public void setHash(boolean hash) {
+        this.hash = hash;
     }
 
     @Override

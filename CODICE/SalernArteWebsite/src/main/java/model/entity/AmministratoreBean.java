@@ -8,16 +8,36 @@ import java.security.NoSuchAlgorithmException;
 public class AmministratoreBean {
     private int id;
     private String nome,cognome,email, passwordHash;
+    private boolean hash;
 
     public AmministratoreBean() {
     }
 
-    public AmministratoreBean(int id, String nome, String cognome, String email, String passwordHash) {
+    public AmministratoreBean(int id, String nome, String cognome, String email, String passwordHash,boolean hash) {
         this.id = id;
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
-        setPasswordHash(passwordHash);
+        if(hash){
+            this.passwordHash=passwordHash;
+            this.hash=hash;
+        }else{
+            setPasswordHash(passwordHash);
+            setHash(true);
+        }
+    }
+
+    public AmministratoreBean(String nome, String cognome, String email, String passwordHash, boolean hash) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.email = email;
+        if(hash){
+            this.passwordHash=passwordHash;
+            this.hash=hash;
+        }else{
+            setPasswordHash(passwordHash);
+            setHash(true);
+        }
     }
 
     public int getId() {
@@ -38,6 +58,10 @@ public class AmministratoreBean {
 
     public String getPasswordHash() {
         return passwordHash;
+    }
+
+    public boolean isHash() {
+        return hash;
     }
 
     public void setId(int id) {
@@ -66,6 +90,10 @@ public class AmministratoreBean {
         }catch (NoSuchAlgorithmException e){
             throw new RuntimeException(e);
         }
+    }
+
+    public void setHash(boolean hash) {
+        this.hash = hash;
     }
 
     @Override

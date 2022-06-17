@@ -10,18 +10,41 @@ public class UtenteRegistratoBean {
     private int id,sesso;
     private String nome,cognome,email, passwordHash;
     private Date dataDiNascita;
+    private boolean hash;
 
     public UtenteRegistratoBean() {
     }
 
-    public UtenteRegistratoBean(int id, int sesso, String nome, String cognome, String email, String passwordHash, Date dataDiNascita) {
-        this.id = id;
-        this.sesso = sesso; //controllo sul range
+    public UtenteRegistratoBean(int sesso, String nome, String cognome, String email, String passwordHash, Date dataDiNascita,boolean hash) {
+        this.sesso = sesso;
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
-        setPasswordHash(passwordHash);
+        if(hash){
+            this.passwordHash=passwordHash;
+            this.hash=hash;
+        }else{
+            setPasswordHash(passwordHash);
+            setHash(true);
+        }
         this.dataDiNascita = dataDiNascita;
+    }
+
+    public UtenteRegistratoBean(int id, int sesso, String nome, String cognome, String email, String passwordHash, Date dataDiNascita, boolean hash) {
+        this.id = id;
+        this.sesso = sesso;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.dataDiNascita = dataDiNascita;
+        if(hash){
+            this.passwordHash=passwordHash;
+            this.hash=hash;
+        }else{
+            setPasswordHash(passwordHash);
+            setHash(true);
+        }
     }
 
     public int getId() {
@@ -52,6 +75,8 @@ public class UtenteRegistratoBean {
     public Date getDataDiNascita() {
         return dataDiNascita;
     }
+
+    public boolean isHash() {return hash; }
 
     public void setId(int id) {
         this.id = id;
@@ -88,6 +113,10 @@ public class UtenteRegistratoBean {
 
     public void setDataDiNascita(Date dataDiNascita) {
         this.dataDiNascita = dataDiNascita;
+    }
+
+    public void setHash(boolean hash) {
+        this.hash = hash;
     }
 
     @Override

@@ -10,6 +10,6 @@ public interface UtenteRegistratoDAO {
     public void doSave(UtenteRegistratoBean utente);
     public void doUpdate(UtenteRegistratoBean utente);
     public UtenteRegistratoBean doRetrieveByEmail(String email);
-    public void doDelete(UtenteRegistratoBean utente);
+    public void doDelete(int idUtente);
 
 }
