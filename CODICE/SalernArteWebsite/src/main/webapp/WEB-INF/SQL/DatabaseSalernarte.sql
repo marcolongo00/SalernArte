@@ -48,6 +48,7 @@ create table Organizzatore(
 
 create table Evento(
 	id int not null auto_increment,
+    idOrganizzatore int not null, #manca nel class
 	nome varchar(50) not null,
     tipo boolean not null, # true=teatro, false=mostra
     descrizione varchar(320) not null,
@@ -57,9 +58,22 @@ create table Evento(
 	dataFine date not null,
     indirizzo varchar(100) not null unique,
     sede varchar(100) not null,
+    attivo boolean default false, #manca nel class anche se l'avevamo detto
     primary key(id),
+    foreign key(idOrganizzatore) references Organizzatore(id)
+		on delete cascade
+        on update cascade,
     FULLTEXT (nome,descrizione)
 );
+
+create table RichiestaEvento( #non c'è nel class 
+	id int not null auto_increment,
+    idEvento int not null,
+    primary key(id,idEvento),
+    foreign key (idEvento) references Evento(id)
+    on delete cascade
+    on update cascade
+	);
 
 create table Biglietto(
 	id int not null auto_increment,
@@ -88,10 +102,8 @@ CREATE TABLE Carrello(
 idUser int not null,
 idProd int not null, ##id mostra, poi da qui ricavo i biglietti disponibili" dinamicamente
 quantita int not null, # e diversa da 0
-primary key(idUser,idProd),
-foreign key(idUser) references UtenteRegistrato(id)
-on delete cascade
-on update cascade,
+tipoUtente boolean not null, #attenzione al codice ricorda di implementare
+primary key(idUser,idProd,tipoUtente),
 foreign key(idProd) references Evento(id)
 on delete cascade
 on update cascade

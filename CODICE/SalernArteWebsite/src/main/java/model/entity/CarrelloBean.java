@@ -3,7 +3,7 @@ package model.entity;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
-public class CarrelloBean {
+public class CarrelloBean { //un attimo n pausa, rivedere bean, dao e daoimpl quando si sarà sviluppata la parte servlet
     public static class BigliettoQuantita {
         private EventoBean evento;
         private int quantita;
@@ -39,7 +39,7 @@ public class CarrelloBean {
         public double getPrezzoTot(){ return  this.prezzoBigl*this.quantita; }
     }
 
-
+    private boolean tipoUtente; //true= utente registrato, false=scolaresca
     private LinkedHashMap<Integer, BigliettoQuantita> prodotti = new LinkedHashMap<>();
     public CarrelloBean() {
     }

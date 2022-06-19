@@ -8,7 +8,7 @@ public class FatturaBean {
     private Date  data;
     private double totale;
     private String prodotti;
-    private boolean tipoUtente;
+    private boolean tipoUtente; //true= utente registrato, false=scolaresca
 
     public FatturaBean() {
     }

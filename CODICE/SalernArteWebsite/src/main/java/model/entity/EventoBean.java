@@ -3,18 +3,19 @@ package model.entity;
 import java.sql.Date;
 
 public class EventoBean {
-    private int id;
+    private int id,idOrganizzatore;
     private Date dataInizio;
     private Date dataFine;
     private String nome,path,descrizione,indirizzo,sede;
     private int numBiglietti;
     private boolean tipo; //true=teatro false=mostra
+    private  boolean attivo=false;
 
     public EventoBean() {
     }
 
-    public EventoBean(int id, Date dataInizio, Date dataFine, String nome, String path, String descrizione, String indirizzo, String sede, int numBiglietti, boolean tipo) {
-        this.id = id;
+    public EventoBean(int idOrganizzatore, Date dataInizio, Date dataFine, String nome, String path, String descrizione, String indirizzo, String sede, int numBiglietti, boolean tipo) {
+        this.idOrganizzatore = idOrganizzatore;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
         this.nome = nome;
@@ -26,8 +27,41 @@ public class EventoBean {
         this.tipo = tipo;
     }
 
+    public EventoBean(int id, int idOrganizzatore, Date dataInizio, Date dataFine, String nome, String path, String descrizione, String indirizzo, String sede, int numBiglietti, boolean tipo) {
+        this.id = id;
+        this.idOrganizzatore = idOrganizzatore;
+        this.dataInizio = dataInizio;
+        this.dataFine = dataFine;
+        this.nome = nome;
+        this.path = path;
+        this.descrizione = descrizione;
+        this.indirizzo = indirizzo;
+        this.sede = sede;
+        this.numBiglietti = numBiglietti;
+        this.tipo = tipo;
+    }
+
+    public EventoBean(int id, int idOrganizzatore, Date dataInizio, Date dataFine, String nome, String path, String descrizione, String indirizzo, String sede, int numBiglietti, boolean tipo, boolean attivo) {
+        this.id = id;
+        this.idOrganizzatore = idOrganizzatore;
+        this.dataInizio = dataInizio;
+        this.dataFine = dataFine;
+        this.nome = nome;
+        this.path = path;
+        this.descrizione = descrizione;
+        this.indirizzo = indirizzo;
+        this.sede = sede;
+        this.numBiglietti = numBiglietti;
+        this.tipo = tipo;
+        this.attivo = attivo;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public int getIdOrganizzatore() {
+        return idOrganizzatore;
     }
 
     public Date getDataInizio() {
@@ -66,8 +100,16 @@ public class EventoBean {
         return tipo;
     }
 
+    public boolean isAttivo() {
+        return attivo;
+    }
+
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setIdOrganizzatore(int idOrganizzatore) {
+        this.idOrganizzatore = idOrganizzatore;
     }
 
     public void setDataInizio(Date dataInizio) {
@@ -106,10 +148,15 @@ public class EventoBean {
         this.tipo = tipo;
     }
 
+    public void setAttivo(boolean attivo) {
+        this.attivo = attivo;
+    }
+
     @Override
     public String toString() {
         return "EventoBean{" +
                 "id=" + id +
+                ", idOrganizzatore=" + idOrganizzatore +
                 ", dataInizio=" + dataInizio +
                 ", dataFine=" + dataFine +
                 ", nome='" + nome + '\'' +
@@ -119,6 +166,7 @@ public class EventoBean {
                 ", sede='" + sede + '\'' +
                 ", numBiglietti=" + numBiglietti +
                 ", tipo=" + tipo +
+                ", attivo=" + attivo +
                 '}';
     }
 
