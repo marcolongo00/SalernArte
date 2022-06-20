@@ -26,7 +26,7 @@ public class OrganizzatoreDAOImpl implements OrganizzatoreDAO{
                 Date dataNascita= rs.getDate("dataDiNascita");
                 int sesso =rs.getInt("sesso");
                 String azienda= rs.getString("azienda");
-                int iban= rs.getInt("iban");
+                String iban= rs.getString("iban");
                 lista.add(new OrganizzatoreBean(id,sesso,iban,nome,cognome,email,passwordHash,bio,azienda,dataNascita,true));
             }
             con.close();
@@ -56,7 +56,7 @@ public class OrganizzatoreDAOImpl implements OrganizzatoreDAO{
                 Date dataNascita= rs.getDate("dataDiNascita");
                 int sesso =rs.getInt("sesso");
                 String azienda= rs.getString("azienda");
-                int iban= rs.getInt("iban");
+                String iban= rs.getString("iban");
                 scelto=new OrganizzatoreBean(id,sesso,iban,nome,cognome,email,passwordHash,bio,azienda,dataNascita,true);
             }
             con.close();
@@ -80,7 +80,7 @@ public class OrganizzatoreDAOImpl implements OrganizzatoreDAO{
             ps.setDate(6,utente.getDataDiNascita());
             ps.setInt(7,utente.getSesso());
             ps.setString(8,utente.getAzienda());
-            ps.setInt(9,utente.getIban());
+            ps.setString(9,utente.getIban());
 
             if(ps.executeUpdate() !=1)
             {
@@ -111,7 +111,7 @@ public class OrganizzatoreDAOImpl implements OrganizzatoreDAO{
             ps.setDate(6,utente.getDataDiNascita());
             ps.setInt(7,utente.getSesso());
             ps.setString(8,utente.getAzienda());
-            ps.setInt(9,utente.getIban());
+            ps.setString(9,utente.getIban());
             ps.setInt(10,utente.getId());
             if(ps.executeUpdate() !=1)
             {
@@ -141,7 +141,7 @@ public class OrganizzatoreDAOImpl implements OrganizzatoreDAO{
                 Date dataNascita= rs.getDate("dataDiNascita");
                 int sesso =rs.getInt("sesso");
                 String azienda= rs.getString("azienda");
-                int iban= rs.getInt("iban");
+                String iban= rs.getString("iban");
                 scelto=new OrganizzatoreBean(id,sesso,iban,nome,cognome,email,passwordHash,bio,azienda,dataNascita,true);
             }
 

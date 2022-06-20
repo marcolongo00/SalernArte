@@ -7,15 +7,15 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 
 public class OrganizzatoreBean {
-    private int id,sesso,iban;
-    private String nome,cognome,email, passwordHash,biografia,azienda;
+    private int id,sesso;
+    private String nome,cognome,email, passwordHash,biografia,azienda,iban;
     private Date dataDiNascita;
     private boolean hash;
 
     public OrganizzatoreBean() {
     }
 
-    public OrganizzatoreBean(int id, int sesso, int iban, String nome, String cognome, String email, String passwordHash, String biografia, String azienda, Date dataDiNascita, boolean hash) {
+    public OrganizzatoreBean(int id, int sesso, String iban, String nome, String cognome, String email, String passwordHash, String biografia, String azienda, Date dataDiNascita, boolean hash) {
         this.id = id;
         this.sesso = sesso;
         this.iban = iban; //aggiungere controlli
@@ -33,7 +33,7 @@ public class OrganizzatoreBean {
         this.dataDiNascita = dataDiNascita;
     }
 
-    public OrganizzatoreBean(int sesso, int iban, String nome, String cognome, String email, String passwordHash, String biografia, String azienda, Date dataDiNascita, boolean hash) {
+    public OrganizzatoreBean(int sesso, String iban, String nome, String cognome, String email, String passwordHash, String biografia, String azienda, Date dataDiNascita, boolean hash) {
         this.sesso = sesso;
         this.iban = iban;
         this.nome = nome;
@@ -60,7 +60,7 @@ public class OrganizzatoreBean {
         return sesso;
     }
 
-    public int getIban() {
+    public String getIban() {
         return iban;
     }
 
@@ -104,7 +104,7 @@ public class OrganizzatoreBean {
         this.sesso = sesso;
     }
 
-    public void setIban(int iban) {
+    public void setIban(String iban) {
         this.iban = iban;
     }
 
