@@ -33,8 +33,7 @@ public class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{
         }
     }
 
-    @Override
-    public UtenteRegistratoBean doRetrieveByEmailPassword(String email, String password) {
+   public UtenteRegistratoBean doRetrieveByEmailPassword(String email, String password) {
         try(Connection con=ConPool.getConnection()){
             PreparedStatement stm=con.prepareStatement("SELECT * FROM UtenteRegistrato WHERE email=? AND passwordHash=SHA1(?)");
             stm.setString(1,email);
@@ -62,7 +61,7 @@ public class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{
     }
 
     @Override
-    public void doSave(UtenteRegistratoBean utente) {
+    public UtenteRegistratoBean doSave(UtenteRegistratoBean utente) {
         try(Connection con=ConPool.getConnection()){
             PreparedStatement ps=con.prepareStatement("INSERT INTO UtenteRegistrato (nome,cognome,email, passwordHash,dataDiNascita,sesso) VALUES(?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
             ps.setString(1,utente.getNome());
@@ -79,11 +78,12 @@ public class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{
             ResultSet rs=ps.getGeneratedKeys();
             rs.next();
             int id=rs.getInt(1);
-            utente.setId(id); //cosa lo setto a fare se poi è void?
+            utente.setId(id);
 
             con.close();
             ps.close();
             rs.close();
+            return utente;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

@@ -6,10 +6,10 @@ import model.entity.UtenteRegistratoBean;
 import java.util.List;
 
 public interface OrganizzatoreDAO {
-    public List<OrganizzatoreBean> doRetrieveAll();
-    public OrganizzatoreBean doRetrieveByEmailPassword(String email,String password); //per il login quindi cambia con email
-    public void doSave(OrganizzatoreBean utente);
-    public void doUpdate(OrganizzatoreBean utente);
-    public OrganizzatoreBean doRetrieveByEmail(String email);
-    public void doDelete(int idUtente);
+    List<OrganizzatoreBean> doRetrieveAll();
+    OrganizzatoreBean doRetrieveByEmailPassword(String email,String password); //per il login quindi cambia con email
+    OrganizzatoreBean doSave(OrganizzatoreBean utente);
+    void doUpdate(OrganizzatoreBean utente);
+    OrganizzatoreBean doRetrieveByEmail(String email);
+    void doDelete(int idUtente);
 }

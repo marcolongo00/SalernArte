@@ -69,7 +69,7 @@ public class OrganizzatoreDAOImpl implements OrganizzatoreDAO{
     }
 
     @Override
-    public void doSave(OrganizzatoreBean utente) {
+    public OrganizzatoreBean doSave(OrganizzatoreBean utente) {
         try(Connection con=ConPool.getConnection()){
             PreparedStatement ps=con.prepareStatement("INSERT INTO Organizzatore (nome,cognome,email, passwordHash,biografia,dataDiNascita,sesso,azienda,iban) VALUES(?,?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
             ps.setString(1,utente.getNome());
@@ -89,11 +89,12 @@ public class OrganizzatoreDAOImpl implements OrganizzatoreDAO{
             ResultSet rs=ps.getGeneratedKeys();
             rs.next();
             int id=rs.getInt(1);
-            utente.setId(id); //cosa lo setto a fare se poi è void?
+            utente.setId(id);
 
             con.close();
             ps.close();
             rs.close();
+            return utente;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

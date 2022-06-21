@@ -14,12 +14,22 @@
 <body>
 <div>
     <form action="autenticazione-controller" method="get" >
-
-        <input type="submit" name="goToLogin" value="login">
+        <c:choose>
+            <c:when test="${sessionScope.selezionato !=null}">
+                <input type="submit" name="logout" value="logout">
+            </c:when>
+            <c:otherwise>
+                <input type="submit" name="goToLogin" value="login">
+                <input type="submit" name="goToRegistrazione" value="Registrati">
+            </c:otherwise>
+        </c:choose>
     </form>
 </div>
 <c:if test="${sessionScope.selezionato !=null}">
-<br>SEI LOGGATO<br>
+<c:if test="${sessionScope.tipoUtente == 'utenteRegistrato'}">
+test per controlli jstl su utenti
+</c:if>
+<br>SEI LOGGATO ${sessionScope.tipoUtente}<br>
 </c:if>
 
 

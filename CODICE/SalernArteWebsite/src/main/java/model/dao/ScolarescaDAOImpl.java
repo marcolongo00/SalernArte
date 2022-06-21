@@ -80,7 +80,7 @@ public class ScolarescaDAOImpl implements  ScolarescaDAO{
     }
 
     @Override
-    public void doSave(ScolarescaBean utente) {
+    public ScolarescaBean doSave(ScolarescaBean utente) {
         try(Connection con=ConPool.getConnection()){
             PreparedStatement ps=con.prepareStatement("INSERT INTO Scolaresca (email, passwordHash,istituto) VALUES(?,?,?)",Statement.RETURN_GENERATED_KEYS);
             ps.setString(1,utente.getEmail());
@@ -94,11 +94,12 @@ public class ScolarescaDAOImpl implements  ScolarescaDAO{
             ResultSet rs=ps.getGeneratedKeys();
             rs.next();
             int id=rs.getInt(1);
-            utente.setId(id); //cosa lo setto a fare se poi è void?
+            utente.setId(id);
 
             con.close();
             ps.close();
             rs.close();
+            return  utente;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

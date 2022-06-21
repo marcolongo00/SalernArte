@@ -1,5 +1,7 @@
 package autenticazione.controller;
 
+import autenticazione.service.AutenticazioneService;
+import autenticazione.service.AutenticazioneServiceImpl;
 import model.dao.*;
 import model.entity.AmministratoreBean;
 import model.entity.OrganizzatoreBean;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Date;
 
 @WebServlet(name = "AutenticazioneController",urlPatterns = "/autenticazione-controller")
 public class AutenticazioneController extends HttpServlet {
@@ -23,9 +26,16 @@ public class AutenticazioneController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        AutenticazioneServiceImpl serviceA= new AutenticazioneServiceImpl();
+
 
         if(request.getParameter("goToLogin")!=null){
             String address="WEB-INF/login.jsp";
+            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
+            dispatcher.forward(request,response);
+        }
+        if(request.getParameter("goToRegistrazione")!=null){
+            String address="WEB-INF/registrazione.jsp";
             RequestDispatcher dispatcher=request.getRequestDispatcher(address);
             dispatcher.forward(request,response);
         }
@@ -33,38 +43,61 @@ public class AutenticazioneController extends HttpServlet {
             String email=request.getParameter("email");
             String password=request.getParameter("password");
             String tipoUtente=request.getParameter("tipoUtente");
-            if(tipoUtente.compareTo("utenteRegistrato")==0){
-                UtenteRegistratoDAO dao= new UtenteRegistratoDAOImpl();
-                UtenteRegistratoBean bean=dao.doRetrieveByEmailPassword(email,password);
-                if(bean != null){// if null throw exception ma ci pensiamo dopo
-                    session.setAttribute("selezionato", bean);
+
+            Object utente= serviceA.loginUtente(email,password,tipoUtente);
+            session.setAttribute("selezionato",utente);
+            session.setAttribute("tipoUtente",tipoUtente);
+
+           //aggiungi dati carrello appena disponibili
+            String address=request.getHeader("referer");
+
+            if(address==null || address.contains("/autenticazione-controller") || address.trim().isEmpty()){
+                address=".";
+            }
+
+            response.sendRedirect(address);
+        }
+        if(request.getParameter("logout")!=null){
+            session.removeAttribute("selezionato");
+            session.removeAttribute("tipoUtente");
+
+            String address=request.getHeader("referer");
+            if(address==null || address.contains("/autenticazione-controller") || address.trim().isEmpty()){
+                address=".";
+            }
+
+            response.sendRedirect(address);
+        }
+        if(request.getParameter("registrazione")!= null){ //controllo sui dati e su password conferma
+
+            String password=request.getParameter("password");
+            String passConferma=request.getParameter("passwordConferma");
+            if(password.compareTo(passConferma)==0){ //tutti altri controlli
+                String tipoUtente=request.getParameter("tipoUtente");
+                String email=request.getParameter("email");
+                String nome=request.getParameter("nome");
+                String cognome=request.getParameter("cognome");
+                String datadiNascita=request.getParameter("dataDiNascita");
+                String gender=request.getParameter("gender");
+                String istituto=request.getParameter("istituto");
+                String biografia=request.getParameter("biografia");
+                String azienda=request.getParameter("azienda");
+                String iban=request.getParameter("iban");
+                Object newUtente=serviceA.registrazioneUtente(tipoUtente,email,password,nome,cognome,datadiNascita,gender,istituto,biografia,azienda,iban);
+
+                session.setAttribute("selezionato",newUtente);
+                session.setAttribute("tipoUtente",tipoUtente);
+
+                //aggiungi dati carrello appena disponibili
+                String address=request.getHeader("referer");
+
+                if(address==null || address.contains("/autenticazione-controller") || address.trim().isEmpty()){
+                    address=".";
                 }
-            }else
-                if(tipoUtente.compareTo("scolaresca")==0){
-                    ScolarescaDAO dao= new ScolarescaDAOImpl();
-                    ScolarescaBean bean=dao.doRetrieveByEmailPassword(email,password);
-                    if(bean != null){// if null throw exception ma ci pensiamo dopo
-                        session.setAttribute("selezionato", bean);
-                    }
-                }
-                else
-                    if(tipoUtente.compareTo("organizzatore")==0){
-                        OrganizzatoreDAO dao= new OrganizzatoreDAOImpl();
-                        OrganizzatoreBean bean= dao.doRetrieveByEmailPassword(email,password);
-                        if(bean != null){// if null throw exception ma ci pensiamo dopo
-                            session.setAttribute("selezionato", bean);
-                        }
-                    }else
-                        if(tipoUtente.compareTo("amministratore")==0){
-                            AmministratoreDAO dao=new AmministratoreDAOImpl();
-                            AmministratoreBean bean=dao.doRetrieveByEmailPassword(email,password);
-                            if(bean != null){// if null throw exception ma ci pensiamo dopo
-                                session.setAttribute("selezionato", bean);
-                            }
-                        }//aggiungi dati carrello appena disponibili
-            String address="WEB-INF/index.jsp"; //non ottimale, usare il referer ma è un esperimento
-            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
-            dispatcher.forward(request,response);
+
+                response.sendRedirect(address);
+            }
+
         }
 
     }
