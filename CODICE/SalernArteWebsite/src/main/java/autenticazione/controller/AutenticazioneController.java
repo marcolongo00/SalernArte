@@ -34,17 +34,13 @@ public class AutenticazioneController extends HttpServlet {
             RequestDispatcher dispatcher=request.getRequestDispatcher(address);
             dispatcher.forward(request,response);
         }
-        if(request.getParameter("goToRegistrazione")!=null){
-            String address="WEB-INF/registrazione.jsp";
-            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
-            dispatcher.forward(request,response);
-        }
+
         if(request.getParameter("Accedi")!=null){
             String email=request.getParameter("email");
             String password=request.getParameter("password");
             String tipoUtente=request.getParameter("tipoUtente");
 
-            Object utente= serviceA.loginUtente(email,password,tipoUtente);
+            Object utente= serviceA.loginUtente(email,password,tipoUtente); //utenti operazioni diverse
             session.setAttribute("selezionato",utente);
             session.setAttribute("tipoUtente",tipoUtente);
 
@@ -68,37 +64,7 @@ public class AutenticazioneController extends HttpServlet {
 
             response.sendRedirect(address);
         }
-        if(request.getParameter("registrazione")!= null){ //controllo sui dati e su password conferma
 
-            String password=request.getParameter("password");
-            String passConferma=request.getParameter("passwordConferma");
-            if(password.compareTo(passConferma)==0){ //tutti altri controlli
-                String tipoUtente=request.getParameter("tipoUtente");
-                String email=request.getParameter("email");
-                String nome=request.getParameter("nome");
-                String cognome=request.getParameter("cognome");
-                String datadiNascita=request.getParameter("dataDiNascita");
-                String gender=request.getParameter("gender");
-                String istituto=request.getParameter("istituto");
-                String biografia=request.getParameter("biografia");
-                String azienda=request.getParameter("azienda");
-                String iban=request.getParameter("iban");
-                Object newUtente=serviceA.registrazioneUtente(tipoUtente,email,password,nome,cognome,datadiNascita,gender,istituto,biografia,azienda,iban);
-
-                session.setAttribute("selezionato",newUtente);
-                session.setAttribute("tipoUtente",tipoUtente);
-
-                //aggiungi dati carrello appena disponibili
-                String address=request.getHeader("referer");
-
-                if(address==null || address.contains("/autenticazione-controller") || address.trim().isEmpty()){
-                    address=".";
-                }
-
-                response.sendRedirect(address);
-            }
-
-        }
 
     }
 }

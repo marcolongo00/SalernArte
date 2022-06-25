@@ -20,16 +20,20 @@
             </c:when>
             <c:otherwise>
                 <input type="submit" name="goToLogin" value="login">
-                <input type="submit" name="goToRegistrazione" value="Registrati">
             </c:otherwise>
         </c:choose>
     </form>
+    <form action="registrazione-controller" method="get" >
+
+            <c:if test="${sessionScope.selezionato ==null}">
+                <input type="submit" name="goToRegistrazione" value="Registrati">
+            </c:if>
+    </form>
 </div>
-<c:if test="${sessionScope.selezionato !=null}">
-<c:if test="${sessionScope.tipoUtente == 'utenteRegistrato'}">
-test per controlli jstl su utenti
-</c:if>
-<br>SEI LOGGATO ${sessionScope.tipoUtente}<br>
+<c:if test="${(sessionScope.selezionato !=null) and (sessionScope.tipoUtente=='organizzatore')}">
+<form action="gestione-eventi" method="get">
+    <input type="submit" name="goToRichiestaEvento" value="Richiedi Evento">
+</form>
 </c:if>
 
 

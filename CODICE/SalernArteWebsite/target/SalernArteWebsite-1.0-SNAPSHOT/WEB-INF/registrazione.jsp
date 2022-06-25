@@ -23,7 +23,7 @@
             <a  id="Linklog">Sei già iscritto?</a>
         </div>
 
-        <form name="reg" action="autenticazione-controller" method="post">
+        <form name="reg" action="registrazione-controller" method="post">
             <div class="flex dati">
                 <div >
                     <input type="radio" id="Utente" name="tipoUtente" onclick="showDatiCorrettiPerUtente()"  value="utenteRegistrato">

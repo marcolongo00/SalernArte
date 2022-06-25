@@ -42,35 +42,6 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
         return null;
     }
 
-    @Override
-    public Object registrazioneUtente(String tipoUtente, String email, String password, String nome, String cognome, String dataDiNascita, String gender, String istituto, String biografia, String azienda, String iban) {
-        //if null throw exception per tutti
-        if(tipoUtente.compareTo("utenteRegistrato")==0){
-            UtenteRegistratoBean newUtente=new UtenteRegistratoBean(AutenticazioneServiceImpl.getNumberGender(gender),nome,cognome,email,password,Date.valueOf(dataDiNascita),false);
-            return daoUtenteRegistrato.doSave(newUtente);
-        }else
-        if(tipoUtente.compareTo("scolaresca")==0){
-            ScolarescaBean newUtente= new ScolarescaBean(email,password,istituto,false);
-            return daoScolaresca.doSave(newUtente);
-        }
-        else
-        if(tipoUtente.compareTo("organizzatore")==0){
-            OrganizzatoreBean newUtente=new OrganizzatoreBean(AutenticazioneServiceImpl.getNumberGender(gender),iban,nome,cognome,email,password,biografia,azienda,Date.valueOf(dataDiNascita),false);
-            return daoOrganizzatore.doSave(newUtente);
-        }
-        return null;
-    }
-
-    private static int getNumberGender(String gender){
-        if(gender.compareTo("uomo")==0){
-            return 0;
-        }else
-            if(gender.compareTo("donna")==0){
-                return 1;
-        }else {
-                return 2;
-            }
-    }
 
 
 }

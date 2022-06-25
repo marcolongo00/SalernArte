@@ -17,7 +17,7 @@ create table UtenteRegistrato(
 
 
 create table Scolaresca(
-	id int not null auto_increment,  #id per scuole non conviene
+	id int not null auto_increment,  
     email varchar(100) not null unique,
     passwordHash varchar(50) not null,
     istituto varchar(100) not null,
@@ -43,7 +43,7 @@ create table Organizzatore(
     dataDiNascita date not null,    
     sesso int not null, #0(maschio), 1(femmina), 2(non specificato)
     azienda varchar(100) not null,
-    iban varchar(27) not null, #aggiustare nei documenti
+    iban varchar(27) not null, 
     primary key(id)
 );
 
@@ -57,9 +57,9 @@ create table Evento(
     numBiglietti int not null,
     dataInizio date not null,
 	dataFine date not null,
-    indirizzo varchar(100) not null unique,
+    indirizzo varchar(100) not null,
     sede varchar(100) not null,
-    attivo boolean default false, #manca nel class anche se l'avevamo detto
+    attivo boolean default false, #anche per la modifica
     primary key(id),
     foreign key(idOrganizzatore) references Organizzatore(id)
 		on delete cascade
@@ -70,8 +70,12 @@ create table Evento(
 create table RichiestaEvento( #non c'è nel class 
 	id int not null auto_increment,
     idEvento int not null,
-    primary key(id,idEvento),
+    idEventoTemp int not null,
+    primary key(id,idEvento,idEventoTemp),
     foreign key (idEvento) references Evento(id)
+    on delete cascade
+    on update cascade,
+    foreign key (idEventoTemp) references Evento(id)
     on delete cascade
     on update cascade
 	);
@@ -79,15 +83,15 @@ create table RichiestaEvento( #non c'è nel class
 create table Biglietto(
 	id int not null auto_increment,
     evento int not null,
-    costo decimal(10,2) not null, #in teoria l'abbiamo messo nella mostra
-    fattura int , #servirebbe per la funzione visualizza acquisti effettuati
+    costo decimal(10,2) not null, 
+    fattura int , 
     primary key(id,evento),
     foreign key(evento) references Evento(id)
 		on delete cascade
         on update cascade
 );
 
-#non presente nel class diagram
+
 create table Fattura(
 	numOrdine int not null auto_increment,
     data date not null,
@@ -98,7 +102,6 @@ create table Fattura(
     primary key(numOrdine)
 );
 
-#nel class manca anche il carrello
 CREATE TABLE Carrello(
 idUser int not null,
 idProd int not null, ##id mostra, poi da qui ricavo i biglietti disponibili" dinamicamente
