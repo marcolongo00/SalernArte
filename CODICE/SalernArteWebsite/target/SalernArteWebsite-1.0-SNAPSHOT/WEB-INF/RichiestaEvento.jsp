@@ -12,7 +12,7 @@
     <title>Title</title>
 </head>
 <body>
-<form action="gestione-eventi" method="post" name="insertForm" enctype="multipart/form-data">
+<form action="gestione-eventi" method="post"  enctype="multipart/form-data">
     <div class="dati">
         <div id="range">
             <div class="dateContainer">
@@ -47,13 +47,7 @@
             <input type="text" name="sede" placeholder="sede">
         </div>
     </div>
-    <div class="buttonImage">
-
-    </div>
     <input type="submit" id="insertMSubmit" name="inviaRichiestaEvento" value="PROCEDI">
-    <div >
-        <div id="messaggio"></div>
-    </div>
 </form>
 
 </body>

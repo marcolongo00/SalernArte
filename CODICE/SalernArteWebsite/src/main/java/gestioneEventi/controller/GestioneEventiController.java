@@ -9,12 +9,14 @@ import model.entity.EventoBean;
 import javax.imageio.ImageIO;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Date;
 
 @WebServlet(name = "GestioneEventiController",urlPatterns = "/gestione-eventi")
+@MultipartConfig
 public class GestioneEventiController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -47,7 +49,7 @@ public class GestioneEventiController extends HttpServlet {
 
             String address=request.getHeader("referer");
 
-            if(address==null || address.contains("/GestioneEventiController") || address.trim().isEmpty()){
+            if(address==null || address.contains("/gestione-eventi") || address.trim().isEmpty()){
                 address=".";
             }
 
