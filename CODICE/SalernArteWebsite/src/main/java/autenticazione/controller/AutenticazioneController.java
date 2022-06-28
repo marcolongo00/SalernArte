@@ -30,7 +30,7 @@ public class AutenticazioneController extends HttpServlet {
 
 
         if(request.getParameter("goToLogin")!=null){
-            String address="WEB-INF/login.jsp";
+            String address="WEB-INF/autenticazione/login.jsp";
             RequestDispatcher dispatcher=request.getRequestDispatcher(address);
             dispatcher.forward(request,response);
         }

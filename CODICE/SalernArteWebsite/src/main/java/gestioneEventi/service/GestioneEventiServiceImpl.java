@@ -25,7 +25,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         daoBiglietto=new BigliettoDAOImpl();
     }
 
-    public void richiediInserimentoEvento(int idOrganizzatore,String nome, String tipoEvento, String descrizione, String path, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede){
+    public void richiediInserimentoEvento(int idOrganizzatore,String nome, String tipoEvento, String descrizione, String pathContext,Part filePhoto, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede){
         try{
             Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
             if(dataFine.before(dataInizio) || dataInizio.before(dataAttuale)){
@@ -37,10 +37,9 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             if(numBiglietti <=0 || prezzoBiglietto<= 0)
                 throw new Exception();
 
-            //aggiungi all'init i path delle foto
 
-            //gestisci path foto
-
+            String path = "./immaginiEventi/" + filePhoto.getSubmittedFileName();
+            saveImage(filePhoto.getInputStream(),pathContext);
 
             EventoBean bean= new EventoBean(idOrganizzatore,dataInizio,dataFine,nome,path,descrizione,indirizzo,sede,numBiglietti,getTypeEvento(tipoEvento));
             daoEvento.doSave(bean);
@@ -61,7 +60,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             return false;
     }
 
-    public static void saveImage(InputStream in,String path){
+    private static void saveImage(InputStream in,String path){
         File file=new File(path);
         try {
             Files.copy(in,file.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -70,7 +69,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         }
     }
 
-    public static void deleteImage(String path){
+    private static void deleteImage(String path){
         File file=new File(path);
         try {
             Files.delete(file.toPath());

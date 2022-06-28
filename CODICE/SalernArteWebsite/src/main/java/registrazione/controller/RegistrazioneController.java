@@ -21,7 +21,7 @@ public class RegistrazioneController extends HttpServlet {
         HttpSession session = request.getSession();
         RegistrazioneServiceimpl serviceA= new RegistrazioneServiceimpl();
         if(request.getParameter("goToRegistrazione")!=null){ //sposta in registrazione service
-            String address="WEB-INF/registrazione.jsp";
+            String address="WEB-INF/autenticazione/registrazione.jsp";
             RequestDispatcher dispatcher=request.getRequestDispatcher(address);
             dispatcher.forward(request,response);
         }
