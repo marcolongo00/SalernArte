@@ -4,6 +4,7 @@ import gestioneEventi.service.GestioneEventiService;
 import gestioneEventi.service.GestioneEventiServiceImpl;
 import model.dao.EventoDAO;
 import model.dao.EventoDAOImpl;
+import model.dao.OrganizzatoreDAOImpl;
 import model.entity.EventoBean;
 import model.entity.OrganizzatoreBean;
 
@@ -15,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.List;
 
 @WebServlet(name = "GestioneEventiController",urlPatterns = "/gestione-eventi")
 @MultipartConfig
@@ -42,6 +44,31 @@ public class GestioneEventiController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
             dispatcher.forward(request, response);
         }
+        if(request.getParameter("goToAllRichiesteEventi")!=null){
+            String tipoUtente=(String) session.getAttribute("tipoUtente");
+            if(tipoUtente.compareTo("amministratore")!=0){
+                throw  new RuntimeException();
+            }
+            //da far fare al service
+            EventoDAO daoEv= new EventoDAOImpl();
+            List<EventoBean> eventiNonAttivi=daoEv.doRetrieveAllEventiNonAttivi();
+            request.setAttribute("richiesteEventi",eventiNonAttivi); //differenzia modifica
+            String address = "/WEB-INF/gestioneEventi/AllRichiesteEventi.jsp";
+            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+            dispatcher.forward(request, response);
+        }
+        if(request.getParameter("bioOrg")!=null){
+            int idOrg=Integer.parseInt(request.getParameter("idOrganizzatore"));
+            int idE = Integer.parseInt(request.getParameter("idE"));
+            //fai in service
+            OrganizzatoreDAOImpl daoOrg=new OrganizzatoreDAOImpl();
+            OrganizzatoreBean org= daoOrg.doRetrieveById(idOrg);
+            request.setAttribute("organizzatore",org);
+            request.setAttribute("idE",idE);
+            String address = "/WEB-INF/gestioneEventi/BioOrganizzatore.jsp";
+            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+            dispatcher.forward(request, response);
+        }
         if(request.getParameter("inviaRichiestaEvento")!=null){
             OrganizzatoreBean organizzatore= (OrganizzatoreBean) session.getAttribute("selezionato"); //controllo sull'utente
             Date dataInizio=Date.valueOf(request.getParameter("dataInizio"));
@@ -65,14 +92,26 @@ public class GestioneEventiController extends HttpServlet {
 
             serviceE.richiediInserimentoEvento(organizzatore.getId(),nome,tipoEvento,descrizione,pathSave,filePhoto,numBiglietti,prezzo,dataInizio,dataFine,indirizzo,sede);
 
-              String address=request.getHeader("referer");
+        }else
+            if(request.getParameter("accettaIns")!=null){
+            //contorlla errori
+            int idEvento= Integer.parseInt(request.getParameter("idEvento"));
+            String tipoUtente=(String)session.getAttribute("tipoUtente");
 
-            if(address==null || address.contains("/gestione-eventi") || address.trim().isEmpty()){
-                address=".";
-            }
+            serviceE.attivaEvento(idEvento,tipoUtente);
+            }else
+                if(request.getParameter("rifiutaIns")!=null){
+            //contorlla errori
+            int idEvento= Integer.parseInt(request.getParameter("idEvento"));
+            String tipoUtente=(String)session.getAttribute("tipoUtente");
 
-            response.sendRedirect(address);
+            serviceE.rimuoviEvento(idEvento,tipoUtente);
+                }
+        String address=request.getHeader("referer");
+        if(address==null || address.contains("/gestione-eventi") || address.trim().isEmpty()){
+            address=".";
         }
 
+        response.sendRedirect(address);
     }
     }

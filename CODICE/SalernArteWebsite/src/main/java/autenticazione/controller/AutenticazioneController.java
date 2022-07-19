@@ -26,7 +26,7 @@ public class AutenticazioneController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        AutenticazioneServiceImpl serviceA= new AutenticazioneServiceImpl();
+        AutenticazioneService serviceA= new AutenticazioneServiceImpl();
 
 
         if(request.getParameter("goToLogin")!=null){
@@ -40,7 +40,7 @@ public class AutenticazioneController extends HttpServlet {
             String password=request.getParameter("password");
             String tipoUtente=request.getParameter("tipoUtente");
 
-            Object utente= serviceA.loginUtente(email,password,tipoUtente); //utenti operazioni diverse
+            UtenteRegistratoBean utente=serviceA.loginUtente(email,password,tipoUtente);
             session.setAttribute("selezionato",utente);
             session.setAttribute("tipoUtente",tipoUtente);
 

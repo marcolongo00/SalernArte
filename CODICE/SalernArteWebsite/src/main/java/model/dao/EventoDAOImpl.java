@@ -74,6 +74,37 @@ public class EventoDAOImpl implements EventoDAO{
     }
 
     @Override
+    public List<EventoBean> doRetrieveAllEventiNonAttivi(){
+        try(Connection conn=ConPool.getConnection()){
+            List<EventoBean> lista= new ArrayList<>();
+            Statement st=conn.createStatement();
+            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() < dataFine AND attivo=false");
+            while(rs.next()){
+                int idEv=rs.getInt("id");
+                int idOrg=rs.getInt("idOrganizzatore");
+                String nome=rs.getString("nome");
+                boolean tipo=rs.getBoolean("tipo");
+                String desc=rs.getString("descrizione");
+                String path=rs.getString("pathFoto");
+                int numBiglietti=rs.getInt("numBiglietti");
+                Date dataInizio=rs.getDate("dataInizio");
+                Date dataFine= rs.getDate("dataFine");
+                String indirizzo= rs.getString("indirizzo");
+                String sede=rs.getString("sede");
+                boolean attivo=rs.getBoolean("attivo");
+
+                lista.add(new EventoBean(idEv,idOrg,dataInizio,dataFine,nome,path,desc,indirizzo,sede,numBiglietti,tipo,attivo));
+            }
+            conn.close();
+            st.close();
+            rs.close();
+            return lista;
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<EventoBean> doRetrieveAllByTeatroAttiviNonScaduti() {
         try(Connection conn=ConPool.getConnection()){
             List<EventoBean> lista= new ArrayList<>();
@@ -264,6 +295,22 @@ public class EventoDAOImpl implements EventoDAO{
             ps.setInt(2,idEvento);
             if(ps.executeUpdate()!=1){
                 throw new RuntimeException("UPDATE numBiglietti error");
+            }
+            conn.close();
+            ps.close();
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void doUpdateAttivazioneEvento(int idEvento, boolean attivo) {
+        try(Connection conn=ConPool.getConnection()){
+            PreparedStatement ps= conn.prepareStatement("UPDATE Evento SET attivo=? WHERE id=?");
+            ps.setBoolean(1,attivo);
+            ps.setInt(2,idEvento);
+            if(ps.executeUpdate()!=1){
+                throw new RuntimeException("UPDATE attivazione error");
             }
             conn.close();
             ps.close();

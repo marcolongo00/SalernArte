@@ -1,15 +1,15 @@
 package model.dao;
 
+import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 
 import java.util.List;
 
 public interface UtenteRegistratoDAO {
-    List<UtenteRegistratoBean> doRetrieveAll();
-    UtenteRegistratoBean doRetrieveByEmailPassword(String email, String password); //per il login quindi cambia con email
-    UtenteRegistratoBean doSave(UtenteRegistratoBean utente);
-    void doUpdate(UtenteRegistratoBean utente);
+    List<UtenteRegistratoBean> doRetrieveAll(); //abstract
+    UtenteRegistratoBean doRetrieveByEmailPassword(String email, String password); //abstract
+    void doSave(UtenteRegistratoBean utente);//implementato poi sovrascritto dai figli
+    void doUpdate(UtenteRegistratoBean utente);//implementato poi sovrascritto dai figli
     UtenteRegistratoBean doRetrieveByEmail(String email);
-    void doDelete(int idUtente);
-
+    void doDelete(int idUtente);//implementato
 }

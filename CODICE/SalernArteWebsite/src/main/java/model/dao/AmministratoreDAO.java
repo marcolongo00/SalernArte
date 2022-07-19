@@ -4,13 +4,13 @@ import model.entity.AmministratoreBean;
 
 import java.util.List;
 
-public interface AmministratoreDAO {
+public interface AmministratoreDAO {// NON SERVE
     //mancano tipo retrievebyrichieste forse eccetera, vedi mano mano
     //metterei un retrieveByID
-    public List<AmministratoreBean> doRetrieveAll();
-    public AmministratoreBean doRetrieveByEmail(String email);
-    public AmministratoreBean doRetrieveByEmailPassword(String email, String password);
-    public void doSave(AmministratoreBean utente);
-    public void doUpdate(AmministratoreBean utente);
-    public void doDelete(int idAdmin);
+    List<AmministratoreBean> doRetrieveAll();
+    AmministratoreBean doRetrieveByEmail(String email);
+    AmministratoreBean doRetrieveByEmailPassword(String email, String password);
+    void doSave(AmministratoreBean utente);
+    void doUpdate(AmministratoreBean utente);
+    void doDelete(int idAdmin);
 }

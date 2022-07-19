@@ -1,8 +1,7 @@
 package registrazione.controller;
 
-import model.entity.OrganizzatoreBean;
-import model.entity.ScolarescaBean;
 import model.entity.UtenteRegistratoBean;
+import registrazione.service.RegistrazioneService;
 import registrazione.service.RegistrazioneServiceimpl;
 
 import javax.servlet.RequestDispatcher;
@@ -19,7 +18,8 @@ import java.sql.Date;
 public class RegistrazioneController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        RegistrazioneServiceimpl serviceA= new RegistrazioneServiceimpl();
+        RegistrazioneService serviceA= new RegistrazioneServiceimpl();
+
         if(request.getParameter("goToRegistrazione")!=null){ //sposta in registrazione service
             String address="WEB-INF/autenticazione/registrazione.jsp";
             RequestDispatcher dispatcher=request.getRequestDispatcher(address);
@@ -32,20 +32,20 @@ public class RegistrazioneController extends HttpServlet {
             if(password.compareTo(passConferma)==0){ //tutti altri controlli
                 String email=request.getParameter("email");
                 String tipoUtente=request.getParameter("tipoUtente");
+                UtenteRegistratoBean utenteResult=null;
 
-                if(tipoUtente.compareTo("utenteRegistrato")==0){
+                if(tipoUtente.compareTo("utente")==0){
                     String nome=request.getParameter("nome");
                     String cognome=request.getParameter("cognome");
                     Date datadiNascita=Date.valueOf(request.getParameter("dataDiNascita"));
                     String gender= request.getParameter("gender");
-                    UtenteRegistratoBean newUtente=serviceA.registrazioneUtente(gender,nome,cognome,email,password,datadiNascita);
-                    session.setAttribute("selezionato",newUtente);
+                    //utenteResult=new UtenteBean();
+                    utenteResult=serviceA.registrazioneUtente(gender,nome,cognome,email,password,datadiNascita);
 
                 }else
                 if(tipoUtente.compareTo("scolaresca")==0){
                     String istituto=request.getParameter("istituto");
-                    ScolarescaBean newUtente= serviceA.registrazioneScolaresca(email,password,istituto);
-                    session.setAttribute("selezionato",newUtente);
+                    utenteResult= serviceA.registrazioneScolaresca(email,password,istituto);
                 }
                 else
                 if(tipoUtente.compareTo("organizzatore")==0){
@@ -56,13 +56,13 @@ public class RegistrazioneController extends HttpServlet {
                     String biografia=request.getParameter("biografia");
                     String azienda=request.getParameter("azienda");
                     String iban=request.getParameter("iban");
-                    OrganizzatoreBean newUtente=serviceA.registrazioneOrganizzatore(gender,iban,nome,cognome,email,password,biografia,azienda,datadiNascita);
-                    session.setAttribute("selezionato",newUtente);
+                    utenteResult=serviceA.registrazioneOrganizzatore(gender,iban,nome,cognome,email,password,biografia,azienda,datadiNascita);
 
-                }else{
+
+                }else{ //admin?????
                     //errore
                 }
-
+                session.setAttribute("selezionato",utenteResult);
                 session.setAttribute("tipoUtente",tipoUtente);
 
                 //aggiungi dati carrello appena disponibili

@@ -1,68 +1,35 @@
 package model.entity;
 
+import model.dao.UtenteDAOImpl;
+import model.dao.UtenteRegistratoDAO;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Date;
 
-public class UtenteRegistratoBean {
-    private int id,sesso;
-    private String nome,cognome,email, passwordHash;
-    private Date dataDiNascita;
+public abstract class UtenteRegistratoBean {
+    private int id;
+    private String email, passwordHash, tipoUtente;
     private boolean hash;
 
     public UtenteRegistratoBean() {
     }
 
-    public UtenteRegistratoBean(int sesso, String nome, String cognome, String email, String passwordHash, Date dataDiNascita,boolean hash) {
-        this.sesso = sesso;
-        this.nome = nome;
-        this.cognome = cognome;
-        this.email = email;
-        if(hash){
-            this.passwordHash=passwordHash;
-            this.hash=hash;
-        }else{
-            setPasswordHash(passwordHash);
-            setHash(true);
-        }
-        this.dataDiNascita = dataDiNascita;
-    }
-
-    public UtenteRegistratoBean(int id, int sesso, String nome, String cognome, String email, String passwordHash, Date dataDiNascita, boolean hash) {
+    public UtenteRegistratoBean(int id, String email, String passwordHash, String tipoUtente, boolean hash) {
         this.id = id;
-        this.sesso = sesso;
-        this.nome = nome;
-        this.cognome = cognome;
         this.email = email;
-        this.passwordHash = passwordHash;
-        this.dataDiNascita = dataDiNascita;
-        if(hash){
-            this.passwordHash=passwordHash;
-            this.hash=hash;
-        }else{
-            setPasswordHash(passwordHash);
-            setHash(true);
-        }
+        setPasswordHash(passwordHash,hash);
+        this.tipoUtente = tipoUtente;
     }
 
-    public int getId() {
-        return id;
+    public UtenteRegistratoBean(String email, String passwordHash, String tipoUtente, boolean hash) {
+        this.email = email;
+        setPasswordHash(passwordHash,hash);
+        this.tipoUtente = tipoUtente;
     }
 
-    public int getSesso() {
-        //
-        return sesso;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
+    public int getId() { return id; }
 
     public String getEmail() {
         return email;
@@ -72,63 +39,45 @@ public class UtenteRegistratoBean {
         return passwordHash;
     }
 
-    public Date getDataDiNascita() {
-        return dataDiNascita;
-    }
-
     public boolean isHash() {return hash; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setSesso(int sesso) {
-        //controllo sul range
-        this.sesso = sesso;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
-    }
+    public String getTipoUtente() { return tipoUtente; }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setPasswordHash(String password) {
-        //password è inserita dall'utente
-        try{
-            MessageDigest digest=MessageDigest.getInstance("SHA-1");
-            digest.reset();
-            digest.update(password.getBytes(StandardCharsets.UTF_8));
-            this.passwordHash=String.format("%040x",new BigInteger(1,digest.digest()));
-        }catch (NoSuchAlgorithmException e){
-            throw new RuntimeException(e);
+    public void setPasswordHash(String password, boolean hash) {
+        if(hash){//password è già in hash
+            this.passwordHash=passwordHash;
+            this.hash=hash;
+        }else{ //password è inserita dall'utente non in formato hash
+            try{
+                MessageDigest digest=MessageDigest.getInstance("SHA-1");
+                digest.reset();
+                digest.update(password.getBytes(StandardCharsets.UTF_8));
+                setHash(true);
+                this.passwordHash=String.format("%040x",new BigInteger(1,digest.digest()));
+            }catch (NoSuchAlgorithmException e){
+                throw new RuntimeException(e);
+            }
         }
+
     }
 
-    public void setDataDiNascita(Date dataDiNascita) {
-        this.dataDiNascita = dataDiNascita;
-    }
+    public void setHash(boolean hash) { this.hash = hash; }
 
-    public void setHash(boolean hash) {
-        this.hash = hash;
-    }
+    public void setTipoUtente(String tipoUtente) { this.tipoUtente = tipoUtente; }
+
+    public void setId(int id) { this.id = id;  }
 
     @Override
     public String toString() {
         return "UtenteRegistratoBean{" +
-                "id=" + id +
-                ", sesso=" + sesso +
-                ", nome='" + nome + '\'' +
-                ", cognome='" + cognome + '\'' +
-                ", email='" + email + '\'' +
+                "id='" + id + '\'' +
+                "email='" + email + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
-                ", dataDiNascita=" + dataDiNascita +
-                '}';
+                ", tipoUtente='" + tipoUtente + '\'' +
+                ", hash=" + hash + '\'';
     }
 }

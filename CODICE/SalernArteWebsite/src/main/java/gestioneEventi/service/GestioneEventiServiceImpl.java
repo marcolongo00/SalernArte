@@ -6,7 +6,6 @@ import model.dao.EventoDAO;
 import model.dao.EventoDAOImpl;
 import model.entity.EventoBean;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +52,24 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
 
 
     }
+
+    @Override
+    public void attivaEvento(int idEvento, String tipoUtente) {
+        if(tipoUtente.compareTo("amministratore")!=0){
+            throw new RuntimeException(); //myexception
+        }
+        daoEvento.doUpdateAttivazioneEvento(idEvento,true);
+    }
+
+    public void rimuoviEvento(int idEvento, String tipoUtente){
+        if(tipoUtente.compareTo("amministratore")!=0){
+            throw new RuntimeException(); //myexception
+        }
+        //nel acso di rifiuto inseirmento l'evento viene rimosso. nel caso di rifiuta modifica no,
+        // si riporta allo stato di prima e si avvisa l'organizzatore
+        daoEvento.doDelete(idEvento);
+    }
+
     private boolean getTypeEvento(String tipoEvento){
         if(tipoEvento.compareTo("teatro")==0)
             return true;
