@@ -38,7 +38,7 @@ public class AutenticazioneController extends HttpServlet {
         if(request.getParameter("Accedi")!=null){
             String email=request.getParameter("email");
             String password=request.getParameter("password");
-            String tipoUtente=request.getParameter("tipoUtente");
+            String tipoUtente=UtenteRegistratoDAOImpl.doRetriveTipoUtenteByEmail(email);
 
             UtenteRegistratoBean utente=serviceA.loginUtente(email,password,tipoUtente);
             session.setAttribute("selezionato",utente);

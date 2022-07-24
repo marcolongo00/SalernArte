@@ -146,7 +146,7 @@ insert into Organizzatore(id,nome,cognome,biografia,dataDiNascita,sesso,iban) va
 
 insert into Evento(idOrganizzatore,nome,tipo,descrizione,pathFoto,numBiglietti,dataInizio,dataFine,indirizzo,sede,attivo) values
 (5,'evento di pluto',true,'descrizione evento prova','path prova',3,'2022-07-21','2022-07-26','indirizzo prova','sede prova',true),
-(5,'evento di pluto 2',true,'descrizione evento prova 2','path prova 2',3,'2022-07-22','2022-07-27','indirizzo prova 2','sede prova 2',false);
+(5,'evento di pluto 2',false,'descrizione evento prova 2','path prova 2',3,'2022-07-22','2022-07-27','indirizzo prova 2','sede prova 2',true);
 
 insert into Biglietto(id,evento,costo,acquisto) values
 (1,1,3.6,null),

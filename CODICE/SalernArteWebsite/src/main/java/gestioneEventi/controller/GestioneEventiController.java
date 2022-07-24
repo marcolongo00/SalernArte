@@ -29,10 +29,10 @@ public class GestioneEventiController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         GestioneEventiService serviceE=new GestioneEventiServiceImpl();
-        EventoDAO eventoDAO=new EventoDAOImpl(); //sposta nel service
         if ( request.getParameter("detailsE")!=null) {
             int idE = Integer.parseInt(request.getParameter("idE"));
-            EventoBean evento = eventoDAO.doRetrieveById(idE);//sposta nel service
+
+            EventoBean evento = serviceE.retriveEventoById(idE);
             request.setAttribute("selectedEvento", evento);
 
             String address = "/WEB-INF/gestioneEventi/EventoDetails.jsp";
@@ -46,13 +46,9 @@ public class GestioneEventiController extends HttpServlet {
         }
         if(request.getParameter("goToAllRichiesteEventi")!=null){
             String tipoUtente=(String) session.getAttribute("tipoUtente");
-            if(tipoUtente.compareTo("amministratore")!=0){
-                throw  new RuntimeException();
-            }
-            //da far fare al service
-            EventoDAO daoEv= new EventoDAOImpl();
-            List<EventoBean> eventiNonAttivi=daoEv.doRetrieveAllEventiNonAttivi();
-            request.setAttribute("richiesteEventi",eventiNonAttivi); //differenzia modifica
+            List<EventoBean> richiesteEventi= serviceE.retriveAllRichiesteEventi(tipoUtente);
+            
+            request.setAttribute("richiesteEventi",richiesteEventi); //differenzia modifica
             String address = "/WEB-INF/gestioneEventi/AllRichiesteEventi.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
             dispatcher.forward(request, response);
@@ -66,6 +62,22 @@ public class GestioneEventiController extends HttpServlet {
             request.setAttribute("organizzatore",org);
             request.setAttribute("idE",idE);
             String address = "/WEB-INF/gestioneEventi/BioOrganizzatore.jsp";
+            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+            dispatcher.forward(request, response);
+        }
+        String goToTipo=request.getParameter("goToTipoEventi");
+        if(goToTipo!=null){
+            //in service
+            EventoDAOImpl eventoDao=new EventoDAOImpl();
+            List<EventoBean> eventi= null;
+
+            if(goToTipo.compareTo("teatro")==0){
+                eventi=eventoDao.doRetrieveAllByTeatroAttiviNonScaduti();
+            }else{
+                eventi=eventoDao.doRetrieveAllByMostraAttiviNonScaduti();
+            }
+            request.setAttribute("eventi",eventi);
+            String address="/WEB-INF/index.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
             dispatcher.forward(request, response);
         }

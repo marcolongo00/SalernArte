@@ -22,20 +22,7 @@
             <!-- il div con i campi da compilare-->
             <div class="campi tipo">
                 <p class="titolo"> Login: </p>
-                <a id="Linkreg">Non sei ancora iscritto?</a> <br>
-
-                <input type="radio" id="Utente" name="tipoUtente" value="utente">
-                <label for="Utente"><b>Utente</b></label>
-
-                <input type="radio" id="Scolaresca" name="tipoUtente" value="scolaresca">
-                <label for="Scolaresca"><b>Scolaresca</b></label>
-
-                <input type="radio" id="Organizzatore" name="tipoUtente" value="organizzatore">
-                <label for="Organizzatore"><b>Organizzatore</b></label>
-
-
-                <input type="radio" id="Amministratore" name="tipoUtente" value="amministratore">
-                <label for="Amministratore"><b>Amministratore</b></label><br>
+                <a id="Linkreg" href="registrazione-controller?goToRegistrazione=true"> Non sei ancora iscritto? </a> <br>
 
                 <label for="email"><b>email: </b></label> <br>
                 <input type="text" id="email" name="email" required> <br>

@@ -16,7 +16,7 @@
 <a href="gestione-eventi?idE=${idE}&detailsE=true">torna all'evento </a><br>
 
 nome : ${organizzatore.nome}
-nome : ${organizzatore.cognome}
+cognome : ${organizzatore.cognome} <br>
 foto...<br>
 biografia: ${organizzatore.biografia}
 </body>

@@ -39,10 +39,19 @@ public class CarrelloBean { //un attimo n pausa, rivedere bean, dao e daoimpl qu
         public double getPrezzoTot(){ return  this.prezzoBigl*this.quantita; }
     }
 
-    private boolean tipoUtente; //true= utente registrato, false=scolaresca
     private LinkedHashMap<Integer, BigliettoQuantita> prodotti = new LinkedHashMap<>();
+    private int idUtente;
+
     public CarrelloBean() {
     }
+
+    public CarrelloBean(int idUtente) {
+        this.idUtente = idUtente;
+    }
+
+    public int getIdUtente() { return idUtente; }
+
+    public void setIdUtente(int idUtente) { this.idUtente = idUtente; }
 
     public Collection<BigliettoQuantita> getProdotti() {
         return prodotti.values();
@@ -52,7 +61,7 @@ public class CarrelloBean { //un attimo n pausa, rivedere bean, dao e daoimpl qu
         return prodotti.get(prodId);
     }
 
-    public void put(EventoBean evento, int quantita, int prezzoBigl) {
+    public void put(EventoBean evento, int quantita, double prezzoBigl) {
         prodotti.put(evento.getId(), new BigliettoQuantita(evento, quantita,prezzoBigl));
     }
     public boolean contains(BigliettoQuantita x){

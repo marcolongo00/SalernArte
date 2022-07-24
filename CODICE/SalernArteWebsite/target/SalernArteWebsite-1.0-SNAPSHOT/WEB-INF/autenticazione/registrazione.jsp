@@ -20,7 +20,7 @@
         </div>
         <p class="titolo" style="margin-bottom:5px">Sign In:</p>
         <div class="tipo">
-            <a  id="Linklog">Sei già iscritto?</a>
+            <a id="Linklog" href="autenticazione-controller?goToLogin=true"> Sei già iscritto? </a> <br>
         </div>
 
         <form name="reg" action="registrazione-controller" method="post">

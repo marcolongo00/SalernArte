@@ -17,8 +17,9 @@
     <form action="autenticazione-controller" method="get" >
         <c:choose>
             <c:when test="${sessionScope.selezionato !=null}">
-               Ciao  ${sessionScope.selezionato.nome}
-                <input type="submit" name="logout" value="logout">
+               Ciao  ${sessionScope.selezionato.nome} tu sei ${sessionScope.tipoUtente}
+                <input type="submit" name="logout" value="logout"> <br>
+                <a href="area-utente?goToProfilo=true"> PROFILO UTENTE </a> <br>
             </c:when>
             <c:otherwise>
                 <input type="submit" name="goToLogin" value="login">
@@ -38,7 +39,11 @@
 </form>
 </c:if>
 <c:if test="${(sessionScope.selezionato !=null) and (sessionScope.tipoUtente=='amministratore')}">
-<a href="gestione-eventi?goToAllRichiesteEventi=true"> RICHIESTE EVENTI </a>
+<a href="gestione-eventi?goToAllRichiesteEventi=true"> RICHIESTE EVENTI </a> <br>
+<a href="area-utente?listaUtenti=true"> LISTA UTENTI </a>
 </c:if>
+<br>
+<a href="gestione-eventi?goToTipoEventi=teatro"> EVENTI TEATRALI </a> <br>
+<a href="gestione-eventi?goToTipoEventi=mostra"> EVENTI MOSTRE </a>
 
 

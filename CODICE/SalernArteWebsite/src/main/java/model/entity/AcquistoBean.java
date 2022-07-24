@@ -2,24 +2,29 @@ package model.entity;
 
 import java.sql.Date;
 
-public class FatturaBean {
+public class AcquistoBean {
 
     private int numOrdine,idUtente;
     private Date  data;
     private double totale;
-    private String prodotti;
-    private boolean tipoUtente; //true= utente registrato, false=scolaresca
+    private String prodotti; //string e non list eprchè se i pordotti vengono rimossi dal sito, la lista di prodotti nell'acquisto rimane
 
-    public FatturaBean() {
+    public AcquistoBean() {
     }
 
-    public FatturaBean(int numOrdine, int idUtente, Date data, double totale, String prodotti, boolean tipoUtente) {
+    public AcquistoBean(int numOrdine, int idUtente, Date data, double totale, String prodotti) {
         this.numOrdine = numOrdine;
         this.idUtente = idUtente;
         this.data = data;
         this.totale = totale;
         this.prodotti = prodotti;
-        this.tipoUtente = tipoUtente;
+    }
+
+    public AcquistoBean(int idUtente, Date data, double totale, String prodotti) {
+        this.idUtente = idUtente;
+        this.data = data;
+        this.totale = totale;
+        this.prodotti = prodotti;
     }
 
     public int getNumOrdine() {
@@ -42,10 +47,6 @@ public class FatturaBean {
         return prodotti;
     }
 
-    public boolean isTipoUtente() {
-        return tipoUtente;
-    }
-
     public void setNumOrdine(int numOrdine) {
         this.numOrdine = numOrdine;
     }
@@ -66,10 +67,6 @@ public class FatturaBean {
         this.prodotti = prodotti;
     }
 
-    public void setTipoUtente(boolean tipoUtente) {
-        this.tipoUtente = tipoUtente;
-    }
-
     @Override
     public String toString() {
         return "FatturaBean{" +
@@ -78,7 +75,6 @@ public class FatturaBean {
                 ", data=" + data +
                 ", totale=" + totale +
                 ", prodotti='" + prodotti + '\'' +
-                ", tipoUtente=" + tipoUtente +
                 '}';
     }
 }

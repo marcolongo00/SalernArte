@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.List;
 
 public class GestioneEventiServiceImpl implements GestioneEventiService{
     private EventoDAO daoEvento;
@@ -68,6 +69,24 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         //nel acso di rifiuto inseirmento l'evento viene rimosso. nel caso di rifiuta modifica no,
         // si riporta allo stato di prima e si avvisa l'organizzatore
         daoEvento.doDelete(idEvento);
+    }
+
+    @Override
+    public EventoBean retriveEventoById(int idEvento) {
+        EventoBean result= daoEvento.doRetrieveById(idEvento);
+        if(result==null){
+            throw new RuntimeException(); //myException si è verificato un errore evento non esiste ciao
+        }
+        return result;
+    }
+
+    @Override
+    public List<EventoBean> retriveAllRichiesteEventi(String tipoUtente) {
+        if(tipoUtente==null || tipoUtente.compareTo("amministratore")!=0){
+            throw  new RuntimeException(); // errore my exception
+        }
+        //differenzia la modifica e gli altri eventi non attivi. non so ancora come
+        return daoEvento.doRetrieveAllEventiNonAttivi();
     }
 
     private boolean getTypeEvento(String tipoEvento){
