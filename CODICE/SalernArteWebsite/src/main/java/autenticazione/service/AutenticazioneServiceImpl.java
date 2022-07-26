@@ -1,11 +1,14 @@
 package autenticazione.service;
 
 import model.dao.*;
+import model.entity.CarrelloBean;
 import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import model.entity.CarrelloBean.BigliettoQuantita;
 
 public class AutenticazioneServiceImpl implements AutenticazioneService{
     private UtenteRegistratoDAO daoU;
@@ -49,5 +52,27 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
         allUtenti.addAll(new AmministratoreDAOImpl().doRetrieveAll());
 
         return  allUtenti;
+    }
+
+    @Override
+    public CarrelloBean mergeCarrelloSessioneAndCarrelloDBAfterLogin(UtenteRegistratoBean utenteRegistratoBean, CarrelloBean carrelloSessione) {
+        CarrelloDAO daoCarr= new CarrelloDAOImpl(); //da testare
+
+        if(carrelloSessione!=null ){
+            CarrelloBean saved=daoCarr.doRetrieveByIdUtente(utenteRegistratoBean.getId());
+            Collection<BigliettoQuantita> prodotti=carrelloSessione.getProdotti();
+            if(!prodotti.isEmpty()) // e se non sono empty? non ci dovrebbe inetressare eprchè poi ci pensa la gotocarrello
+                for (BigliettoQuantita bi: prodotti) {
+                    if(saved.contains(bi)){
+                        if(bi.getQuantita() != saved.get(bi.getProdotto().getId()).getQuantita())
+                            daoCarr.doUpdateQuantita(utenteRegistratoBean.getId(),bi);
+                    }
+                    else
+                        daoCarr.doSave(utenteRegistratoBean.getId(),bi);
+                }
+        }else{
+                carrelloSessione=daoCarr.doRetrieveByIdUtente(utenteRegistratoBean.getId()) ;
+        }
+        return carrelloSessione;
     }
 }

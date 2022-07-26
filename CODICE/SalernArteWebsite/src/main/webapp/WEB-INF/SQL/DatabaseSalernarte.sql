@@ -154,7 +154,8 @@ insert into Evento(idOrganizzatore,nome,tipo,descrizione,pathFoto,numBiglietti,d
 
 insert into RichiestaEvento(idEvento,idEventoTemp) values
 (2,3);
-
+ 
+ 
 # eventi da inserire ma non modifica
 SELECT 
     *

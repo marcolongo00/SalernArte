@@ -44,6 +44,9 @@
 </c:if>
 <br>
 <a href="gestione-eventi?goToTipoEventi=teatro"> EVENTI TEATRALI </a> <br>
-<a href="gestione-eventi?goToTipoEventi=mostra"> EVENTI MOSTRE </a>
+<a href="gestione-eventi?goToTipoEventi=mostra"> EVENTI MOSTRE </a><br>
 
+<c:if test="${(sessionScope.tipoUtente=='utente') or (sessionScope.tipoUtente=='scolaresca') or (sessionScope.selezionato==null)}">
+<a href="gestione-acquisti?goToCarrello=true"> CARRELLO </a> <br>
+</c:if>
 

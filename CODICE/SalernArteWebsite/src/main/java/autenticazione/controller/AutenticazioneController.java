@@ -3,10 +3,7 @@ package autenticazione.controller;
 import autenticazione.service.AutenticazioneService;
 import autenticazione.service.AutenticazioneServiceImpl;
 import model.dao.*;
-import model.entity.AmministratoreBean;
-import model.entity.OrganizzatoreBean;
-import model.entity.ScolarescaBean;
-import model.entity.UtenteRegistratoBean;
+import model.entity.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -41,6 +38,19 @@ public class AutenticazioneController extends HttpServlet {
             String tipoUtente=UtenteRegistratoDAOImpl.doRetriveTipoUtenteByEmail(email);
 
             UtenteRegistratoBean utente=serviceA.loginUtente(email,password,tipoUtente);
+            if(utente!=null){
+                CarrelloBean carrello= (CarrelloBean) session.getAttribute("carrello");
+                if(utente.getTipoUtente().compareTo("utente")!=0 && utente.getTipoUtente().compareTo("scolaresca")!=0 ) {
+                    if(carrello!=null)
+                        session.removeAttribute("carrello");
+                }else{
+                    carrello=serviceA.mergeCarrelloSessioneAndCarrelloDBAfterLogin(utente,carrello);
+                    session.setAttribute("carrello",carrello);
+                }
+            }else{
+                new RuntimeException("errore Login");
+            }
+
             session.setAttribute("selezionato",utente);
             session.setAttribute("tipoUtente",tipoUtente);
 

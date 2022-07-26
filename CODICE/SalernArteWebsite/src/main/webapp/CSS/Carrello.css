@@ -1,0 +1,89 @@
+.carrContainer  {
+    display: list-item;
+    list-style-type: none;
+    max-width: 800px;
+    position: relative;
+    margin: auto;
+    height:80%;
+    overflow-y:auto;
+}
+.empty{
+    width:100%;
+    text-align: center;
+    color: #605E5E;
+}
+.itemCarr{
+    margin: 10px 20px 10px 10px;
+    background-color: rgba(128, 128, 128, 0.22);
+
+}
+img{
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    margin: 2px;
+}
+.itemTitle{
+    margin-left: 120px;
+    color: black;
+    margin-top: 10px;
+    position: absolute;
+    font-weight: bold;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+.center{
+    position: absolute;
+    margin: 50px 10px 20px 120px;
+    color: black;
+    max-width: 663px;
+    max-height: 142px;
+    height: auto;
+}
+.quantita{
+    margin-right: 10px;
+}
+
+.itDelete input[type=submit]{
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.bottonedecoratoblu{
+    color: #4267b2;
+    background-color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 3px;/*bottone rotondo*/
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    transition: all 200ms ease-out;
+}
+/*on the button*/
+.bottonedecoratoblu:hover:enabled{
+    color: #00e6e6;
+    box-shadow: 0 0 0 1px #66ffff;
+    transition: all 200ms ease-out;
+}
+.bottonedecoratoblu:disabled{
+    color: #374685;
+    background-color: #dddddd;
+    cursor: default;
+}
+#sommario{
+    margin: 10px 20px 10px 10px;
+    padding: 10px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: rgba(128, 128, 128, 0.22);
+    background-color: rgba(223, 223, 223, 0.22);
+    text-align: center;
+}
+form{
+    margin-block-end: unset;
+}
+.errorProd{
+    margin-block-start: unset;
+    margin-block-end: 1px;
+    font-size: 15px;
+}
