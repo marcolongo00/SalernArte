@@ -4,5 +4,8 @@ import model.entity.CarrelloBean;
 import model.entity.UtenteRegistratoBean;
 
 public interface GestioneAcquistiService {
-    boolean retrieveCarrelloAggiornato(UtenteRegistratoBean utente, CarrelloBean carrelloSessione);//ritorna un boolean che avvisa l'utente se ci sono elementi da rimuovere nel carrello
+    CarrelloBean retrieveCarrelloUtente(UtenteRegistratoBean utente);
+    boolean controlloElementiCarrello(CarrelloBean carrelloSessione,UtenteRegistratoBean utente);
+    void svuotaCarrello(CarrelloBean carrello,UtenteRegistratoBean utente);
+    void removeEventoFromCarrello(int idE,CarrelloBean carrello, UtenteRegistratoBean utente);
 }

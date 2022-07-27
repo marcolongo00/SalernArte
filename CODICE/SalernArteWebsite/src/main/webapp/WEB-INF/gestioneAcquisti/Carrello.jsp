@@ -8,7 +8,7 @@
 </jsp:include>
 <div class="carrContainer">
     <div id="sommario">
-        <form action="acquisto" method="post">
+        <form action="gestione-acquisti" method="post">
             <c:choose>
                 <c:when test="${empty carrello.prodotti}">
                     <h3 class="empty">NESSUN PRODOTTO NEL CARRELLO</h3>
@@ -60,8 +60,8 @@
 
 
                 <form action="gestione-acquisti" method="get" class="exDelete">
-                    <input type="hidden" name="idM" value="${pq.prodotto.id}">
-                    <input type="submit" class="bottonedecoratoblu" name="removeAllBigl" value="Rimuovi">
+                    <input type="hidden" name="idE" value="${pq.prodotto.id}">
+                    <input type="submit" class="bottonedecoratoblu" name="removeEventoFromCarrello" value="Rimuovi">
                 </form>
             </div>
             <img src="${pq.prodotto.path}" >
@@ -74,10 +74,10 @@
 <script>
     $(document).ready(function () {
         $(".quantita").change(function () {
-            var idM=$(this).attr("id");
+            var idE=$(this).attr("id");
             var val=$("#"+idM+" option:selected").text();
 
-            var url="gestione-acquisti?update-carr-qta=true&idM="+idM+"&qta="+val; //nopn esiste ancora
+            var url="gestione-acquisti?update-carr-qta=true&idE="+idE+"&qta="+val; //nopn esiste ancora
             $.getJSON(url,function (data) {
                 location.reload();
             });

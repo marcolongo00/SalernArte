@@ -7,9 +7,16 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script> <%--per le icone--%>
 <html>
 <head>
     <title>${param.pageTitle}</title>
+    <c:forEach items="${paramValues.get('stylesheet')}" var="par">
+        <link rel="stylesheet" type="text/css" href="${par}">
+    </c:forEach>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="jQuery/myjQuery.js"></script>
+
 </head>
 <body>
 <div>

@@ -24,40 +24,67 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         eventoDao= new EventoDAOImpl();
     }
 
+
     @Override
-    public boolean retrieveCarrelloAggiornato(UtenteRegistratoBean utente, CarrelloBean carrelloSessione) {
-        if (carrelloSessione == null && utente==null) { //devo fare return carrello e gestire diversamente l'alert
-            carrelloSessione = new CarrelloBean(); //asp gestione carrello se non c'è utente con l'id??
-        }else{ //manca if utente esiste o non
-            carrelloSessione=daoCarr.doRetrieveByIdUtente(utente.getId());
+    public CarrelloBean retrieveCarrelloUtente(UtenteRegistratoBean utente) { //forse non serve questa funzione
+        if(utente.getTipoUtente().compareTo("utente")!=0 && utente.getTipoUtente().compareTo("scolaresca")!=0 ) {
+            throw new RuntimeException("operazione non autorizzata");
+        }else{
+            return daoCarr.doRetrieveByIdUtente(utente.getId());
         }
+    }
+
+    @Override
+    public boolean controlloElementiCarrello(CarrelloBean carrelloSessione,UtenteRegistratoBean utente) {
+
         boolean alertCarrello=false; //serve per allertare della presenza di prodotti non più disponibili nel
-                                     // carrello senza automaticamente toglierli dal carrello
+        // carrello senza automaticamente toglierli dal carrello
 
         List<Integer> eventiToRemove= new ArrayList<>(); //eventi passati
-            Collection<BigliettoQuantita> prodotti= carrelloSessione.getProdotti();
-            if(!prodotti.isEmpty()){
-                Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
-                for (BigliettoQuantita bi: prodotti) {
-                    int idE=bi.getProdotto().getId();
-                    EventoBean temp=eventoDao.doRetrieveById(idE);
-                    if(temp==null || temp.getDataFine().before(dataAttuale)){ //evento non esiste più o è scaduto
-                        eventiToRemove.add(idE);
-                        if(utente!=null) //rimuovi anche dal carrello nel db
-                            daoCarr.doDelete(utente.getId(),idE);
-                    }else
-                    if(temp.getNumBiglietti()==0 || temp.getNumBiglietti()<bi.getQuantita()){
-                        alertCarrello=true;
-                    }
-
+        Collection<BigliettoQuantita> prodotti= carrelloSessione.getProdotti();
+        if(!prodotti.isEmpty()){
+            Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
+            for (BigliettoQuantita bi: prodotti) {
+                int idE=bi.getProdotto().getId();
+                EventoBean temp=eventoDao.doRetrieveById(idE);
+                if(temp==null || temp.getDataFine().before(dataAttuale)){ //evento non esiste più o è scaduto
+                    //eventiToRemove.add(idE);
+                    carrelloSessione.remove(idE);
+                    daoCarr.doDelete(utente.getId(),idE); //so che l'utente è != null per precondizione
+                }else
+                if(temp.getNumBiglietti()==0 || temp.getNumBiglietti()<bi.getQuantita()){
+                    alertCarrello=true;
                 }
             }
-
-
-        for(Integer id:eventiToRemove){
-            carrelloSessione.remove(id); //rimuove solo quelli scaduti a livello di data
         }
+
+        /*for(Integer id:eventiToRemove){
+            carrelloSessione.remove(id); //rimuove solo quelli scaduti a livello di data
+        }*/
         return alertCarrello;
+    }
+
+    @Override
+    public void svuotaCarrello(CarrelloBean carrello, UtenteRegistratoBean utente) {
+        if(utente.getTipoUtente().compareTo("utente")!=0 && utente.getTipoUtente().compareTo("scolaresca")!=0 ) {
+            throw new RuntimeException("operazione non autorizzata");
+        }else{
+            daoCarr.svuotaCarrello(utente.getId());
+        }
+    }
+
+    @Override
+    public void removeEventoFromCarrello(int idE, CarrelloBean carrello, UtenteRegistratoBean utente) {
+        // controllo che l'id sia corretto e che nel carrello sia presente il prodotto
+        if(idE<= 0 || eventoDao.doRetrieveById(idE)==null || carrello.get(idE)==null)
+            throw new RuntimeException("qualcosa è andato storto ripsovare");
+
+       if(utente != null && utente.getTipoUtente().compareTo("utente")!=0 && utente.getTipoUtente().compareTo("scolaresca")!=0 ) {
+            throw new RuntimeException("operazione non autorizzata");
+        }else{
+            daoCarr.doDelete(utente.getId(),idE);
+        }
+        carrello.remove(idE);
     }
 
 

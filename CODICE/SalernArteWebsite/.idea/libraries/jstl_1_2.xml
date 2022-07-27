@@ -2,6 +2,8 @@
   <library name="jstl-1.2">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/src/main/webapp/WEB-INF/lib/jstl-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/main/webapp/WEB-INF/lib/json-20200518.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/main/webapp/WEB-INF/lib/gson-2.3.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

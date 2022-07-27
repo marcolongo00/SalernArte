@@ -48,7 +48,7 @@ public class AutenticazioneController extends HttpServlet {
                     session.setAttribute("carrello",carrello);
                 }
             }else{
-                new RuntimeException("errore Login");
+                new RuntimeException("errore Login"); //myException
             }
 
             session.setAttribute("selezionato",utente);
@@ -66,6 +66,7 @@ public class AutenticazioneController extends HttpServlet {
         if(request.getParameter("logout")!=null){
             session.removeAttribute("selezionato");
             session.removeAttribute("tipoUtente");
+            session.removeAttribute("carrello");
 
             String address=request.getHeader("referer");
             if(address==null || address.contains("/autenticazione-controller") || address.trim().isEmpty()){

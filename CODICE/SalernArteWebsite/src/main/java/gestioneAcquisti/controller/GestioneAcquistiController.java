@@ -24,16 +24,48 @@ public class GestioneAcquistiController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GestioneAcquistiService service= new GestioneAcquistiServiceImpl();
         HttpSession session = request.getSession();
+        UtenteRegistratoBean utente= (UtenteRegistratoBean) session.getAttribute("selezionato");
+        CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
 
         if(request.getParameter("goToCarrello")!=null){
-            UtenteRegistratoBean utente= (UtenteRegistratoBean) session.getAttribute("selezionato");
-            CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
-            boolean alertCarrello = service.retrieveCarrelloAggiornato(utente,carrello);
+            boolean alertCarrello=false;
+            if(carrello==null && utente==null){
+                carrello=new CarrelloBean();
+
+            }else if(carrello==null && utente!=null){
+                // non si può mai verificare eprchè se ho fatto il login il carrello non è null ma al più vuoto
+                carrello=service.retrieveCarrelloUtente(utente);
+            }else if(carrello!=null && utente!=null){
+                alertCarrello=service.controlloElementiCarrello(carrello,utente);
+            }
+
             session.setAttribute("carrello",carrello);
             request.setAttribute("alertCarrello",alertCarrello);
             String address="WEB-INF/gestioneAcquisti/Carrello.jsp";
             RequestDispatcher dispatcher=request.getRequestDispatcher(address);
             dispatcher.forward(request,response);
         }
+        if(request.getParameter("svuotaCarrello")!=null){
+            if(utente==null){
+                carrello=new CarrelloBean();
+            }else{
+                service.svuotaCarrello(carrello,utente);
+                carrello=new CarrelloBean(utente.getId());
+            }
+
+            session.setAttribute("carrello", new CarrelloBean());
+        }
+        if(request.getParameter("removeEventoFromCarrello")!=null){
+            int idE= Integer.parseInt(request.getParameter("idE"));
+            service.removeEventoFromCarrello(idE,carrello,utente);
+        }
+        //gestione-acquisti?update-carr-qta=true&idE="+idE+"&qta="+val;
+
+        String address=request.getHeader("referer");
+        if(address==null || address.contains("/gestione-acquisti") || address.trim().isEmpty()){
+            address=".";
+        }
+
+        response.sendRedirect(address);
     }
 }

@@ -56,12 +56,12 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
 
     @Override
     public CarrelloBean mergeCarrelloSessioneAndCarrelloDBAfterLogin(UtenteRegistratoBean utenteRegistratoBean, CarrelloBean carrelloSessione) {
-        CarrelloDAO daoCarr= new CarrelloDAOImpl(); //da testare
+        //da testare
+        CarrelloDAO daoCarr= new CarrelloDAOImpl();
 
-        if(carrelloSessione!=null ){
+        if(carrelloSessione!=null && !carrelloSessione.getProdotti().isEmpty()){
             CarrelloBean saved=daoCarr.doRetrieveByIdUtente(utenteRegistratoBean.getId());
             Collection<BigliettoQuantita> prodotti=carrelloSessione.getProdotti();
-            if(!prodotti.isEmpty()) // e se non sono empty? non ci dovrebbe inetressare eprchè poi ci pensa la gotocarrello
                 for (BigliettoQuantita bi: prodotti) {
                     if(saved.contains(bi)){
                         if(bi.getQuantita() != saved.get(bi.getProdotto().getId()).getQuantita())
