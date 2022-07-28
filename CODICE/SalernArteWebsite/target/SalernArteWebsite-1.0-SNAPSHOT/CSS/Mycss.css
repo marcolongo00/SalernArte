@@ -1,0 +1,587 @@
+body{
+    background-color: #ffffff;
+    font-family: Courier, Monaco, monospace;
+}
+
+a{
+    color: #A0A0A0;/*colore --neretto--*/
+    text-decoration: none;/*per togliere la sottolineatura al link*/
+}
+
+.container{
+    display: flex;/*mode of display*/
+    flex-direction: column;/*how to set our 3 items,children of container*/
+    flex-wrap: wrap;/* how to insert each items wrap: flex items will wrap onto multiple lines, from top to bottom.*/
+    margin: 1%;
+    padding: 0;
+
+}
+
+.items2{
+    display: flex;
+    justify-content: space-between;
+    align-content: flex-end;
+    align-items: flex-end;
+    flex-direction: row;
+}
+
+
+.items3{
+    display: flex;
+    flex-direction: row;/*disposition of the children of items3*/
+    flex-shrink: 6;/*flexible item*/
+    font-size: 1.2rem;/* how huge is the sentence*/
+    align-self: center;/*items position from the first*/
+}
+
+a.header{
+    flex-shrink: 6;/*flexible item*/
+    flex-basis: auto;/*first size of the item*/
+    font-size: 2rem;/* how huge is the sentence*/
+    align-self: center;/*items position from the first*/
+    justify-content: center;/*general position of items*/
+    margin: 0;
+    color: #605E5E;/*colore --neretto--*/
+    text-decoration: none;/*per togliere la sottolineatura al link*/
+    text-transform: uppercase;
+}
+
+.items2Icon{
+    display: flex;
+    flex-direction: row;/*disposition of the children of items2*/
+    justify-content: flex-end;
+    align-items: baseline;
+
+    flex-shrink: 6;/*flexible item*/
+    align-content: center;/*general position of items*/
+    font-size: 1rem;/* how huge is the sentence*/
+}
+
+.items2Icon{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.iconresponsive{
+    display: none;
+}
+
+#login{
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    font-family: Lucida Sans Unicode;
+    opacity: 0.6;
+}
+
+
+.items2 a.sopraIcon2{
+    opacity: 0.5;
+    margin-left: 10px;/*per staccare le icone,altrimenti so troppo vicine*/
+}
+.togglecerca{
+    background-color: rgba(0,0,0,0.4);
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    height: 100%;
+    overflow: auto;
+    right: 0;
+    width: 200px;
+    left: auto;
+}
+.togglecerca input[type=text]{
+    padding: 10px;
+    width: 56%;
+    margin-top: 7%;
+    margin-left: 1%;
+}
+#search{
+    color: #FFFFFF;
+    cursor: pointer;
+    background-color: #c1bdbd;
+    padding: 7px;
+    border: 0;
+}
+
+.items3 a{
+    color: #A0A0A0;/*colore --neretto--*/
+    text-decoration: none;/*per togliere la sottolineatura al link*/
+    text-transform: uppercase;
+    opacity: 0.6;
+    padding: 14px 16px;
+    margin-top: 7px;
+}
+
+a:hover:not(.header):not(.sopraIcon2):not(.logFrase):not(.noOpacityhover):not(.sopraIconMex){
+    opacity: 0.4; /*se vai sopra col cursore l'opacità diminuisce*/
+}
+
+a.logFrase:hover{
+    opacity: 0.5;
+}
+
+a.sopraIcon2:hover{
+    opacity: 0.2;
+}
+
+#show{
+    visibility: hidden;
+}
+
+/*fine header + menu bar*/
+
+/*login*/
+
+#logon input[type=text],input[type=password]{
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc; /*bordo dei campi --grigio--*/
+
+}
+/*bottone accedi*/
+#acc{
+    color: #f5f6f7;
+    background-color: #4267b2;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;/*il cursore a manina*/
+    font-weight: bold;
+    border-radius: 3px;/*bottone rotondo*/
+    width: 50%;
+    margin-top:20px;
+}
+/*on the button*/
+#acc:hover{
+    background-color: #29487d;
+}
+/*press the button*/
+#acc:active{
+    opacity: 0.8;
+}
+/*Center the image and position the close button*/
+.closeLogin{
+    text-align: center;
+   margin: 0;
+    position: relative;
+    z-index: 3;
+}
+
+.campi{
+    text-align: center;
+    padding: 5px;
+}
+
+.tipo{
+    text-align: center;
+    font-family: Courier, Monaco, monospace;
+    opacity: 0.6;
+}
+
+.tipo a{
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    font-weight: bold;
+    font-family: Courier, Monaco, monospace;
+    color: #527cbf;
+    text-decoration: none;
+    font-size: small;
+}
+
+
+.titolo{
+    font-size: 20px;
+    text-align: center;
+}
+
+#forgot{
+    padding-bottom: 8px;
+    padding-top: 16px;
+}
+
+/*logon background*/
+.modal{
+    display: none;
+    position: fixed;
+    z-index: 3;/*over the menu*/
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;/*scroll type*/
+    background-color: rgba(0,0,0,0.4);/*background color*/
+}
+
+
+
+.modalContainer{
+    background-color: white;
+    position: relative;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+#signInContainer{
+    max-width:500px;
+    max-height:600px;}
+#logon .modalContainer{
+    max-width:500px;
+    max-height: 350px;}
+#showaddQ .modalContainer{
+    max-width:800px;
+    max-height: 600px;}
+
+.dati{
+    padding: 2%;
+    display: flex;
+    flex-direction: row;
+}
+
+.dati ::placeholder {
+    font-family: Courier, Monaco, monospace;
+    text-align: center;
+}
+
+#registrami{
+    color: #f5f6f7;
+    background-color: #4267b2;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;/*il cursore a manina*/
+    font-weight: bold;
+    border-radius: 3px;/*bottone rotondo*/
+    width: 50%;
+    margin-left: 25%;
+    margin-top:10px;
+}
+#registrami:disabled{
+    background-color: #b0b0b0;
+    cursor: unset;
+}
+#passRegContainer{
+    display: inline-flex;
+    width:100%;
+}
+::-webkit-scrollbar {
+    width: 6px;
+    height:  6px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+}
+#signInContainer .dati input[type=text],#signInContainer  .dati input[type=number],#signInContainer  input[type="email"],#signInContainer  input[type=password]{
+    display:block;
+    padding: 3%;
+    width: 90%;
+    margin: 0 auto 4% auto;
+    border: 1px solid rgba(160, 160, 159, 1);
+    text-align: center;
+    height: 100%;
+    max-height: 30px;
+    margin-bottom: 10px;
+
+}
+
+.logon-content{
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 40%;
+    height: 60%;
+}
+
+.close{
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.close:hover,.close:focus{
+    opacity: 0.3;
+    cursor: pointer;
+}
+
+/*fine login*/
+
+/*quando user è loggato*/
+
+
+.account{
+    position: relative;
+    width: 20%;
+}
+.account:hover{
+    opacity: 0.3;
+}
+
+.hidemenu{
+    display: flex;
+    flex-direction: column;
+    margin:0 10px;
+}
+.hidemenu i:hover{
+    opacity: 0.6;
+}
+
+.positionDown{
+    position: relative;
+    top: 40%;
+}
+
+.positionUp{
+    position: absolute;
+    left: 25%;
+    top: 35%;
+}
+
+#scrittaAccount{
+    color: #4267b2;
+}
+
+
+.showmenu{
+    display: none;/*diventa flex appena clicchi sull'icona*/
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(47, 46, 46, 0.2);
+    font-size: 13px;
+    max-width: 300px;
+    top: 78px;
+    z-index: 2;
+    position: absolute;
+    margin-right: 50%;
+    width: 150px;
+    right: 0;
+}
+.showmenu ul{
+    padding-inline-end: 10%;
+    padding-inline-start: 20%;/*padding sinistro delle scritte*/
+}
+.showmenu li{
+    width: 135px;
+}
+
+.showmenu a:hover{
+    opacity: 0.6;
+}
+
+/*responsive hidelogin*/
+@media screen and (max-width: 1260px) {
+
+    .positionDown{
+        right: 20%;
+    }
+    .positionUp {
+        left: 7%
+    }
+
+}
+
+
+
+#scrittaAccount{
+text-transform: lowercase;
+}
+
+
+hr{
+    margin: 5px 10px 5px 0px;
+    opacity: 0.4;
+}
+
+
+/*responsive*/
+@media screen and (max-width: 1152px){
+
+    .items2Responsive{
+        background-color: rgba(160, 160, 159, 1);
+        border: solid 1px rgba(255, 255, 255, 1);
+        border-radius: 7px;
+        padding:4px 5px;
+    }
+    .iconresponsive{
+        display: flex;
+        flex-direction: column;
+    }
+    .cercaresponsive{
+        margin-bottom: 15px;
+        margin-top: 10px;
+    }
+    #ricercaresp{
+        border: 0;
+        border-bottom: 1px solid #A0A0A0;
+        background-color: rgba(255, 255, 255, 1);
+        opacity: 0.5;
+        margin:0 8px;
+    }
+    #ricercaresp::placeholder{
+        color: black;
+    }
+    .items2Icon{
+        display: none;
+    }
+    .items3 a{
+        color: #ffffff;
+    }
+    .items3 a:active{
+        color: #ffffff;
+    }
+    .items3{
+        z-index: 2;
+        position: absolute;
+        margin-top: 80px;
+        border: 1px solid #ffffff;
+        color: rgba(255, 255, 255, 1);
+        left: 17px;
+        top: 15px;
+        overflow: auto;/*scroll type*/
+        background-color: rgba(189,189,189,0.95);
+    }
+    .items2Icon{
+        position: initial;
+    }
+
+    /*menu-simbolo responsive*/
+
+
+    .container2{
+        display: inline-block;
+        cursor: pointer;
+    }
+
+
+    .bar1,.bar2,.bar3{
+        width: 32px;
+        height: 5px;
+        background-color: #ffffff;
+        margin: 6px 0;
+        transition: 0.4s;
+    }
+
+    .change .bar1 {
+        -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+        transform: rotate(-45deg) translate(-9px, 6px);
+    }
+
+    .change .bar2 {opacity: 0;}
+
+    .change .bar3 {
+        -webkit-transform: rotate(45deg) translate(-8px, -8px);
+        transform: rotate(45deg) translate(-8px, -8px);
+    }
+
+
+    .items3{
+        display: none;
+        flex-direction: column;/*disposition of the children of items2*/
+        justify-content: flex-start;
+        align-content: flex-start;
+        align-self: flex-start;
+    }
+
+    .items3 a.uno,a.due,a.tre,a.quattro{
+        display: flex;
+    }
+
+    #null{
+        display: none;
+    }
+    #show{
+        visibility: visible;
+    }
+
+    .showmenu{
+        display: none;/*diventa flex appena clicchi sull'icona*/
+        position: relative;
+        font-size: 13px;
+        border: none;
+        font-size: 13px;
+        max-width: 300px;
+        top: 0;
+        margin-right: 0;
+        width: 0;
+        z-index: 0;
+    }
+    .hidemenu {
+        display: flex;
+        position: relative;
+        top: 2%;
+        cursor: pointer;
+        flex-direction: column;
+        margin: 0 15px;
+    }
+    .positionUp {
+        left: 26%;
+        top: 2%;
+    }
+    #scrittaAccount{
+        color: #605E5E;
+    }
+}
+
+
+/*fine responsive*/
+
+
+img.image1{
+    position: relative;
+    border: 4px #ffffff solid;
+    margin-right: 30px;
+    margin-left: 80px;
+}
+
+
+div.testo{
+    bottom: 500px;
+    text-indent: 150px;
+    text-align: left;
+    font-style: italic;
+}
+
+img.image2{
+    position: absolute;
+    top: 800px;
+    right: 875px;
+    border: 10px #ffffff solid;
+}
+
+
+.testo2{
+    text-align: center;
+    text-indent: 250px;
+}
+.bottonedecoratoblu{
+    color: #4267b2;
+    background-color: #fff;
+    cursor: pointer;/*il cursore a manina*/
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 3px;/*bottone rotondo*/
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    transition: all 200ms ease-out;
+    border: 0;
+}
+/*on the button*/
+.bottonedecoratoblu:hover:enabled{
+    color: #00e6e6;
+    box-shadow: 0 0 0 1px #66ffff;
+    transition: all 200ms ease-out;
+}
+.bottonedecoratoblu:disabled{
+    color: #374685;
+    background-color: #dddddd;
+    cursor: default;
+}
+

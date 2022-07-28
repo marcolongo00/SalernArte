@@ -21,13 +21,13 @@
 <div class="contAll">
 
     <div class="imgContainer">
-        <img src="${selectedevento.path}" alt="fotoEvento">
+        <img src="${selectedEvento.path}" alt="fotoEvento">
     </div>
     <div class="fluidDet">
         <div class="messageMod" id="messaggio"></div>
         <div class="mTitle">${selectedEvento.nome}</div>
-        <a href="gestione-eventi?idE=${selectedEvento.id}&bioOrg=true&idOrganizzatore=${selectedEvento.idOrganizzatore}">Bio organizzatore </a>
-        <strong> <div style="text-align: center" id="durataMostra"> Dal <fmt:formatDate value="${selectedEvento.dataInizio}" pattern="dd-MM-yyyy"/>  al <fmt:formatDate value="${selectedMostra.dataFine}" pattern="dd-MM-yyyy"/> </div></strong>
+       <div class="mTitle"> <a href="gestione-eventi?idE=${selectedEvento.id}&bioOrg=true&idOrganizzatore=${selectedEvento.idOrganizzatore}">Bio organizzatore </a> </div>
+        <strong> <div style="text-align: center" id="durataMostra"> Dal <fmt:formatDate value="${selectedEvento.dataInizio}" pattern="dd-MM-yyyy"/>  al <fmt:formatDate value="${selectedEvento.dataFine}" pattern="dd-MM-yyyy"/> </div></strong>
         <div class="mDescr">${selectedEvento.descrizione}</div>
         <strong><div style="text-align: center; margin-top:20px;" id="prezzoBiglietto">Costo biglietto: XXX €</div></strong>
         <c:choose>
@@ -60,7 +60,7 @@
                         <div class="mButtons">
                             <form action="gestione-acquisti" method="get">
                                 <input type="hidden" name="quantita" value="0">
-                                <input type="hidden" name="idM" value="${selecteEvento.id}">
+                                <input type="hidden" name="idE" value="${selectedEvento.id}">
                                 <input type="submit" class="bottonedecoratoblu" name="aggiungiAlCarrello" value="AGGIUNGI AL CARRELLO">
                             </form>
                             <button id="annulla" class="bottonedecoratoblu">ANNULLA</button>

@@ -13,23 +13,6 @@ import java.util.List;
 import model.entity.CarrelloBean.BigliettoQuantita;
 
 public class CarrelloDAOImpl implements  CarrelloDAO{
-    private double getPrezzoBiglietto(int idEvento){
-        try(Connection conn= ConPool.getConnection()){
-            PreparedStatement ps=conn.prepareStatement("SELECT costo FROM Biglietto WHERE evento=?");
-            ps.setInt(1,idEvento);
-            ResultSet rs=ps.executeQuery();
-            double costo=0;
-            if(rs.next()){
-                costo= rs.getDouble("costo");
-            }
-            conn.close();
-            ps.close();
-            rs.close();
-            return costo;
-        }catch (SQLException e){
-            throw  new RuntimeException(e);
-        }
-    }
 
     @Override
     public CarrelloBean doRetrieveByIdUtente(int idUtente) {
@@ -55,7 +38,7 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
                 temp.setAttivo(rs.getBoolean("attivo"));
 
                 int quantita=rs.getInt("quantita");
-                carrello.put(temp,quantita,getPrezzoBiglietto(idE));
+                carrello.put(temp,quantita,new BigliettoDAOImpl().doRetrievePrezzoBigliettoByEvento(idE));
             }
             conn.close();
             ps.close();

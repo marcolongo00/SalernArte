@@ -22,7 +22,7 @@
                     <input type="submit" name="svuotaCarrello" class="bottonedecoratoblu" value="SVUOTA CARRELLO">
                 </c:when>
                 <c:otherwise>
-                    <strong>TOTALE:</strong> ${carrello.prezzoTotC}<br>
+                    <strong>TOTALE:</strong> ${carrello.prezzoTot}<br>
                     <input type="submit" name="completaAcquisto" class="bottonedecoratoblu" value="COMPLETA ACQUISTO" disabled>
                     <input type="submit" name="svuotaCarrello" class="bottonedecoratoblu" value="SVUOTA CARRELLO"><br>
                     <strong> Effettua il login o Registrati per completare l'acquisto </strong>

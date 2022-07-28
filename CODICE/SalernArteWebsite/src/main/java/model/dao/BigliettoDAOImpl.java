@@ -96,4 +96,23 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public double doRetrievePrezzoBigliettoByEvento(int idEvento) {
+        try(Connection conn= ConPool.getConnection()){
+            PreparedStatement ps=conn.prepareStatement("SELECT costo FROM Biglietto WHERE evento=?");
+            ps.setInt(1,idEvento);
+            ResultSet rs=ps.executeQuery();
+            double costo=0;
+            if(rs.next()){
+                costo= rs.getDouble("costo");
+            }
+            conn.close();
+            ps.close();
+            rs.close();
+            return costo;
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+    }
 }

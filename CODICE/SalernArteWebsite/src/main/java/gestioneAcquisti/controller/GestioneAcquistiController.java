@@ -2,7 +2,10 @@ package gestioneAcquisti.controller;
 
 import gestioneAcquisti.service.GestioneAcquistiService;
 import gestioneAcquisti.service.GestioneAcquistiServiceImpl;
+import model.dao.CarrelloDAOImpl;
+import model.dao.EventoDAOImpl;
 import model.entity.CarrelloBean;
+import model.entity.EventoBean;
 import model.entity.UtenteRegistratoBean;
 
 import javax.servlet.RequestDispatcher;
@@ -13,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Date;
+import java.util.Calendar;
 
 
 @WebServlet(name = "GestioneAcquistiController",urlPatterns = "/gestione-acquisti")
@@ -58,6 +63,14 @@ public class GestioneAcquistiController extends HttpServlet {
         if(request.getParameter("removeEventoFromCarrello")!=null){
             int idE= Integer.parseInt(request.getParameter("idE"));
             service.removeEventoFromCarrello(idE,carrello,utente);
+            session.setAttribute("carrello", carrello);
+        }
+        if(request.getParameter("aggiungiAlCarrello")!=null){
+            int quantita=Integer.parseInt(request.getParameter("quantita")); //se non sono numeri darà errore la parse
+            int idE=Integer.parseInt(request.getParameter("idE"));
+            carrello=service.aggiungiAlCarrello(idE,quantita,carrello,utente);
+            request.getSession().setAttribute("notificaAll", "Biglietti aggiunti al carrello."); //per ora non ho la notifica
+            session.setAttribute("carrello", carrello);
         }
         //gestione-acquisti?update-carr-qta=true&idE="+idE+"&qta="+val;
 

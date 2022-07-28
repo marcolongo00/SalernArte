@@ -5,9 +5,10 @@ import model.entity.BigliettoBean;
 import java.util.List;
 
 public interface BigliettoDAO {
-    public List<BigliettoBean> doRetrieveAllByEvento(int idEvento);
-    public void sellBiglietto(int idEvento, int quantita, int numFattura);
-    public void updatePrezzoBigliettoEvento(int idEvento, double costo);
-    public void doSave(int idEvento, double prezzo);
+    List<BigliettoBean> doRetrieveAllByEvento(int idEvento);
+    void sellBiglietto(int idEvento, int quantita, int numFattura);
+    void updatePrezzoBigliettoEvento(int idEvento, double costo);
+    void doSave(int idEvento, double prezzo);
+    double doRetrievePrezzoBigliettoByEvento(int idEvento);
 
 }

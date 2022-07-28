@@ -148,7 +148,7 @@ insert into Organizzatore(id,nome,cognome,biografia,dataDiNascita,sesso,iban) va
 (5,'pluto','prova','prova biografia','1999-07-21',0,'IT17J0300203280772191565161');
 
 insert into Evento(idOrganizzatore,nome,tipo,descrizione,pathFoto,numBiglietti,dataInizio,dataFine,indirizzo,sede,attivo) values
-(5,'evento di pluto',true,'descrizione evento prova','path prova',3,'2022-07-28','2022-08-26','indirizzo prova','sede prova',true),
+(5,'evento di pluto',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-08-26','indirizzo prova','sede prova',true),
 (5,'evento di pluto 2',false,'descrizione evento prova 2','path prova 2',3,'2022-07-22','2022-07-27','indirizzo prova 2','sede prova 2',false),
 (5,'evento di pluto 2 modificato',false,'descrizione evento prova 2 modificato','path prova 2',3,'2022-07-22','2022-07-27','indirizzo prova 2','sede prova 2',false);
 
