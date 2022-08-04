@@ -48,5 +48,8 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-commons:1.7.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.7.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.7.0" level="project" />
+    <orderEntry type="library" name="jstl-1.21" level="project" />
+    <orderEntry type="library" name="gson-2.3" level="project" />
+    <orderEntry type="library" name="json-20200518" level="project" />
   </component>
 </module>

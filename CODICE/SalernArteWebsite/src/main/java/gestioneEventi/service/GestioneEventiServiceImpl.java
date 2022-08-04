@@ -1,9 +1,7 @@
 package gestioneEventi.service;
 
-import model.dao.BigliettoDAO;
-import model.dao.BigliettoDAOImpl;
-import model.dao.EventoDAO;
-import model.dao.EventoDAOImpl;
+import model.dao.*;
+import model.entity.CarrelloBean;
 import model.entity.EventoBean;
 
 import javax.servlet.http.Part;
@@ -15,6 +13,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
+import model.entity.CarrelloBean.BigliettoQuantita;
 
 public class GestioneEventiServiceImpl implements GestioneEventiService{
     private EventoDAO daoEvento;
@@ -87,6 +86,31 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         }
         //differenzia la modifica e gli altri eventi non attivi. non so ancora come
         return daoEvento.doRetrieveAllEventiNonAttivi();
+    }
+
+    @Override
+    public void checkQuantitaCarrello(EventoBean evento, CarrelloBean carrelloSessione) {
+        if (carrelloSessione != null) {
+            BigliettoQuantita biQta=carrelloSessione.get(evento.getId());
+            if (biQta != null) {
+                int qtaCarr= evento.getNumBiglietti()-biQta.getQuantita();
+                    evento.setNumBiglietti(qtaCarr);
+            }
+        }
+    }
+
+    @Override
+    public boolean checkScaduta(EventoBean evento) {
+        Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
+        if(evento.getDataFine().before(dataAttuale)){
+            return true;
+        }
+        return  false;
+    }
+
+    @Override
+    public double getPrezzoEvento(int idEvento) {
+        return daoBiglietto.doRetrievePrezzoBigliettoByEvento(idEvento);
     }
 
     private boolean getTypeEvento(String tipoEvento){

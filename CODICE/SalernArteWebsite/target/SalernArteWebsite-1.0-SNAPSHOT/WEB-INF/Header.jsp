@@ -14,11 +14,13 @@
     <c:forEach items="${paramValues.get('stylesheet')}" var="par">
         <link rel="stylesheet" type="text/css" href="${par}">
     </c:forEach>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="jQuery/myjQuery.js"></script>
 
     <link rel="stylesheet" type="text/css" href="CSS/Mycss.css">
     <link rel="stylesheet" type="text/css" href="CSS/Footer.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="jQuery/myjQuery.js"></script>
+    <script src="JS/ricerca.js"></script>
 
 </head>
 <body>
@@ -63,3 +65,29 @@
 
 </div>
 
+<a class="sopraIcon2"><i class="fa fa-search" id="showbarracerca" style="font-size: 23px;color: #605E5E"></i></a>
+<div class="togglecerca">
+    <form action="gestione-eventi" method="post">
+        <input type="text" name="query" list="ricerca-datalist" placeholder="Esplora" onkeyup="ricerca(this.value)" value="">
+        <datalist id="ricerca-datalist"></datalist>
+        <input type="submit" id="search" name="ricercaEventi" value="Search">
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+
+        $(".togglecerca").css("display","none");
+        $("#showbarracerca").click(function () {
+            $(".togglecerca").toggle();
+            if($(".togglecerca").is(':visible')){
+                $(".items2Icon").css("right","206px");
+            }else{
+                $(".items2Icon").css("right","10px");
+            }
+
+        });
+
+
+    });
+
+</script>

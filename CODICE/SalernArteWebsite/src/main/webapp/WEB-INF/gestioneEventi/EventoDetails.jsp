@@ -29,7 +29,7 @@
        <div class="mTitle"> <a href="gestione-eventi?idE=${selectedEvento.id}&bioOrg=true&idOrganizzatore=${selectedEvento.idOrganizzatore}">Bio organizzatore </a> </div>
         <strong> <div style="text-align: center" id="durataMostra"> Dal <fmt:formatDate value="${selectedEvento.dataInizio}" pattern="dd-MM-yyyy"/>  al <fmt:formatDate value="${selectedEvento.dataFine}" pattern="dd-MM-yyyy"/> </div></strong>
         <div class="mDescr">${selectedEvento.descrizione}</div>
-        <strong><div style="text-align: center; margin-top:20px;" id="prezzoBiglietto">Costo biglietto: XXX €</div></strong>
+        <strong><div style="text-align: center; margin-top:20px;" id="prezzoBiglietto">Costo biglietto: ${prezzoBigl} €</div></strong>
         <c:choose>
             <c:when test="${selectedEvento.numBiglietti eq 0}">
                 <h3 id="soldOut">SOLD OUT</h3>

@@ -5,6 +5,7 @@ import gestioneEventi.service.GestioneEventiServiceImpl;
 import model.dao.EventoDAO;
 import model.dao.EventoDAOImpl;
 import model.dao.OrganizzatoreDAOImpl;
+import model.entity.CarrelloBean;
 import model.entity.EventoBean;
 import model.entity.OrganizzatoreBean;
 
@@ -16,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "GestioneEventiController",urlPatterns = "/gestione-eventi")
@@ -33,7 +35,13 @@ public class GestioneEventiController extends HttpServlet {
             int idE = Integer.parseInt(request.getParameter("idE"));
 
             EventoBean evento = serviceE.retriveEventoById(idE);
+            CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
+            serviceE.checkQuantitaCarrello(evento,carrello);
+            boolean alertScaduta=serviceE.checkScaduta(evento);
+            double prezzoBiglietto=serviceE.getPrezzoEvento(evento.getId());
             request.setAttribute("selectedEvento", evento);
+            request.setAttribute("alertScaduta",alertScaduta);
+            request.setAttribute("prezzoBigl",prezzoBiglietto);
 
             String address = "/WEB-INF/gestioneEventi/EventoDetails.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
@@ -81,6 +89,18 @@ public class GestioneEventiController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
             dispatcher.forward(request, response);
         }
+        if(request.getParameter("ricercaEventi")!=null){
+            // nel service
+            String query=request.getParameter("query")+"*";
+            if(query.trim().length()>1){
+                List<EventoBean> eventi=new EventoDAOImpl().doRetrieveByNomeOrDescrizione(query);
+                request.setAttribute("eventi",eventi);
+            }
+
+            String address="WEB-INF/Ricerca.jsp";
+            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
+            dispatcher.forward(request,response);
+        }
         if(request.getParameter("inviaRichiestaEvento")!=null){
             OrganizzatoreBean organizzatore= (OrganizzatoreBean) session.getAttribute("selezionato"); //controllo sull'utente
             Date dataInizio=Date.valueOf(request.getParameter("dataInizio"));
@@ -103,7 +123,8 @@ public class GestioneEventiController extends HttpServlet {
             String sede=request.getParameter("sede");
 
             serviceE.richiediInserimentoEvento(organizzatore.getId(),nome,tipoEvento,descrizione,pathSave,filePhoto,numBiglietti,prezzo,dataInizio,dataFine,indirizzo,sede);
-
+            //gestione biglietti
+            //gestione richiesta modifica
         }else
             if(request.getParameter("accettaIns")!=null){
             //contorlla errori
@@ -119,7 +140,7 @@ public class GestioneEventiController extends HttpServlet {
 
             serviceE.rimuoviEvento(idEvento,tipoUtente);
                 }
-        String address=request.getHeader("referer");
+        String address=request.getHeader("referer"); //gli da fastidio, devi completamente separare dispatcher e referer
         if(address==null || address.contains("/gestione-eventi") || address.trim().isEmpty()){
             address=".";
         }
