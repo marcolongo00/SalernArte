@@ -47,7 +47,7 @@ public class EventoDAOImpl implements EventoDAO{
         try(Connection conn=ConPool.getConnection()){
             List<EventoBean> lista= new ArrayList<>();
             Statement st=conn.createStatement();
-            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() < dataFine AND attivo=true");
+            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() < dataFine AND attivo=true"); //attenzione modifica
             while(rs.next()){
                 int idEv=rs.getInt("id");
                 int idOrg=rs.getInt("idOrganizzatore");
@@ -78,7 +78,7 @@ public class EventoDAOImpl implements EventoDAO{
         try(Connection conn=ConPool.getConnection()){
             List<EventoBean> lista= new ArrayList<>();
             Statement st=conn.createStatement();
-            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() < dataFine AND attivo=false");
+            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() < dataFine AND attivo=false"); //attenzione modifica
             while(rs.next()){
                 int idEv=rs.getInt("id");
                 int idOrg=rs.getInt("idOrganizzatore");
@@ -109,7 +109,7 @@ public class EventoDAOImpl implements EventoDAO{
         try(Connection conn=ConPool.getConnection()){
             List<EventoBean> lista= new ArrayList<>();
             Statement st=conn.createStatement();
-            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() < dataFine AND attivo=true AND tipo=true");
+            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() < dataFine AND attivo=true AND tipo=true");//attenzione modifica
             while(rs.next()){
                 int idEv=rs.getInt("id");
                 int idOrg=rs.getInt("idOrganizzatore");
@@ -140,7 +140,7 @@ public class EventoDAOImpl implements EventoDAO{
         try(Connection conn=ConPool.getConnection()){
             List<EventoBean> lista= new ArrayList<>();
             Statement st=conn.createStatement();
-            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() < dataFine AND attivo=true AND tipo=false");
+            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() < dataFine AND attivo=true AND tipo=false");//attenzione modifica
             while(rs.next()){
                 int idEv=rs.getInt("id");
                 int idOrg=rs.getInt("idOrganizzatore");
@@ -170,7 +170,7 @@ public class EventoDAOImpl implements EventoDAO{
     public List<EventoBean> doRetrieveByOrganizzatore(int idOrg) {
         try(Connection conn=ConPool.getConnection()){
             List<EventoBean> lista= new ArrayList<>();
-            PreparedStatement ps =conn.prepareStatement("SELECT * FROM Evento WHERE idOrganizzatore=?");
+            PreparedStatement ps =conn.prepareStatement("SELECT * FROM Evento WHERE idOrganizzatore=? AND id not in(SELECT idEvento FROM RichiestaEvento)");
             ps.setInt(1,idOrg);
             ResultSet rs=ps.executeQuery();
             while(rs.next()){
@@ -201,7 +201,7 @@ public class EventoDAOImpl implements EventoDAO{
     public List<EventoBean> doRetrieveByNomeOrDescrizione(String against) {
         List<EventoBean> lista=new ArrayList<>();
         try(Connection con=ConPool.getConnection()){
-            PreparedStatement ps=con.prepareStatement("select * from Evento where match(nome,descrizione) Against(? in boolean mode)");
+            PreparedStatement ps=con.prepareStatement("select * from Evento where match(nome,descrizione) Against(? in boolean mode) and attivo=true");
             ps.setString(1,against);
             ResultSet rs=ps.executeQuery();
             while(rs.next()){
@@ -225,6 +225,68 @@ public class EventoDAOImpl implements EventoDAO{
             rs.close();
             return lista;
         }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<EventoBean> doRetrieveAllRichiesteInserimento() {
+        try(Connection conn=ConPool.getConnection()){
+            List<EventoBean> lista= new ArrayList<>();
+            Statement st=conn.createStatement();
+            ResultSet rs=st.executeQuery("SELECT * FROM Evento as e LEFT JOIN RichiestaEvento as r on e.id=r.idEvento WHERE CURRENT_DATE() <= dataFine AND attivo=false AND r.idEvento IS NULL AND e.id not in (SELECT idEventoTemp FROM RichiestaEvento)");
+            while(rs.next()){
+                int idEv=rs.getInt("id");
+                int idOrg=rs.getInt("idOrganizzatore");
+                String nome=rs.getString("nome");
+                boolean tipo=rs.getBoolean("tipo");
+                String desc=rs.getString("descrizione");
+                String path=rs.getString("pathFoto");
+                int numBiglietti=rs.getInt("numBiglietti");
+                Date dataInizio=rs.getDate("dataInizio");
+                Date dataFine= rs.getDate("dataFine");
+                String indirizzo= rs.getString("indirizzo");
+                String sede=rs.getString("sede");
+                boolean attivo=rs.getBoolean("attivo");
+
+                lista.add(new EventoBean(idEv,idOrg,dataInizio,dataFine,nome,path,desc,indirizzo,sede,numBiglietti,tipo,attivo));
+            }
+            conn.close();
+            st.close();
+            rs.close();
+            return lista;
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<EventoBean> doRetrieveAllRichiesteModifiche() {
+        try(Connection conn=ConPool.getConnection()){
+            List<EventoBean> lista= new ArrayList<>();
+            Statement st=conn.createStatement();
+            ResultSet rs=st.executeQuery("SELECT * FROM Evento WHERE CURRENT_DATE() <= dataFine AND attivo=false AND id in( select idEventoTemp from RichiestaEvento)");
+            while(rs.next()){
+                int idEv=rs.getInt("id");
+                int idOrg=rs.getInt("idOrganizzatore");
+                String nome=rs.getString("nome");
+                boolean tipo=rs.getBoolean("tipo");
+                String desc=rs.getString("descrizione");
+                String path=rs.getString("pathFoto");
+                int numBiglietti=rs.getInt("numBiglietti");
+                Date dataInizio=rs.getDate("dataInizio");
+                Date dataFine= rs.getDate("dataFine");
+                String indirizzo= rs.getString("indirizzo");
+                String sede=rs.getString("sede");
+                boolean attivo=rs.getBoolean("attivo");
+
+                lista.add(new EventoBean(idEv,idOrg,dataInizio,dataFine,nome,path,desc,indirizzo,sede,numBiglietti,tipo,attivo));
+            }
+            conn.close();
+            st.close();
+            rs.close();
+            return lista;
+        }catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
@@ -328,6 +390,27 @@ public class EventoDAOImpl implements EventoDAO{
                 throw new RuntimeException("DELETE error");
             conn.close();
             ps.close();
+
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+    }
+
+    public int retieveEventoFromidEventoModifica(int idEventoTemp){
+        try(Connection conn=ConPool.getConnection()){
+            PreparedStatement ps=conn.prepareStatement("SELECT idEvento FROM RichiestaEvento WHERE idEventoTemp=?");
+            ps.setInt(1,idEventoTemp);
+            ResultSet rs=ps.executeQuery();
+            EventoBean temp=null;
+            int idEv=0;
+            if(rs.next()){ //elimini il duplicato del'evento e poi rimuovi la richiesta
+                idEv=rs.getInt("idEvento");
+            }
+
+            conn.close();
+            rs.close();
+            ps.close();
+            return idEv;
 
         }catch (SQLException e){
             throw  new RuntimeException(e);

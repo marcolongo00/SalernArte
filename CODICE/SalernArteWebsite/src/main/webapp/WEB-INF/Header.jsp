@@ -10,6 +10,7 @@
 <script src="https://kit.fontawesome.com/a076d05399.js"></script> <%--per le icone--%>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${param.pageTitle}</title>
     <c:forEach items="${paramValues.get('stylesheet')}" var="par">
         <link rel="stylesheet" type="text/css" href="${par}">
@@ -50,9 +51,12 @@
 <form action="gestione-eventi" method="get">
     <input type="submit" style="margin: 5px;" name="goToRichiestaEvento" value="Richiedi Evento">
 </form>
+    <a href="gestione-eventi?goToEventiOrganizzatore=true">I TUOI EVENTI</a>
 </c:if>
 <c:if test="${(sessionScope.selezionato !=null) and (sessionScope.tipoUtente=='amministratore')}">
     <a href="gestione-eventi?goToAllRichiesteEventi=true" style="margin: 5px;"> RICHIESTE EVENTI</a> <br>
+    <a href="gestione-eventi?goToRichiesteInserimento=true" style="margin: 5px;"> RICHIESTE INSERIMENTO EVENTI</a> <br>
+    <a href="gestione-eventi?goToRichiesteModifica=true" style="margin: 5px;"> RICHIESTE MODIFICHE EVENTI</a> <br>
 <a href="area-utente?listaUtenti=true" style="margin: 5px;"> LISTA UTENTI </a>
 </c:if>
 <br>

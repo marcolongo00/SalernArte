@@ -58,12 +58,22 @@ public class GestioneAcquistiController extends HttpServlet {
                 carrello=new CarrelloBean(utente.getId());
             }
 
-            session.setAttribute("carrello", new CarrelloBean());
+            session.setAttribute("carrello",carrello);
+            String address="WEB-INF/gestioneAcquisti/Carrello.jsp";
+            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
+            dispatcher.forward(request,response);
         }
         if(request.getParameter("removeEventoFromCarrello")!=null){
             int idE= Integer.parseInt(request.getParameter("idE"));
             service.removeEventoFromCarrello(idE,carrello,utente);
             session.setAttribute("carrello", carrello);
+
+            String address=request.getHeader("referer");
+            if(address==null || address.contains("/gestione-acquisti") || address.trim().isEmpty()){
+                address=".";
+            }
+
+            response.sendRedirect(address);
         }
         if(request.getParameter("aggiungiAlCarrello")!=null){
             int quantita=Integer.parseInt(request.getParameter("quantita")); //se non sono numeri darà errore la parse
@@ -71,14 +81,13 @@ public class GestioneAcquistiController extends HttpServlet {
             carrello=service.aggiungiAlCarrello(idE,quantita,carrello,utente);
             request.getSession().setAttribute("notificaAll", "Biglietti aggiunti al carrello."); //per ora non ho la notifica
             session.setAttribute("carrello", carrello);
-        }
-        //gestione-acquisti?update-carr-qta=true&idE="+idE+"&qta="+val;
 
-        String address=request.getHeader("referer");
-        if(address==null || address.contains("/gestione-acquisti") || address.trim().isEmpty()){
-            address=".";
-        }
+            String address=request.getHeader("referer");
+            if(address==null || address.contains("/gestione-acquisti") || address.trim().isEmpty()){
+                address=".";
+            }
 
-        response.sendRedirect(address);
+            response.sendRedirect(address);
+        }
     }
 }

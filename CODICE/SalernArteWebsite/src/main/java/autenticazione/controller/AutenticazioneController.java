@@ -69,6 +69,8 @@ public class AutenticazioneController extends HttpServlet {
             session.removeAttribute("carrello");
 
             String address=request.getHeader("referer");
+            //attenzione alle pagine in cui un utente non ha il permesso di stare
+            //a questo punto andrei alla homepage
             if(address==null || address.contains("/autenticazione-controller") || address.trim().isEmpty()){
                 address=".";
             }

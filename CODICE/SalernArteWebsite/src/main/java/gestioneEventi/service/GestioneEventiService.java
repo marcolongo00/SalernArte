@@ -2,6 +2,8 @@ package gestioneEventi.service;
 
 import model.entity.CarrelloBean;
 import model.entity.EventoBean;
+import model.entity.OrganizzatoreBean;
+import model.entity.UtenteRegistratoBean;
 
 import javax.servlet.http.Part;
 import java.sql.Date;
@@ -16,4 +18,9 @@ public interface GestioneEventiService {
     void checkQuantitaCarrello(EventoBean evento, CarrelloBean carrelloSessione);
     boolean checkScaduta(EventoBean evento);
     double getPrezzoEvento(int idEvento);
+    List<EventoBean> retrieveRichiesteInserimento(String tipoUtente);
+    List<EventoBean> retrieveRichiesteModifica(String tipoUtente);
+    void accettaModifica(int idEvento,String tipoUtente);
+    void rifiutaModifica(int idEvento,String tipoUtente);
+    List<EventoBean> retrieveEventiOrganizzatore(UtenteRegistratoBean utente);
 }

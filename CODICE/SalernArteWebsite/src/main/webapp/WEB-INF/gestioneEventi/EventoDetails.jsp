@@ -10,8 +10,21 @@
         <div id="adminButtons">
             <form action="gestione-eventi" method="get">
                 <input type="hidden" class="bottonedecoratoblu" name="idEvento" value="${selectedEvento.id}">
-                <input type="submit" class="bottonedecoratoblu" name="accettaIns" value="ACCETTA">
-                <input type="submit" class="bottonedecoratoblu" name="rifiutaIns" value="RIFIUTA">
+                <c:choose>
+                    <c:when test="${ins}">
+                        inserimento
+                        <input type="submit" class="bottonedecoratoblu" name="accettaIns" value="ACCETTA">
+                        <input type="submit" class="bottonedecoratoblu" name="rifiutaIns" value="RIFIUTA">
+                    </c:when>
+                    <c:when test="${modif}">
+                        modifica
+                        <input type="submit" class="bottonedecoratoblu" name="accettaMod" value="ACCETTA">
+                        <input type="submit" class="bottonedecoratoblu" name="rifiutaMod" value="RIFIUTA">
+                    </c:when>
+                    <c:otherwise>
+                        credo ci sia stato qualche errore, questa non è una richiesta
+                    </c:otherwise>
+                </c:choose>
             </form>
         </div>
     </div>

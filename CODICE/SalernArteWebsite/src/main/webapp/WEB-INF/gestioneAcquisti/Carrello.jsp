@@ -75,9 +75,9 @@
     $(document).ready(function () {
         $(".quantita").change(function () {
             var idE=$(this).attr("id");
-            var val=$("#"+idM+" option:selected").text();
+            var val=$("#"+idE+" option:selected").text();
 
-            var url="gestione-acquisti?update-carr-qta=true&idE="+idE+"&qta="+val; //nopn esiste ancora
+            var url="update-carr-qta?idE="+idE+"&qta="+val; //nopn esiste ancora
             $.getJSON(url,function (data) {
                 location.reload();
             });

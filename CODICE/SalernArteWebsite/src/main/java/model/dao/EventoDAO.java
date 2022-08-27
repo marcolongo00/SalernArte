@@ -13,13 +13,15 @@ public interface EventoDAO {
     * */
 
     EventoBean doRetrieveById(int id);
-    List<EventoBean> doRetrieveAllEventiAttiviNonScaduti();
+    List<EventoBean> doRetrieveAllEventiAttiviNonScaduti(); //attenzione duplicati per modifica
     List<EventoBean> doRetrieveAllEventiNonAttivi();
     List<EventoBean> doRetrieveAllByTeatroAttiviNonScaduti();
     List<EventoBean> doRetrieveAllByMostraAttiviNonScaduti();
     List<EventoBean> doRetrieveByOrganizzatore(int idOrg);
     List<EventoBean> doRetrieveByNomeOrDescrizione(String against); // per la ricerca
-
+    List<EventoBean> doRetrieveAllRichiesteInserimento();
+    List<EventoBean> doRetrieveAllRichiesteModifiche();
+    int retieveEventoFromidEventoModifica(int idEventoTemp);
 
    // public List<EventoBean> doRetrieveAllRichiesteEventi();
    // potrebbe funzionare come doRetrieveAllRichieste e per ogni next della query fare doRetrieveById di evento

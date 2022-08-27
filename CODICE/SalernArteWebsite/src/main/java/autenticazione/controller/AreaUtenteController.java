@@ -27,7 +27,7 @@ public class AreaUtenteController extends HttpServlet {
         AutenticazioneService service=new AutenticazioneServiceImpl();
         if(request.getParameter("listaUtenti")!=null){
             //usa service
-            String tipoUtente= (String) session.getAttribute("tipoUtente");
+            String tipoUtente= (String) session.getAttribute("tipoUtente"); //retrive utente non tipoutente
             List<UtenteRegistratoBean> allUtenti= service.retriveAllUtentiSistema(tipoUtente);
             request.setAttribute("allUtenti",allUtenti);
 

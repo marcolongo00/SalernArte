@@ -112,6 +112,18 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         return carrelloSessione;
     }
 
+    @Override
+    public void updateQuantitaCarrello(int idE, int quantita, CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
+        EventoBean evento= eventoDao.doRetrieveById(idE);
+        if(evento==null) throw new RuntimeException("errore aggiornamento carrello");
+        BigliettoQuantita biQta=carrelloSessione.get(idE);
+        if(biQta==null ) throw new RuntimeException("errore aggiornamento carrello");
+        if(quantita > evento.getNumBiglietti() || quantita<=0 ) throw new NumberFormatException();
+        biQta.setQuantita(quantita);
+        if(utente!= null)
+            daoCarr.doUpdateQuantita(utente.getId(),biQta);
+    }
+
     private void checkAutorizzazioniUtente(UtenteRegistratoBean utente){
         if(utente != null && utente.getTipoUtente().compareTo("utente")!=0 && utente.getTipoUtente().compareTo("scolaresca")!=0 ) {
             throw new RuntimeException("operazione non autorizzata");

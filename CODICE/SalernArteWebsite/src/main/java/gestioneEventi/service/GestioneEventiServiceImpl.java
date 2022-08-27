@@ -14,6 +14,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import model.entity.CarrelloBean.BigliettoQuantita;
+import model.entity.UtenteRegistratoBean;
 
 public class GestioneEventiServiceImpl implements GestioneEventiService{
     private EventoDAO daoEvento;
@@ -42,15 +43,17 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
 
             EventoBean bean= new EventoBean(idOrganizzatore,dataInizio,dataFine,nome,path,descrizione,indirizzo,sede,numBiglietti,getTypeEvento(tipoEvento));
             daoEvento.doSave(bean);
-            //creo tanti biglietti quanto il num inserito e li carico
-            for (int i = 0; i < numBiglietti; i++) {
-                daoBiglietto.doSave(bean.getId(),prezzoBiglietto);
-            }
+            creaBiglietti(numBiglietti,bean.getId(),prezzoBiglietto);
+
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
+    }
+    private void creaBiglietti(int numBiglietti,int idEvento, double prezzoBiglietto){
+        //creo tanti biglietti quanto il num inserito e li carico
+        for (int i = 0; i < numBiglietti; i++) {
+            daoBiglietto.doSave(idEvento,prezzoBiglietto);
+        }
     }
 
     @Override
@@ -71,6 +74,32 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
     }
 
     @Override
+    public void accettaModifica(int idEvento, String tipoUtente) { //anche stessa  funzione con flag per accetta rifiuta
+        if(tipoUtente.compareTo("amministratore")!=0){
+            throw new RuntimeException(); //myexception
+        }
+        //accetto al modifica poi trovo e cancello l'evento con i dati vecchi e in cascade si cancellerà la richiesta
+        int idEventoPreModifica=daoEvento.retieveEventoFromidEventoModifica(idEvento);
+        daoEvento.doUpdateAttivazioneEvento(idEvento,true);
+        EventoBean eventoPre=daoEvento.doRetrieveById(idEventoPreModifica);
+        EventoBean eventoPost=daoEvento.doRetrieveById(idEvento);
+        daoBiglietto.doUpdateBigliettiModificaEvento(eventoPre,eventoPost);
+        daoEvento.doDelete(idEventoPreModifica);
+        //attenzione al pathfoto se è diversp. da eliminare quello vecchio
+    }
+
+    @Override
+    public void rifiutaModifica(int idEvento, String tipoUtente) {
+        if(tipoUtente.compareTo("amministratore")!=0){
+            throw new RuntimeException(); //myexception
+        }
+        //rifiuto la modifica quindi elimino temp e riporto evento originale ad attivo
+        int idEventoPreModifica=daoEvento.retieveEventoFromidEventoModifica(idEvento);
+        daoEvento.doUpdateAttivazioneEvento(idEventoPreModifica,true);
+        daoEvento.doDelete(idEvento);
+    }
+
+    @Override
     public EventoBean retriveEventoById(int idEvento) {
         EventoBean result= daoEvento.doRetrieveById(idEvento);
         if(result==null){
@@ -85,8 +114,34 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             throw  new RuntimeException(); // errore my exception
         }
         //differenzia la modifica e gli altri eventi non attivi. non so ancora come
-        return daoEvento.doRetrieveAllEventiNonAttivi();
+        return daoEvento.doRetrieveAllEventiNonAttivi(); // non va bene perchè ci sono i duplicati di quelli solo modifiche
     }
+
+    @Override
+    public List<EventoBean> retrieveEventiOrganizzatore(UtenteRegistratoBean utente){
+        if(utente==null || utente.getTipoUtente().compareToIgnoreCase("Organizzatore")!=0){ //funzione a prte controllaPermessi(UtenteReg utente, String permesso);
+            throw new RuntimeException("operazione non autorizzata"); //my exception
+        }
+        return daoEvento.doRetrieveByOrganizzatore(utente.getId());
+    }
+
+    @Override
+    public List<EventoBean> retrieveRichiesteInserimento(String tipoUtente) {
+        if(tipoUtente==null || tipoUtente.compareTo("amministratore")!=0){
+            throw  new RuntimeException(); // errore my exception
+        }
+        return daoEvento.doRetrieveAllRichiesteInserimento();
+    }
+
+    @Override
+    public List<EventoBean> retrieveRichiesteModifica(String tipoUtente) {
+        if(tipoUtente==null || tipoUtente.compareTo("amministratore")!=0){
+            throw  new RuntimeException(); // errore my exception
+        }
+        return daoEvento.doRetrieveAllRichiesteModifiche();
+    }
+
+
 
     @Override
     public void checkQuantitaCarrello(EventoBean evento, CarrelloBean carrelloSessione) {
