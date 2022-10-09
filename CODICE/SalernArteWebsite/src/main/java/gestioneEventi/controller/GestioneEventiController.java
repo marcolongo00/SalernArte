@@ -118,6 +118,7 @@ public class GestioneEventiController extends HttpServlet {
                 eventi=eventoDao.doRetrieveAllByMostraAttiviNonScaduti();
             }
             request.setAttribute("eventi",eventi);
+            request.setAttribute("active",goToTipo);
             String address="/WEB-INF/index.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
             dispatcher.forward(request, response);

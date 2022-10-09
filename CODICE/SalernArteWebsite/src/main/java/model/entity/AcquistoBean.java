@@ -27,6 +27,12 @@ public class AcquistoBean {
         this.prodotti = prodotti;
     }
 
+    public AcquistoBean(int idUtente, Date data, double totale) {
+        this.idUtente = idUtente;
+        this.data = data;
+        this.totale = totale;
+    }
+
     public int getNumOrdine() {
         return numOrdine;
     }

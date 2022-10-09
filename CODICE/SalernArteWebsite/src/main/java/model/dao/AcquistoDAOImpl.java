@@ -62,13 +62,12 @@ public class AcquistoDAOImpl implements AcquistoDAO {
     @Override
     public void doSave(AcquistoBean acquisto) {
         try(Connection conn=ConPool.getConnection()){
-            PreparedStatement ps=conn.prepareStatement("INSERT INTO Acquisto(data,totale,idUtente,prodotti) VALUES(?,?,?,?)",
+            PreparedStatement ps=conn.prepareStatement("INSERT INTO Acquisto(data,totale,idUtente) VALUES(?,?,?)",
                     Statement.RETURN_GENERATED_KEYS);
 
             ps.setDate(1,acquisto.getData());
             ps.setDouble(2,acquisto.getTotale());
             ps.setInt(3,acquisto.getIdUtente());
-            ps.setString(4,acquisto.getProdotti());
             if(ps.executeUpdate()!=1)
                 throw new RuntimeException("INSERT error");
             ResultSet rs=ps.getGeneratedKeys();
@@ -99,6 +98,23 @@ public class AcquistoDAOImpl implements AcquistoDAO {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public void setProdotti(int numAcquisto, String prodotti) {
+        try(Connection conn= ConPool.getConnection()){
+            PreparedStatement ps=conn.prepareStatement("UPDATE Acquisto SET prodotti=? WHERE numOrdine=?");
+            ps.setString(1,prodotti);
+            ps.setInt(2,numAcquisto);
+
+            if(ps.executeUpdate()!=1){
+                throw new RuntimeException("SET Prodotti fattura error");
+            }
+            conn.close();
+            ps.close();
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

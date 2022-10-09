@@ -22,7 +22,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
                 temp.setIdBiglietto(rs.getInt("id"));
                 temp.setIdEvento(rs.getInt("evento"));
                 temp.setPrezzo(rs.getDouble("costo"));
-                temp.setFattura(rs.getInt("acquisto"));
+                temp.setNumAcquisto(rs.getInt("acquisto"));
 
                 biglietti.add(temp);
             }
@@ -46,7 +46,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
                 temp.setIdBiglietto(rs.getInt("id"));
                 temp.setIdEvento(rs.getInt("evento"));
                 temp.setPrezzo(rs.getDouble("costo"));
-                temp.setFattura(rs.getInt("acquisto"));
+                temp.setNumAcquisto(rs.getInt("acquisto"));
 
                 biglietti.add(temp);
             }
@@ -70,7 +70,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
                 temp.setIdBiglietto(rs.getInt("id"));
                 temp.setIdEvento(rs.getInt("evento"));
                 temp.setPrezzo(rs.getDouble("costo"));
-                temp.setFattura(rs.getInt("acquisto"));
+                temp.setNumAcquisto(rs.getInt("acquisto"));
 
                 biglietti.add(temp);
             }
@@ -84,7 +84,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
     }
 
     @Override
-    public void sellBiglietto(int idEvento, int quantita, int numFattura) {
+    public void sellBiglietto(int idEvento, int quantita, int numAcquisto) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement psMin=conn.prepareStatement("SELECT MIN(id) FROM Biglietto WHERE evento=? AND acquisto is null");
             psMin.setInt(1,idEvento);
@@ -96,9 +96,9 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             psMin.close();
             PreparedStatement ps= conn.prepareStatement("UPDATE Biglietto SET acquisto=? WHERE id=? AND evento=?");
             //inutile con quantita=0 che non dovrebbe proprio poter essere selezionata
-            //aggiorna anche num biglietti in mostra
+            //aggiorna anche num biglietti in evento
             for(int i=0;i<quantita;i++){
-                ps.setInt(1,numFattura);
+                ps.setInt(1,numAcquisto);
                 ps.setInt(2,min);
                 ps.setInt(3,idEvento);
                 min++;

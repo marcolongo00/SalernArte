@@ -29,7 +29,26 @@
         </div>
     </div>
 </c:if>
-
+<c:if test="${(sessionScope.selezionato !=null) and (sessionScope.tipoUtente=='organizzatore') and  selectedEvento.attivo}">
+    <div class="funzOrg">
+    <div id="orgButtons">
+    <!- JS trsforma caselle in input->
+    <button class="bottonedecoratoblu" id="modMostra" > Modifica evento</button>
+    <button id="modAnnulla" class="bottonedecoratoblu">Annulla</button>
+    <button id="modConferma" class="bottonedecoratoblu">Conferma</button>
+    <form id="formImg" action="update-imm-mostra" method="post" enctype="multipart/form-data"> <!-per ora no->
+        <input type="hidden" name="idE" value="${selectedEvento.id}">
+        <label for="file-upload" class="bottonefileblu">
+            Cambia immagine<input type="file" id="file-upload" name="path" accept="image/*">
+        </label>
+    </form>
+    <form action="delete-mostra" method="get" class="exDelete"><!-per ora no, cambia action del form->
+        <input type="hidden" name="idE" value="${selectedEvento.id}">
+        <input type="submit" id="Elimina" class="bottonedecoratoblu" value="Elimina">
+    </form>
+    </div>
+    </div>
+</c:if>
 
 <div class="contAll">
 
@@ -37,9 +56,15 @@
         <img src="${selectedEvento.path}" alt="fotoEvento">
     </div>
     <div class="fluidDet">
-        <div class="messageMod" id="messaggio"></div>
+        <div class="messageMod" id="messaggio"></div><!- ci potrebbe essere attivo o non attivo->
         <div class="mTitle">${selectedEvento.nome}</div>
-       <div class="mTitle"> <a href="gestione-eventi?idE=${selectedEvento.id}&bioOrg=true&idOrganizzatore=${selectedEvento.idOrganizzatore}">Bio organizzatore </a> </div>
+        <div class="tipoEvento">
+            <c:choose>
+                <c:when test="${selectedEvento.tipo}"> teatro </c:when>
+                <c:otherwise> mostra </c:otherwise>
+             </c:choose>
+        </div>
+       <div class="evBio"> <a href="gestione-eventi?idE=${selectedEvento.id}&bioOrg=true&idOrganizzatore=${selectedEvento.idOrganizzatore}">Bio organizzatore </a> </div><!-usare nome organizzatore->
         <strong> <div style="text-align: center" id="durataMostra"> Dal <fmt:formatDate value="${selectedEvento.dataInizio}" pattern="dd-MM-yyyy"/>  al <fmt:formatDate value="${selectedEvento.dataFine}" pattern="dd-MM-yyyy"/> </div></strong>
         <div class="mDescr">${selectedEvento.descrizione}</div>
         <strong><div style="text-align: center; margin-top:20px;" id="prezzoBiglietto">Costo biglietto: ${prezzoBigl} €</div></strong>
@@ -56,7 +81,6 @@
                         <button id="firstButton" class="bottonedecoratoblu">ACQUISTA BIGLIETTI</button>
                     </div>
                     <div class="carrContainer">
-                            <%--<div id="up">QTA:</div>--%>
                         <div id="carrQta">QUANTITA'</div>
                         <div id="barra">
                             <div class="qtaValue">0</div>

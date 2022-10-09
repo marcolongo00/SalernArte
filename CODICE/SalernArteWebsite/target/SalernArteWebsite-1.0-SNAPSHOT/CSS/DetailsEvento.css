@@ -37,6 +37,7 @@
         height: auto;
     }
     .funzAdmin{position: absolute;}
+    .funzOrg{position: absolute;}
 }
 @media only screen and (max-width: 799px){
     .imgContainer{display: none;}
@@ -46,6 +47,7 @@
         height: 150px;
     }
     .funzAdmin{position: unset;}
+    .funzOrg{position: unset;}
 }
 .contAll{
     width:100%;
@@ -72,6 +74,12 @@
     text-transform: uppercase;
     font-size: 30px;
     margin:30px 0px 10px 0px;
+}
+.tipoEvento, .evBio{
+    text-align: center;
+    text-transform: uppercase;
+    font-size: medium;
+    margin:10px 0px;
 }
 .qTitle{
     position: relative;
@@ -148,7 +156,7 @@
     width: 100%;
 }
 
-.funzAdmin{
+.funzAdmin, .funzOrg {
     width: 100%;
     height: 30px;
 }
@@ -159,10 +167,14 @@
     margin:auto;
     padding:5px;
 }
-
-#modMostra{
-    margin-left: 40px;
+#orgButtons{
+    position: relative;
+    display:flex;
+    width:max-content;
+    margin:auto;
+    padding:5px;
 }
+
 .bottonefileblu{
     color: #4267b2;
     background-color: #fff;
@@ -177,8 +189,8 @@
     transition: all 200ms ease-out;
     top:5px;
 }
-form{ margin-block-end: unset;
-    margin-top:unset;}
+/*form{ margin-block-end: unset;
+    margin-top:unset;}*/
 .bottonefileblu:hover{
     color: #00e6e6;
     box-shadow: 0 0 0 1px #66ffff;
@@ -186,6 +198,7 @@ form{ margin-block-end: unset;
 }
 
 #modMostra, #modAnnulla, #modConferma, .bottonefileblu{
+    height: max-content;
     position: relative;
     z-index: 1;
 }

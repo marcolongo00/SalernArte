@@ -152,14 +152,14 @@ insert into Evento(idOrganizzatore,nome,tipo,descrizione,pathFoto,numBiglietti,d
 (5,'evento di pippo3',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
 (5,'evento di pippo4',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
 (5,'evento di pippo5',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
-(5,'evento di pippo6',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
+(5,'evento di pippo6 ',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
 (5,'evento di pluto 2',false,'descrizione evento prova 2','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-22','2022-10-27','indirizzo prova 2','sede prova 2',false),
 (5,'evento di pluto 2 modificato',false,'descrizione evento prova 2 modificato','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',2,'2022-07-22','2022-10-27','indirizzo prova 2','sede prova 2',false);
 
 insert into RichiestaEvento(idEvento,idEventoTemp) values
 (2,3);
 insert into Acquisto(numOrdine,data,totale,idUtente,prodotti) value
-(1,'2022-08-14',4,5,'un biglietto');
+(1,'2022-08-14',4,5,'un biglietto'); #non potrei manco acquistare che sono acmin
  insert into Biglietto(id,evento,costo,acquisto) values
 (1,1,3.6,null),
 (2,1,3.6,null),
@@ -197,10 +197,11 @@ where id in( select idEventoTemp from RichiestaEvento);
 
 
 
-
+ /*prova update con join
 update UtenteRegistrato join Utente using(id)
 set nome='culo' , email='culo@exampleupdate.com'
 where id=4;
+*/
 
 #SELECT * FROM UtenteRegistrato JOIN Organizzatore USING(id) WHERE email='plutoprova@example.com' AND passwordHash=SHA1('pluto');
 #SELECT * FROM Evento as e JOIN Carrello as c on e.id=c.idevento WHERE c.idUtente=1;

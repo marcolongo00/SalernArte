@@ -1,16 +1,16 @@
 package model.entity;
 
 public class BigliettoBean {
-    private int idBiglietto,idEvento,fattura;
+    private int idBiglietto,idEvento,numAcquisto;
     private double prezzo;
 
     public BigliettoBean() {
     }
 
-    public BigliettoBean(int idBiglietto, int idEvento, int fattura, double prezzo) {
+    public BigliettoBean(int idBiglietto, int idEvento, int numAcquisto, double prezzo) {
         this.idBiglietto = idBiglietto;
         this.idEvento = idEvento;
-        this.fattura = fattura;
+        this.numAcquisto = numAcquisto;
         this.prezzo = prezzo;
     }
 
@@ -22,8 +22,8 @@ public class BigliettoBean {
         return idEvento;
     }
 
-    public int getFattura() {
-        return fattura;
+    public int getNumAcquisto() {
+        return numAcquisto;
     }
 
     public double getPrezzo() {
@@ -38,8 +38,8 @@ public class BigliettoBean {
         this.idEvento = idEvento;
     }
 
-    public void setFattura(int fattura) {
-        this.fattura = fattura;
+    public void setNumAcquisto(int numAcquisto) {
+        this.numAcquisto = numAcquisto;
     }
 
     public void setPrezzo(double prezzo) {
@@ -51,7 +51,7 @@ public class BigliettoBean {
         return "BigliettoBean{" +
                 "idBiglietto=" + idBiglietto +
                 ", idEvento=" + idEvento +
-                ", fattura=" + fattura +
+                ", fattura=" + numAcquisto +
                 ", prezzo=" + prezzo +
                 '}';
     }

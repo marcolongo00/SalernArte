@@ -1,6 +1,7 @@
 package gestioneAcquisti.service;
 
 import model.dao.*;
+import model.entity.AcquistoBean;
 import model.entity.CarrelloBean;
 import model.entity.EventoBean;
 import model.entity.UtenteRegistratoBean;
@@ -17,10 +18,13 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
     private CarrelloDAO daoCarr;
     private EventoDAO eventoDao;
     private BigliettoDAO bigliettoDAO;
+
+    private AcquistoDAO acquistoDAO;
     public GestioneAcquistiServiceImpl() {
         daoCarr=new CarrelloDAOImpl();
         eventoDao= new EventoDAOImpl();
         bigliettoDAO= new BigliettoDAOImpl();
+        acquistoDAO= new AcquistoDAOImpl();
     }
 
 
@@ -62,11 +66,8 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
 
     @Override
     public void svuotaCarrello(CarrelloBean carrello, UtenteRegistratoBean utente) {
-        if(utente.getTipoUtente().compareTo("utente")!=0 && utente.getTipoUtente().compareTo("scolaresca")!=0 ) {
-            throw new RuntimeException("operazione non autorizzata");
-        }else{
-            daoCarr.svuotaCarrello(utente.getId());
-        }
+        checkAutorizzazioniUtente(utente);
+        daoCarr.svuotaCarrello(utente.getId());
     }
 
     @Override
@@ -124,8 +125,61 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
             daoCarr.doUpdateQuantita(utente.getId(),biQta);
     }
 
+    @Override
+    public void acquistaProdotti(CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
+        //controlla se i prodotti esistono ancora al momento dell'acquisto o se sono scaduti
+        //fai con carrello nella sessione così puoi controllare se al momento
+        // dell'acquisto ci sono prodotti già venduti
+
+        if(utente==null || carrelloSessione==null || carrelloSessione.getProdotti().isEmpty()){
+            throw new RuntimeException("operazione non autorizzata");
+        }else{
+            checkAutorizzazioniUtente(utente);
+        }
+
+        //prendo la stringa dei prodotti e gli altri dati da salvare nell'acquisto
+        String prodotti="";
+        double prezzoTotale= carrelloSessione.getPrezzoTot();
+        Date dataAttuale = new Date(Calendar.getInstance().getTimeInMillis());
+        AcquistoBean acquisto=new AcquistoBean(utente.getId(),dataAttuale,prezzoTotale);
+        acquistoDAO.doSave(acquisto);
+        //la stringa con i prodotti verrà settata nel database successivamente
+        for(BigliettoQuantita x: carrelloSessione.getProdotti()){
+            EventoBean evento=x.getProdotto();
+            int quantita=x.getQuantita();
+            double prezzo= x.getPrezzoBigl(); //forse no
+            //controllo che l'evento salvato in database sia disponibile
+            EventoBean savedE=eventoDao.doRetrieveById(evento.getId());
+            if(savedE==null || !savedE.isAttivo() || quantita==0 || savedE.getNumBiglietti()< quantita || savedE.getDataFine().before(dataAttuale)){
+                //se c'è stato un errore cancello l'acquisto creato e lancio eccezione
+                acquistoDAO.doDelete(acquisto.getNumOrdine());
+                throw new RuntimeException("errore acquisto, ricaricare la pagina");
+            }
+
+            bigliettoDAO.sellBiglietto(evento.getId(),quantita,acquisto.getNumOrdine());
+            //aggiorno anche num biglietti disponibili
+            int bigliettiRimasti= evento.getNumBiglietti()-quantita;
+            eventoDao.doUpdateNumBiglietti(evento.getId(),bigliettiRimasti);
+
+            //metodo dao controllo biglietti carrelli e aggiorna quantità
+            daoCarr.doUpdateQuantitaFromCarrelliAfterAcquisto(evento.getId(), bigliettiRimasti);
+            prodotti+=evento.getNome()+"(qta:"+quantita+"), ";
+        }
+
+        //tolgo la virgola per l'ultimo prodotto
+        int index=prodotti.lastIndexOf(",");
+        prodotti=prodotti.substring(0,index)+";";
+
+        acquistoDAO.setProdotti(acquisto.getNumOrdine(),prodotti);
+
+        if(utente!=null){
+            daoCarr.svuotaCarrello(utente.getId());
+        }
+
+    }
+
     private void checkAutorizzazioniUtente(UtenteRegistratoBean utente){
-        if(utente != null && utente.getTipoUtente().compareTo("utente")!=0 && utente.getTipoUtente().compareTo("scolaresca")!=0 ) {
+        if(utente != null && utente.getTipoUtente().compareTo("Utente")!=0 && utente.getTipoUtente().compareTo("Scolaresca")!=0 ) {
             throw new RuntimeException("operazione non autorizzata");
         }
     }

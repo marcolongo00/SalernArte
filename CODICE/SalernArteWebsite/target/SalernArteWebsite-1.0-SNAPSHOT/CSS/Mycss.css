@@ -7,7 +7,12 @@ a{
     color: #A0A0A0;/*colore --neretto--*/
     text-decoration: none;/*per togliere la sottolineatura al link*/
 }
+.radioTipoUtente, .dateContainer, .genderContainer{
+    margin: auto;
+    width: fit-content;
+    padding: 5px;
 
+}
 .container{
     display: flex;/*mode of display*/
     flex-direction: column;/*how to set our 3 items,children of container*/
@@ -227,7 +232,7 @@ a.sopraIcon2:hover{
 }
 #signInContainer{
     max-width:500px;
-    max-height:600px;}
+    height: max-content}
 #logon .modalContainer{
     max-width:500px;
     max-height: 350px;}

@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.List;
 
 
 @WebServlet(name = "GestioneAcquistiController",urlPatterns = "/gestione-acquisti")
@@ -88,6 +90,27 @@ public class GestioneAcquistiController extends HttpServlet {
             }
 
             response.sendRedirect(address);
+        }
+        if(request.getParameter("datiCartaAcquisto")!=null){
+            //go to dettagli carta first
+            String address="WEB-INF/gestioneAcquisti/DettagliPagamentoCarta.jsp";
+            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
+            dispatcher.forward(request,response);
+        }
+        String finalizzaAcquisto=request.getParameter("finalizzaAcquisto");
+        if(finalizzaAcquisto!=null){
+
+
+            //finto controllo dati carta
+
+            service.acquistaProdotti(carrello,utente);
+            //session.setAttribute("notificaAll", "Acquisto completato");
+            session.setAttribute("carrello", new CarrelloBean(utente.getId()));
+            //se utente fosse null non si sarebbe potuto fare l'acquisto
+
+            String address="WEB-INF/gestioneAcquisti/Acquistato.jsp";
+            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
+            dispatcher.forward(request,response);
         }
     }
 }

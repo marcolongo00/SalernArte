@@ -8,9 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<jsp:include page="Header.jsp">
+<jsp:include page="./Header.jsp">
     <jsp:param name="pageTitle" value="Home"/>
-    <jsp:param name="active" value="activeGallery"/>
     <jsp:param name="stylesheet" value="CSS/Gallerycss.css"/>
 </jsp:include>
 

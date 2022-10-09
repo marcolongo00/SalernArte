@@ -17,13 +17,13 @@
                     <strong>Rilevati prodotti non più disponibili, rimuoverli per procedere.</strong>
                 </c:when>
                 <c:when test="${(sessionScope.tipoUtente=='utente') or (sessionScope.tipoUtente=='scolaresca')}">
-                    <strong>TOTALE:</strong><fmt:formatNumber type="number" maxFractionDigits="2" value="${carrello.prezzoTotC}" /> €<br>
-                    <input type="submit" name="completaAcquisto" class="bottonedecoratoblu" value="COMPLETA ACQUISTO">
+                    <strong>TOTALE:</strong><fmt:formatNumber type="number" maxFractionDigits="2" value="${carrello.prezzoTot}" /> €<br>
+                    <input type="submit" name="datiCartaAcquisto" class="bottonedecoratoblu" value="COMPLETA ACQUISTO">
                     <input type="submit" name="svuotaCarrello" class="bottonedecoratoblu" value="SVUOTA CARRELLO">
                 </c:when>
                 <c:otherwise>
                     <strong>TOTALE:</strong> ${carrello.prezzoTot}<br>
-                    <input type="submit" name="completaAcquisto" class="bottonedecoratoblu" value="COMPLETA ACQUISTO" disabled>
+                    <input type="submit" name="datiCartaAcquisto" class="bottonedecoratoblu" value="COMPLETA ACQUISTO" disabled>
                     <input type="submit" name="svuotaCarrello" class="bottonedecoratoblu" value="SVUOTA CARRELLO"><br>
                     <strong> Effettua il login o Registrati per completare l'acquisto </strong>
                 </c:otherwise>
