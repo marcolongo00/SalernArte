@@ -25,7 +25,6 @@ public class AutenticazioneController extends HttpServlet {
         HttpSession session = request.getSession();
         AutenticazioneService serviceA= new AutenticazioneServiceImpl();
 
-
         if(request.getParameter("goToLogin")!=null){
             String address="WEB-INF/autenticazione/login.jsp";
             RequestDispatcher dispatcher=request.getRequestDispatcher(address);
@@ -63,21 +62,20 @@ public class AutenticazioneController extends HttpServlet {
 
             response.sendRedirect(address);
         }
-        if(request.getParameter("logout")!=null){
+        if(request.getParameter("logout")!=null) {
             session.removeAttribute("selezionato");
             session.removeAttribute("tipoUtente");
             session.removeAttribute("carrello");
 
-            String address=request.getHeader("referer");
+
+            String address = request.getHeader("referer");
             //attenzione alle pagine in cui un utente non ha il permesso di stare
             //a questo punto andrei alla homepage
-            if(address==null || address.contains("/autenticazione-controller") || address.trim().isEmpty()){
-                address=".";
+            if (address == null || address.contains("/autenticazione-controller") || address.trim().isEmpty()) {
+                address = ".";
             }
 
             response.sendRedirect(address);
         }
-
-
     }
 }

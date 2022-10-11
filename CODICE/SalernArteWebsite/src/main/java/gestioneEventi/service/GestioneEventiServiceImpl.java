@@ -19,7 +19,6 @@ import model.entity.UtenteRegistratoBean;
 public class GestioneEventiServiceImpl implements GestioneEventiService{
     private EventoDAO daoEvento;
     private BigliettoDAO daoBiglietto;
-
     public GestioneEventiServiceImpl() {
         daoEvento= new EventoDAOImpl();
         daoBiglietto=new BigliettoDAOImpl();

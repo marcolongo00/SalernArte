@@ -18,7 +18,6 @@
         <h3 class="empty" >Nessun evento disponibile al momento.</h3>
     </c:when>
     <c:otherwise>
-
         <div id="quadriTOT" class="containerGall row" >
 
             <c:forEach items="${eventi}" var="evento">
@@ -27,17 +26,13 @@
                         <img class="textoverimage" src="${evento.path}">
                         <figcaption><p>${evento.nome}</p></figcaption>
                     </figure>
-
                 </a>
-
             </c:forEach>
 
         </div>
     </c:otherwise>
 </c:choose>
-
 <jsp:include page="./Footer.jsp" />
-
 
 </body>
 </html>

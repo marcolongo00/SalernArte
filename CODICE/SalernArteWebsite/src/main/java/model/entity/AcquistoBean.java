@@ -3,14 +3,12 @@ package model.entity;
 import java.sql.Date;
 
 public class AcquistoBean {
-
     private int numOrdine,idUtente;
     private Date  data;
     private double totale;
     private String prodotti; //string e non list eprchè se i pordotti vengono rimossi dal sito, la lista di prodotti nell'acquisto rimane
 
-    public AcquistoBean() {
-    }
+    public AcquistoBean() {}
 
     public AcquistoBean(int numOrdine, int idUtente, Date data, double totale, String prodotti) {
         this.numOrdine = numOrdine;

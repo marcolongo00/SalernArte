@@ -156,7 +156,7 @@ public class OrganizzatoreDAOImpl extends UtenteRegistratoDAOImpl{
                 throw  new RuntimeException(); //myexception
             }
 
-            PreparedStatement ps=con.prepareStatement("UPDATE UtenteRegistrato JOIN Organizzatore USING(id) SET nome=?, cognome=?, email=?,passwordHash=?, biografia=?, dataDiNasciua=?, sesso=?, iban=? WHERE id=?");
+            PreparedStatement ps=con.prepareStatement("UPDATE UtenteRegistrato JOIN Organizzatore USING(id) SET nome=?, cognome=?, email=?,passwordHash=?, biografia=?, dataDiNascita=?, sesso=?, iban=? WHERE id=?");
             ps.setString(1,((OrganizzatoreBean)utente).getNome());
             ps.setString(2,((OrganizzatoreBean)utente).getCognome());
             ps.setString(3,utente.getEmail());

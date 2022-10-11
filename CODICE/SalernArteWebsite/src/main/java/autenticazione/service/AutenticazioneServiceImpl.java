@@ -2,7 +2,6 @@ package autenticazione.service;
 
 import model.dao.*;
 import model.entity.CarrelloBean;
-import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 
 import java.util.ArrayList;
@@ -12,11 +11,16 @@ import model.entity.CarrelloBean.BigliettoQuantita;
 
 public class AutenticazioneServiceImpl implements AutenticazioneService{
     private UtenteRegistratoDAO daoU;
-
-
+    private AmministratoreDAOImpl daoAmm;
+    private OrganizzatoreDAOImpl daoOrg;
+    private UtenteDAOImpl daoUtente;
+    private ScolarescaDAOImpl daoScol;
     public AutenticazioneServiceImpl() {
+        daoOrg = new OrganizzatoreDAOImpl();
+        daoUtente = new UtenteDAOImpl();
+        daoScol = new ScolarescaDAOImpl();
+        daoAmm = new AmministratoreDAOImpl();
     }
-
     @Override
     public UtenteRegistratoBean loginUtente(String email, String passwordNotHash, String tipoUtente) {
         //if null throw exception per tutti
@@ -39,26 +43,47 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
         }
         return null;
     }
-
     @Override
     public List<UtenteRegistratoBean> retriveAllUtentiSistema(String tipoUtente) {
         if(tipoUtente==null || tipoUtente.compareTo("amministratore")!=0){
             throw new RuntimeException(); //myexception utente non autorizzato
         }
         List<UtenteRegistratoBean> allUtenti= new ArrayList<>();
-        allUtenti.addAll(new UtenteDAOImpl().doRetrieveAll());
-        allUtenti.addAll(new ScolarescaDAOImpl().doRetrieveAll());
-        allUtenti.addAll(new OrganizzatoreDAOImpl().doRetrieveAll());
-        allUtenti.addAll(new AmministratoreDAOImpl().doRetrieveAll());
+        allUtenti.addAll(daoUtente.doRetrieveAll());
+        allUtenti.addAll(daoScol.doRetrieveAll());
+        allUtenti.addAll(daoOrg.doRetrieveAll());
+        allUtenti.addAll(daoAmm.doRetrieveAll());
 
         return  allUtenti;
+    }
+
+    @Override
+    public void updateUtente(UtenteRegistratoBean utente) {
+
+        System.out.println(utente.getTipoUtente());
+
+        if(utente.getTipoUtente().compareToIgnoreCase("amministratore") == 0)
+        {
+            daoAmm.doUpdate(utente);
+        }
+        else if(utente.getTipoUtente().compareToIgnoreCase("organizzatore") == 0)
+        {
+            daoOrg.doUpdate(utente);
+        }
+        else if(utente.getTipoUtente().compareToIgnoreCase("scolaresca") == 0)
+        {
+            daoScol.doUpdate(utente);
+        }
+        else
+        {
+            daoU.doUpdate(utente);
+        }
     }
 
     @Override
     public CarrelloBean mergeCarrelloSessioneAndCarrelloDBAfterLogin(UtenteRegistratoBean utenteRegistratoBean, CarrelloBean carrelloSessione) {
         //da testare
         CarrelloDAO daoCarr= new CarrelloDAOImpl();
-
         if(carrelloSessione!=null && !carrelloSessione.getProdotti().isEmpty()){
             CarrelloBean saved=daoCarr.doRetrieveByIdUtente(utenteRegistratoBean.getId());
             Collection<BigliettoQuantita> prodotti=carrelloSessione.getProdotti();

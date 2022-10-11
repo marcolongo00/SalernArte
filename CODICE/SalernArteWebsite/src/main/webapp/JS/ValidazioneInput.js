@@ -92,8 +92,6 @@ function validaUsername(nomeForm,nomeSubmit) {
         cambiaStato(nomeSubmit);
     }
 
-
-
 }
 
 function validaPassword(nomeForm,nomeSubmit) {

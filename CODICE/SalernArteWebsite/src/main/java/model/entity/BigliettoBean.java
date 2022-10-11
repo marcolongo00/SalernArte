@@ -6,7 +6,6 @@ public class BigliettoBean {
 
     public BigliettoBean() {
     }
-
     public BigliettoBean(int idBiglietto, int idEvento, int numAcquisto, double prezzo) {
         this.idBiglietto = idBiglietto;
         this.idEvento = idEvento;

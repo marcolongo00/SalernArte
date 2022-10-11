@@ -1,5 +1,4 @@
 
-
 $(document).ready(function () {
     $(".container2").click(function () {
         $("#menuIntegrate").toggleClass("change");

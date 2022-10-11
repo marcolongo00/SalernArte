@@ -8,7 +8,7 @@
 
 <c:choose>
     <c:when test="${empty allUtenti}">
-        <h3 class="empty" >Nessun Utente registrato sulla piattaforma</h3>
+        <h3 class="empty" >Nessun ordine effettuato</h3>
     </c:when>
     <c:otherwise>
         <section class="tabellautenti">

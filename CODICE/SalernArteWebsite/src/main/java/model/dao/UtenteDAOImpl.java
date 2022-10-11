@@ -62,7 +62,6 @@ public class UtenteDAOImpl extends UtenteRegistratoDAOImpl {//prova extends e no
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
-
     }
 
     @Override

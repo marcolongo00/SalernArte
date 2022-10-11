@@ -2,7 +2,6 @@ package model.entity;
 
 public class AmministratoreBean extends UtenteRegistratoBean{
     private String nome,cognome;
-
     public AmministratoreBean() {
     }
 
@@ -11,7 +10,6 @@ public class AmministratoreBean extends UtenteRegistratoBean{
         this.nome = nome;
         this.cognome = cognome;
     }
-
     public AmministratoreBean(String nome, String cognome, String email, String passwordHash, boolean hash) {
         super(email,passwordHash,"Amministratore",hash);
         this.nome = nome;

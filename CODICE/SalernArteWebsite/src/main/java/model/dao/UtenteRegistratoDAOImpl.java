@@ -18,7 +18,6 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
             if(rs.next()){
                 tipoUtente=rs.getString(1);
             }
-
             con.close();
             ps.close();
             rs.close();
