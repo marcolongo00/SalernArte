@@ -44,7 +44,7 @@ create table Amministratore(
     on update cascade
 );
 
-create table Organizzatore(
+create table Organizzatore(	
 	id int not null auto_increment,
 	nome varchar(50) not null,
     cognome varchar(50) not null,
@@ -79,6 +79,7 @@ create table RichiestaEvento(
 	id int not null auto_increment,
     idEvento int not null unique,
     idEventoTemp int not null unique,
+    nuovoPrezzoBiglietto decimal(10,2) not null,
     primary key(id),
     foreign key (idEvento) references Evento(id)
     on delete cascade
@@ -112,6 +113,7 @@ create table Biglietto(
         on update cascade,
 	foreign key(acquisto) references Acquisto(numOrdine)
     on update cascade
+    on delete cascade
 );
 
 
@@ -148,16 +150,16 @@ insert into Organizzatore(id,nome,cognome,biografia,dataDiNascita,sesso,iban) va
 (5,'pluto','prova','prova biografia','1999-07-21',0,'IT17J0300203280772191565161');
 
 insert into Evento(idOrganizzatore,nome,tipo,descrizione,pathFoto,numBiglietti,dataInizio,dataFine,indirizzo,sede,attivo) values
-(5,'evento di pippo',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
-(5,'evento di pippo3',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
-(5,'evento di pippo4',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
-(5,'evento di pippo5',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
-(5,'evento di pippo6 ',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-10-26','indirizzo prova','sede prova',true),
+(5,'evento di pippo',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-11-26','indirizzo prova','sede prova',true),
+(5,'evento di pippo3',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-11-26','indirizzo prova','sede prova',true),
+(5,'evento di pippo4',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-11-26','indirizzo prova','sede prova',true),
+(5,'evento di pippo5',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-11-26','indirizzo prova','sede prova',true),
+(5,'evento di pippo6 ',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-11-26','indirizzo prova','sede prova',true),
 (5,'evento di pluto 2',false,'descrizione evento prova 2','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-22','2022-10-27','indirizzo prova 2','sede prova 2',false),
-(5,'evento di pluto 2 modificato',false,'descrizione evento prova 2 modificato','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',2,'2022-07-22','2022-10-27','indirizzo prova 2','sede prova 2',false);
+(5,'evento di pluto 2 modificato',false,'descrizione evento prova 2 modificato','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',2,'2022-07-22','2022-11-27','indirizzo prova 2','sede prova 2',false);
 
-insert into RichiestaEvento(idEvento,idEventoTemp) values
-(2,3);
+insert into RichiestaEvento(idEvento,idEventoTemp,nuovoPrezzoBiglietto) values
+(6,7,9.8);
 insert into Acquisto(numOrdine,data,totale,idUtente,prodotti) value
 (1,'2022-08-14',4,5,'un biglietto'); #non potrei manco acquistare che sono acmin
  insert into Biglietto(id,evento,costo,acquisto) values

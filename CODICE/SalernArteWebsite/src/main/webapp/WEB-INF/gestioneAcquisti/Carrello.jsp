@@ -16,7 +16,7 @@
                 <c:when test="${alertCarrello}">
                     <strong>Rilevati prodotti non più disponibili, rimuoverli per procedere.</strong>
                 </c:when>
-                <c:when test="${(sessionScope.tipoUtente=='utente') or (sessionScope.tipoUtente=='scolaresca')}">
+                <c:when test="${(selezionato.tipoUtente=='utente') or (selezionato.tipoUtente=='scolaresca')}">
                     <strong>TOTALE:</strong><fmt:formatNumber type="number" maxFractionDigits="2" value="${carrello.prezzoTot}" /> €<br>
                     <input type="submit" name="datiCartaAcquisto" class="bottonedecoratoblu" value="COMPLETA ACQUISTO">
                     <input type="submit" name="svuotaCarrello" class="bottonedecoratoblu" value="SVUOTA CARRELLO">

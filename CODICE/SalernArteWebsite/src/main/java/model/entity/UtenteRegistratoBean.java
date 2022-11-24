@@ -49,7 +49,7 @@ public abstract class UtenteRegistratoBean {
 
     public void setPasswordHash(String password, boolean hash) {
         if(hash){//password è già in hash
-            this.passwordHash=passwordHash;
+            this.passwordHash=password;
             this.hash=hash;
         }else{ //password è inserita dall'utente non in formato hash
             try{

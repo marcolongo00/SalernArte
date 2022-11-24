@@ -68,6 +68,8 @@ public class ScolarescaDAOImpl extends UtenteRegistratoDAOImpl{
                 String passwordHash=rs.getString("passwordHash");
                 String istituto= rs.getString("istituto");
                 scelto=new ScolarescaBean(id,email,passwordHash,istituto,true);
+            }else{
+                throw new RuntimeException("Errore Autenticazione utente");
             }
             con.close();
             stm.close();

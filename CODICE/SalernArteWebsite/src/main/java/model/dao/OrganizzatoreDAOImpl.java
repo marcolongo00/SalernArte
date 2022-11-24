@@ -85,6 +85,8 @@ public class OrganizzatoreDAOImpl extends UtenteRegistratoDAOImpl{
                 int sesso =rs.getInt("sesso");
                 String iban= rs.getString("iban");
                 scelto=new OrganizzatoreBean(id,sesso,iban,nome,cognome,email,passwordHash,bio,dataNascita,true);
+            }else{
+                throw new RuntimeException("Errore Autenticazione utente");
             }
             con.close();
             stm.close();

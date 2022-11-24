@@ -13,6 +13,7 @@ public interface BigliettoDAO {
     void updatePrezzoBigliettoEvento(int idEvento, double costo);
     void doSave(int idEvento, double prezzo);
     double doRetrievePrezzoBigliettoByEvento(int idEvento);
+    double doRetrievePrezzoBiglByRichiestaModifica(int idEventoPostMod);
     void doUpdateBigliettiModificaEvento(EventoBean eventoPreModifica, EventoBean eventoModifica);
     void doDelete(int idEvento, int idBiglietto);
 

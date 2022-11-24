@@ -41,7 +41,7 @@
             <div class="showmenu">
                 <ul style="list-style-type: none">
                     <c:choose>
-                        <c:when test="${(sessionScope.selezionato !=null) and (sessionScope.tipoUtente=='amministratore')}">
+                        <c:when test="${(sessionScope.selezionato !=null) and (selezionato.tipoUtente=='amministratore')}">
                             <li><a href="gestione-eventi?goToAllRichiesteEventi=true" > Richieste eventi</a></li>
                             <hr>
                             <li><a href="gestione-eventi?goToRichiesteInserimento=true" > RICHIESTE INSERIMENTO EVENTI</a></li>
@@ -51,14 +51,15 @@
                             <li><a href="area-utente?listaUtenti=true" > LISTA UTENTI </a></li>
                             <hr>
                         </c:when>
-                        <c:when test="${(sessionScope.selezionato !=null) and (sessionScope.tipoUtente=='organizzatore')}">
+                        <c:when test="${(sessionScope.selezionato !=null) and (selezionato.tipoUtente=='organizzatore')}">
                             <li><a href="gestione-eventi?goToRichiestaEvento=true">Richiedi evento</a></li>
                             <hr>
                             <li><a href="gestione-eventi?goToEventiOrganizzatore=true">I tuoi eventi</a></li>
                             <hr>
                         </c:when>
                         <c:otherwise>
-
+                            <li><a href="area-utente?goToListaAcquisti=true">I TUOI ACQUISTI</a></li>
+                            <hr>
                         </c:otherwise>
                     </c:choose>
                     <li> <a href="area-utente?goToProfilo=true" > PROFILO UTENTE </a> </li>
@@ -79,7 +80,7 @@
                     </c:otherwise>
                 </c:choose>
             </div>
-            <c:if test="${(sessionScope.tipoUtente=='utente') or (sessionScope.tipoUtente=='scolaresca') or (sessionScope.selezionato==null)}">
+            <c:if test="${(selezionato.tipoUtente=='utente') or (selezionato.tipoUtente=='scolaresca') or (sessionScope.selezionato==null)}">
                 <a class="sopraIcon2" id="null" href="gestione-acquisti?goToCarrello=true"><i class="fa fa-shopping-cart" aria-hidden="true" style="font-size: 23px;color: #605E5E"></i></a>
             </c:if>
             <a class="sopraIcon2"><i class="fa fa-search" id="showbarracerca" style="font-size: 23px;color: #605E5E"></i></a>
@@ -90,6 +91,7 @@
             <div class="cercaresponsive">
                 <form action="gestione-eventi" method="get">
                     <input type="text" name="query" list="ricerca-datalist" placeholder="Ricerca" id="ricercaresp" onkeyup="ricerca(this.value)" value="">
+                    <input type="hidden" name="ricercaEventi" value="Search">
                     <datalist id="ricerca-datalist2"></datalist>
                 </form>
             </div>
@@ -101,7 +103,7 @@
                         <div class="showmenu">
                             <ul style="list-style-type: none;">
                                 <c:choose>
-                                    <c:when test="${(sessionScope.selezionato !=null) and (sessionScope.tipoUtente=='amministratore')}">
+                                    <c:when test="${(sessionScope.selezionato !=null) and (selezionato.tipoUtente=='amministratore')}">
                                         <li><a href="gestione-eventi?goToAllRichiesteEventi=true" > Richieste eventi</a></li>
                                         <hr>
                                         <li><a href="gestione-eventi?goToRichiesteInserimento=true" > RICHIESTE INSERIMENTO EVENTI</a></li>
@@ -111,13 +113,15 @@
                                         <li><a href="area-utente?listaUtenti=true" > LISTA UTENTI </a></li>
                                         <hr>
                                     </c:when>
-                                    <c:when test="${(sessionScope.selezionato !=null) and (sessionScope.tipoUtente=='organizzatore')}">
+                                    <c:when test="${(sessionScope.selezionato !=null) and (selezionato.tipoUtente=='organizzatore')}">
                                         <li><a href="gestione-eventi?goToRichiestaEvento=true">Richiedi evento</a></li>
                                         <hr>
                                         <li><a href="gestione-eventi?goToEventiOrganizzatore=true">I tuoi eventi</a></li>
                                         <hr>
                                     </c:when>
                                      <c:otherwise>
+                                         <li><a href="area-utente?goToListaAcquisti=true">I TUOI ACQUISTI</a></li>
+                                         <hr>
                                     </c:otherwise>
                                 </c:choose>
                                  <li> <a href="area-utente?goToProfilo=true" > PROFILO UTENTE </a>  </li>
@@ -133,7 +137,7 @@
                 </c:choose>
             </div>
 
-            <c:if test="${(sessionScope.tipoUtente=='utente') or (sessionScope.tipoUtente=='scolaresca') or (sessionScope.selezionato==null)}">
+            <c:if test="${(selezionato.tipoUtente=='utente') or (selezionato.tipoUtente=='scolaresca') or (sessionScope.selezionato==null)}">
                 <a class="sopraIcon2" href="gestione-acquisti?goToCarrello=true">Carrello</a>
             </c:if>
         </div>
@@ -181,6 +185,7 @@
         <!-- il div della finestra login -->
         <jsp:include page="autenticazione/login.jsp"/>
         <jsp:include page="autenticazione/registrazione.jsp"/>
+        <jsp:include page="autenticazione/RecuperaPassword.jsp"/>
     </c:if>
 </div>
 
@@ -188,8 +193,12 @@
     function closeLoginRegistrazione(){
         $("form[name='LoginForm']").trigger("reset");
         $("form[name='reg']").trigger("reset");
+        $("form[name='recuperaPwd']").trigger("reset");
+
+        showDatiCorrettiPerUtente();
         $("#logon").hide();
         $("#modalRegistrazione").hide();
+        $("#recuperaPwd").hide();
         //validaAll("insertMSubmit"); valida tutti i campi per registrazione
     }
 
@@ -209,6 +218,14 @@
         $("#Linklog").click(function () {
             closeLoginRegistrazione();
             $("#logon").css("display","flex");
+        });
+        $("#LinklogRecuperaPwd").click(function () {
+            closeLoginRegistrazione();
+            $("#logon").css("display","flex");
+        });
+        $("#LinkRecuperaPwd").click(function () {
+            closeLoginRegistrazione();
+            $("#recuperaPwd").css("display","flex");
         });
         // Get the modal
         var modal=document.getElementById("logon");

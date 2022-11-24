@@ -70,6 +70,8 @@ public class AmministratoreDAOImpl extends UtenteRegistratoDAOImpl{
                 String cognome= rs.getString("cognome");
                 String passwordHash=rs.getString("passwordHash");
                 scelto=new AmministratoreBean(id,nome,cognome,email,passwordHash,true);
+            }else{
+                throw new RuntimeException("Errore Autenticazione utente");
             }
             con.close();
             stm.close();

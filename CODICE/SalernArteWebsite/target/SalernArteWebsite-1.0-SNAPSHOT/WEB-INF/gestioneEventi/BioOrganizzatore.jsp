@@ -4,7 +4,7 @@
 <jsp:include page="../Header.jsp">
     <jsp:param name="pageTitle" value="${organizzatore.nome}"/>
 </jsp:include>
-<c:if test="${(sessionScope.selezionato !=null) and (sessionScope.tipoUtente=='amministratore') and (not selectedEvento.attivo)}">
+<c:if test="${(sessionScope.selezionato !=null) and (selezionato.tipoUtente=='amministratore') and (not selectedEvento.attivo)}">
     <form action="gestione-eventi" method="get">
         <input type="hidden" name="idEvento" value="${selectedEvento.id}">
 

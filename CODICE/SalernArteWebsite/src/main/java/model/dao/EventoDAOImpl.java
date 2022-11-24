@@ -323,7 +323,34 @@ public class EventoDAOImpl implements EventoDAO{
             throw new RuntimeException(e);
         }
     }
+    public void doSaveRichiestaModificaEv(int idOldEvento, int idEventoModificato, double nuovoPrezzoBiglietto) {
+        try(Connection conn=ConPool.getConnection()){
+            PreparedStatement ps=conn.prepareStatement("INSERT INTO RichiestaEvento(idEvento,idEventoTemp,nuovoPrezzoBiglietto) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
+            ps.setInt(1,idOldEvento);
+            ps.setInt(2,idEventoModificato);
+            ps.setDouble(3,nuovoPrezzoBiglietto);
+
+
+            if(ps.executeUpdate()!=1)
+                throw new RuntimeException("INSERT error");
+            /*ResultSet rs=ps.getGeneratedKeys();
+            rs.next();
+            int id=rs.getInt(1);
+            evento.setId(id);
+             */
+            //mi assicuro che entrambi gli eventi non siano attivi, eprchè si riferiscono allo stesso
+            //evento pre e post modifica che deve essere riattivato dall'admin
+            doUpdateAttivazioneEvento(idOldEvento,false);
+            doUpdateAttivazioneEvento(idEventoModificato,false);
+
+            conn.close();
+            ps.close();
+           // rs.close();
+        }catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
     @Override
     public void doUpdate(EventoBean evento) {
         try(Connection conn=ConPool.getConnection()){

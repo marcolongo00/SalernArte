@@ -26,17 +26,14 @@
                         <td>${count.index}</td>
                         <td>${utente.tipoUtente}</td>
                         <td>${utente.email}</td>
-                        <!-- bottoni per ora non funzionanti-->
-                        <td class="flex">
-                            <form action="area-utente" method="post">
-                                <input type="hidden" name="id" value="${utente.id}">
-                                <input type="submit"class="buttoninfo" value="Rimuovi">
-                            </form>
-                            <form action="area-utente" method="post">
-                                <input type="hidden" name="id" value="${utente.id}">
-                                <input type="submit" class="buttoninfo" value="fatture">
-                            </form>
-                        </td>
+                        <c:if test="${utente.tipoUtente=='utente' || utente.tipoUtente=='scolaresca'}">
+                            <td class="flex">
+                                <form action="area-utente" method="post">
+                                    <input type="hidden" name="id" value="${utente.id}">
+                                    <input type="submit" name="goToListaAcquisti" class="buttoninfo" value="Lista acquisti">
+                                </form>
+                            </td>
+                        </c:if>
                         <td class="detailstext2">
 
                         </td>

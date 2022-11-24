@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Date;
 
 @WebServlet(name = "AutenticazioneController",urlPatterns = "/autenticazione-controller")
 public class AutenticazioneController extends HttpServlet {
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request,response);
     }
@@ -26,9 +26,9 @@ public class AutenticazioneController extends HttpServlet {
         AutenticazioneService serviceA= new AutenticazioneServiceImpl();
 
         if(request.getParameter("goToLogin")!=null){
+            //credo non venga mia usata. contorllare
             String address="WEB-INF/autenticazione/login.jsp";
-            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
-            dispatcher.forward(request,response);
+            callDispatcher(request,response,address);
         }
 
         if(request.getParameter("Accedi")!=null){
@@ -47,35 +47,36 @@ public class AutenticazioneController extends HttpServlet {
                     session.setAttribute("carrello",carrello);
                 }
             }else{
-                new RuntimeException("errore Login"); //myException
+                new RuntimeException("errore Login");
             }
 
             session.setAttribute("selezionato",utente);
-            session.setAttribute("tipoUtente",tipoUtente);
-
-           //aggiungi dati carrello appena disponibili
-            String address=request.getHeader("referer");
-
-            if(address==null || address.contains("/autenticazione-controller") || address.trim().isEmpty()){
-                address=".";
-            }
-
-            response.sendRedirect(address);
+            callReferer(request,response);
         }
         if(request.getParameter("logout")!=null) {
             session.removeAttribute("selezionato");
-            session.removeAttribute("tipoUtente");
             session.removeAttribute("carrello");
 
-
-            String address = request.getHeader("referer");
-            //attenzione alle pagine in cui un utente non ha il permesso di stare
-            //a questo punto andrei alla homepage
-            if (address == null || address.contains("/autenticazione-controller") || address.trim().isEmpty()) {
-                address = ".";
-            }
-
-            response.sendRedirect(address);
+            callDispatcher(request,response,"/index.html");
         }
+        if(request.getParameter("ConfermaCambioPwd")!=null){
+            String emailTo=request.getParameter("email");
+            //contorlal formato email e controlla che esista in db
+            //retriene by email
+            //genera stringa per password casuale
+            //cambia la pwd nel db e invia la mail
+            callDispatcher(request,response,"/index.html");        }
+    }
+    private void callDispatcher(HttpServletRequest request, HttpServletResponse response,String address) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+        dispatcher.forward(request, response);
+    }
+    private void callReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String address=request.getHeader("referer"); //gli da fastidio, devi completamente separare dispatcher e referer
+        if(address==null || address.contains("/gestione-eventi") || address.trim().isEmpty()){
+            address=".";
+        }
+        response.sendRedirect(address);
     }
 }
+

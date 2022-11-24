@@ -26,6 +26,8 @@ public interface EventoDAO {
    // public List<EventoBean> doRetrieveAllRichiesteEventi();
    // potrebbe funzionare come doRetrieveAllRichieste e per ogni next della query fare doRetrieveById di evento
     void doSave (EventoBean evento);
+
+    void doSaveRichiestaModificaEv(int idOldEvento, int idEventoModificato, double nuovoPrezzoBiglietto);
     void doUpdate(EventoBean evento);
     void doUpdateNumBiglietti( int idEvento, int numBiglietti);
     void doUpdateAttivazioneEvento(int idEvento,boolean attivo);

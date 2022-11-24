@@ -16,7 +16,7 @@
             <div class="flex dati">
                 <div >
                     <div class="radioTipoUtente">
-                        <input type="radio" id="Utente" name="tipoUtente" onclick="showDatiCorrettiPerUtente()"  value="utente">
+                        <input type="radio" id="Utente" name="tipoUtente" onclick="showDatiCorrettiPerUtente()"  value="utente" checked>
                         <label for="Utente"><b>Utente</b></label>
 
                         <input type="radio" id="Scolaresca" name="tipoUtente" onclick="showDatiCorrettiPerUtente()" value="scolaresca">
@@ -56,7 +56,6 @@
                     </div>
                     <div class="organizzatore">
                         <input type="text" id="biografia" name="biografia"  placeholder="biografia" >
-                        <input type="text" id="azienda" name="azienda"  placeholder="azienda" >
                         <input type="text" id="iban" name="iban"  placeholder="iban" >
                     </div>
                 </div>
@@ -89,16 +88,8 @@
             $(".organizzatore").show();
         }
 
-
-        /*
-            document.getElementById("provaJS").innerHTML
-                = "hai selezionato: "+document.querySelector('input[name="tipoUtente"]:checked').value;
-            for(i = 0; i < tipo.length; i++) {
-                if(tipo[i].checked){
-
-                }
-                   +tipo[i].value;
-            }*/
-
     }
+    $(document).ready(function () {
+        showDatiCorrettiPerUtente();
+    });
 </script>

@@ -232,10 +232,13 @@ a.sopraIcon2:hover{
 }
 #signInContainer{
     max-width:500px;
-    height: max-content}
+    height: max-content;}
+#RecuperaPwdContainer{
+    width: max-content;
+    height: max-content;}
 #logon .modalContainer{
     max-width:500px;
-    max-height: 350px;}
+    height: max-content}
 #showaddQ .modalContainer{
     max-width:800px;
     max-height: 600px;}

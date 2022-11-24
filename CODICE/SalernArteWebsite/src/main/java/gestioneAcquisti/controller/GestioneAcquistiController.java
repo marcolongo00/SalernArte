@@ -77,20 +77,6 @@ public class GestioneAcquistiController extends HttpServlet {
 
             response.sendRedirect(address);
         }
-        if(request.getParameter("aggiungiAlCarrello")!=null){
-            int quantita=Integer.parseInt(request.getParameter("quantita")); //se non sono numeri darà errore la parse
-            int idE=Integer.parseInt(request.getParameter("idE"));
-            carrello=service.aggiungiAlCarrello(idE,quantita,carrello,utente);
-            request.getSession().setAttribute("notificaAll", "Biglietti aggiunti al carrello."); //per ora non ho la notifica
-            session.setAttribute("carrello", carrello);
-
-            String address=request.getHeader("referer");
-            if(address==null || address.contains("/gestione-acquisti") || address.trim().isEmpty()){
-                address=".";
-            }
-
-            response.sendRedirect(address);
-        }
         if(request.getParameter("datiCartaAcquisto")!=null){
             //go to dettagli carta first
             String address="WEB-INF/gestioneAcquisti/DettagliPagamentoCarta.jsp";

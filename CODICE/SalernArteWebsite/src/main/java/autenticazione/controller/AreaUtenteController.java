@@ -22,92 +22,90 @@ public class AreaUtenteController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         AutenticazioneService service=new AutenticazioneServiceImpl();
+        UtenteRegistratoBean utenteLoggato= (UtenteRegistratoBean) session.getAttribute("selezionato");
 
-        if(request.getParameter("verificaOrdini") != null)
-        {
-
+        if(request.getParameter("goToListaAcquisti") != null){
+            int idUtente;
+            if(utenteLoggato.getTipoUtente().compareToIgnoreCase("amministratore")==0){
+                idUtente=Integer.parseInt(request.getParameter("id"));
+            }else{
+                idUtente=utenteLoggato.getId();
+            }
+            List<AcquistoBean>ordiniUtente= service.retrieveListaOrdiniUtente(utenteLoggato,idUtente);
+            request.setAttribute("ordini",ordiniUtente);
+            callDispatcher(request,response,"/WEB-INF/gestioneUtente/OrdiniUtente.jsp");
         }
 
         if(request.getParameter("listaUtenti")!=null){
-            //usa service
-            String tipoUtente= (String) session.getAttribute("tipoUtente"); //retrive utente non tipoutente
-            List<UtenteRegistratoBean> allUtenti= service.retriveAllUtentiSistema(tipoUtente);
+             if(utenteLoggato==null) throw new RuntimeException("operazione non autorizzata");
+            List<UtenteRegistratoBean> allUtenti= service.retrieveAllUtentiSistema(utenteLoggato);
             request.setAttribute("allUtenti",allUtenti);
 
             String address = "/WEB-INF/gestioneUtente/AllUtenti.jsp";
-            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-            dispatcher.forward(request, response);
+            callDispatcher(request,response,address);
         }
         if(request.getParameter("goToProfilo")!=null){
-            //nella jsp usa JS per vedere i dati del tipo di utente giusto
             String address = "/WEB-INF/gestioneUtente/ProfiloUtente.jsp";
-
-            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-            dispatcher.forward(request, response);
+            callDispatcher(request,response,address);
         }
-        if(request.getParameter("updateProfilo")!=null)
-        {
-            UtenteRegistratoBean utente = (UtenteRegistratoBean) session.getAttribute("selezionato");
-            String tipo = utente.getTipoUtente();
-
-            if(utente == null)
+        if(request.getParameter("updateProfilo")!=null){
+            //controllare autorizzazioni
+            if(utenteLoggato == null)
                 throw new RuntimeException("Operazione non autorizzata");
 
-            if(request.getParameter("password").compareToIgnoreCase(request.getParameter("conferma-password")) != 0)
-                throw new RuntimeException("Le password non corrispondono");
+            String tipo = utenteLoggato.getTipoUtente();
+            String password= request.getParameter("password");
+            String passwordConferma= request.getParameter("passwordConferma");
 
-            if(tipo.compareToIgnoreCase("utente") == 0)
-            {
-                UtenteBean bean = new UtenteBean();
-                bean.setNome(request.getParameter("nome"));
-                bean.setCognome(request.getParameter("cognome"));
-                bean.setEmail(request.getParameter("email"));
+            if(!password.isEmpty() && !passwordConferma.isEmpty() && password.compareToIgnoreCase(passwordConferma)!=0)
+                throw new RuntimeException("Le password inserite non corrispondono");
+            // il null delle string viene controllato nel service
+            String email=request.getParameter("email");
+            String nome=request.getParameter("nome");
+            String cognome=request.getParameter("cognome");
+            String istituto=request.getParameter("istituto");
+            String biografia=request.getParameter("biografia");
+            String iban=request.getParameter("iban");
+            UtenteRegistratoBean utenteAggiornato=null;
+            if(tipo.compareToIgnoreCase("utente") == 0) {
+                Date dataDiNascita= Date.valueOf(request.getParameter("dataDiNascita"));
+                int gender= Integer.parseInt(request.getParameter("gender"));
 
-                if(!(request.getParameter("password").equals(null)))
-                    bean.setPasswordHash(request.getParameter("password"),bean.isHash());
+                utenteAggiornato=service.updateUtente(utenteLoggato,email,password,nome,cognome,dataDiNascita,gender);
 
-                bean.setDataDiNascita(Date.valueOf(request.getParameter("data")));
-                bean.setSesso(Integer.parseInt(request.getParameter("sesso")));
-                service.updateUtente(bean);
-            }
-            else if(tipo.compareToIgnoreCase("organizzatore") == 0)
-            {
-                OrganizzatoreBean bean = new OrganizzatoreBean();
-                bean.setNome(request.getParameter("nome"));
-                bean.setCognome(request.getParameter("cognome"));
-                bean.setEmail(request.getParameter("email"));
+            }else
+                if(tipo.compareToIgnoreCase("organizzatore") == 0){
+                    Date dataDiNascita= Date.valueOf(request.getParameter("dataDiNascita"));
+                    int gender= Integer.parseInt(request.getParameter("gender"));
 
-                if(!(request.getParameter("password").equals(null)))
-                    bean.setPasswordHash(request.getParameter("password"), bean.isHash());
-
-                bean.setBiografia(request.getParameter("bio"));
-                bean.setSesso(Integer.parseInt(request.getParameter("sesso")));
-                bean.setDataDiNascita(Date.valueOf(request.getParameter("data")));
-                bean.setIban(request.getParameter("iban"));
-                service.updateUtente(bean);
-            }
-            else if(tipo.compareToIgnoreCase("scolaresca") == 0)
-            {
-                ScolarescaBean bean = new ScolarescaBean();
-                bean.setIstituto(request.getParameter("istituto"));
-                bean.setEmail(request.getParameter("email"));
-                if(!(request.getParameter("password").equals(null)))
-                    bean.setPasswordHash(request.getParameter("password"), bean.isHash());
-
-                service.updateUtente(bean);
-            }
-            else{
-                AmministratoreBean bean = new AmministratoreBean();
-                bean.setNome(request.getParameter("nome"));
-                bean.setCognome(request.getParameter("cognome"));
-                bean.setEmail(request.getParameter("email"));
-
-                if(!(request.getParameter("password").equals(null)))
-                    bean.setPasswordHash(request.getParameter("password"), bean.isHash());
-
-                service.updateUtente(bean);
-            }
+                    utenteAggiornato=service.updateOrganizzatore(utenteLoggato,email,password,nome,cognome,dataDiNascita,gender,biografia,iban);
+                }
+                else if(tipo.compareToIgnoreCase("scolaresca") == 0) {
+                    utenteAggiornato=service.updateScolaresca(utenteLoggato,email,password,istituto);
+                }
+                else{
+                    utenteAggiornato=service.updateAmministratore(utenteLoggato,email,password,nome,cognome);
+                }
+            session.setAttribute("selezionato",utenteAggiornato);
+            String address = "/WEB-INF/gestioneUtente/ProfiloUtente.jsp";
+            callDispatcher(request,response,address);
+        }
+        if(request.getParameter("eliminaProfilo")!=null){
+            service.eliminaProfiloUtente(utenteLoggato);
+            session.removeAttribute("selezionato");
+            callDispatcher(request,response,"/index.html");
         }
 
+    }
+    private void callDispatcher(HttpServletRequest request, HttpServletResponse response,String address) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+        dispatcher.forward(request, response);
+    }
+    private void callReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String address=request.getHeader("referer"); //gli da fastidio, devi completamente separare dispatcher e referer
+        if(address==null || address.contains("/gestione-eventi") || address.trim().isEmpty()){
+            address=".";
+        }
+        response.sendRedirect(address);
     }
 }

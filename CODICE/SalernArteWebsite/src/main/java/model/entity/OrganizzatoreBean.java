@@ -11,7 +11,7 @@ public class OrganizzatoreBean extends UtenteRegistratoBean{
     }
 
     public OrganizzatoreBean(int id, int sesso, String iban, String nome, String cognome, String email, String passwordHash, String biografia, Date dataDiNascita, boolean hash) {
-        super(id,email,passwordHash,"Organizzatore",hash);
+        super(id,email,passwordHash,"organizzatore",hash);
         this.sesso = sesso;
         this.iban = iban; //aggiungere controlli
         this.nome = nome;
@@ -21,7 +21,7 @@ public class OrganizzatoreBean extends UtenteRegistratoBean{
     }
 
     public OrganizzatoreBean(int sesso, String iban, String nome, String cognome, String email, String passwordHash, String biografia, Date dataDiNascita, boolean hash) {
-        super(email,passwordHash,"Organizzatore",hash);
+        super(email,passwordHash,"organizzatore",hash);
         this.sesso = sesso;
         this.iban = iban;
         this.nome = nome;

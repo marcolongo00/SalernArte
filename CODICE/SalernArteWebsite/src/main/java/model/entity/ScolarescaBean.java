@@ -7,12 +7,12 @@ public class ScolarescaBean extends UtenteRegistratoBean{
     }
 
     public ScolarescaBean(int id, String email, String passwordHash, String istituto, boolean hash) {
-        super(id,email,passwordHash,"Scolaresca",hash);
+        super(id,email,passwordHash,"scolaresca",hash);
         this.istituto = istituto;
     }
 
     public ScolarescaBean(String email, String passwordHash, String istituto, boolean hash) {
-        super(email,passwordHash,"Scolaresca",hash);
+        super(email,passwordHash,"scolaresca",hash);
         this.istituto = istituto;
     }
 

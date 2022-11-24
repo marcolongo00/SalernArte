@@ -81,6 +81,8 @@ public class UtenteDAOImpl extends UtenteRegistratoDAOImpl {//prova extends e no
                 int sesso =rs.getInt("sesso");
                 scelto=new UtenteBean(id,sesso,nome,cognome,email,passwordHash,dataNascita,true);
 
+            }else{
+                throw new RuntimeException("Errore Autenticazione utente");
             }
             con.close();
             stm.close();
@@ -132,7 +134,7 @@ public class UtenteDAOImpl extends UtenteRegistratoDAOImpl {//prova extends e no
             ps.setDate(5,((UtenteBean)utente).getDataDiNascita());
             ps.setInt(6,((UtenteBean)utente).getSesso());
             ps.setInt(7,utente.getId());
-            if(ps.executeUpdate() !=1)
+            if(ps.executeUpdate() <1)
             {
                 throw new RuntimeException("UPDATE UTENTE error.");
             }

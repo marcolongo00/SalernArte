@@ -117,10 +117,10 @@ public class BigliettoDAOImpl implements BigliettoDAO{
     @Override
     public void updatePrezzoBigliettoEvento(int idEvento, double costo) {
         try(Connection conn=ConPool.getConnection()){
-            PreparedStatement ps= conn.prepareStatement("UPDATE Biglietto SET costo=? WHERE evento=?");
+            PreparedStatement ps= conn.prepareStatement("UPDATE Biglietto SET costo=? WHERE evento=? AND acquisto is null");
             ps.setDouble(1,costo);
             ps.setInt(2,idEvento);
-            if(ps.executeUpdate()!=1){
+            if(ps.executeUpdate()<0){
                 throw new RuntimeException("UPDATE Evento error");
             }
             conn.close();
@@ -164,10 +164,24 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             throw  new RuntimeException(e);
         }
     }
-
-    @Override
+    public double doRetrievePrezzoBiglByRichiestaModifica( int idEventoPostMod) {
+        try (Connection conn = ConPool.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement("SELECT nuovoPrezzoBiglietto FROM RichiestaEvento WHERE idEventoTemp=?");
+            ps.setInt(1, idEventoPostMod);
+            ResultSet rs = ps.executeQuery();
+            double costo = 0;
+            if (rs.next()) {
+                costo = rs.getDouble("nuovoPrezzoBiglietto");
+            }
+            conn.close();
+            ps.close();
+            rs.close();
+            return costo;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void doUpdateBigliettiModificaEvento(EventoBean eventoPreModifica, EventoBean eventoModifica) {
-        // e se è cambiato il prezzo dei biglietti? li devo modificare tutti . update prezzo è un'operazione che no ha bisogno di essere confermata dall'admin.
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("UPDATE Biglietto SET evento=? WHERE evento=?");
             ps.setInt(1,eventoModifica.getId());
@@ -175,6 +189,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             if(ps.executeUpdate()<1){
                 throw new RuntimeException("UPDATE Bigleitti evento error");
             }
+
             if(eventoModifica.getNumBiglietti()<eventoPreModifica.getNumBiglietti()){
                 List<BigliettoBean> bigliettiNonAcquistati= doRetrieveAllAcquistati();
                 if(eventoModifica.getNumBiglietti()<bigliettiNonAcquistati.size()) throw new RuntimeException("non puoi rendere disponibili meno biglietti di quelli già acquistati");
