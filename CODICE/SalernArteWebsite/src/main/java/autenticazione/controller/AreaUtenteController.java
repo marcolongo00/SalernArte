@@ -103,7 +103,7 @@ public class AreaUtenteController extends HttpServlet {
     }
     private void callReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String address=request.getHeader("referer"); //gli da fastidio, devi completamente separare dispatcher e referer
-        if(address==null || address.contains("/gestione-eventi") || address.trim().isEmpty()){
+        if(address==null || address.contains("/area-utente") || address.trim().isEmpty()){
             address=".";
         }
         response.sendRedirect(address);

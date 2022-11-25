@@ -35,6 +35,8 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
             String tipoUtente=null;
             if(rs.next()){
                 tipoUtente=rs.getString(1);
+            }else{
+                throw new RuntimeException("Questa email non è associata a nessun account, ricarica e riprova");
             }
 
             con.close();

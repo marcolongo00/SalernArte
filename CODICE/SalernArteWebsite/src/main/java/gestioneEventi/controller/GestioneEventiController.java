@@ -32,7 +32,7 @@ public class GestioneEventiController extends HttpServlet {
         if ( request.getParameter("detailsE")!=null) {
             int idE = Integer.parseInt(request.getParameter("idE"));
 
-            EventoBean evento = serviceE.retriveEventoById(idE);
+            EventoBean evento = serviceE.retrieveEventoById(idE);
             CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
             serviceE.checkQuantitaCarrello(evento,carrello);
             boolean alertScaduta=serviceE.checkScaduta(evento);
@@ -53,9 +53,7 @@ public class GestioneEventiController extends HttpServlet {
             callDispatcher(request,response,address);
         }
         if(request.getParameter("goToEventiOrganizzatore")!=null){
-            //aggiustare ritorna eventi sbagliati
-            UtenteRegistratoBean utente=(UtenteRegistratoBean) session.getAttribute("selezionato");
-            List<EventoBean> eventi=serviceE.retrieveEventiOrganizzatore(utente);
+            List<EventoBean> eventi=serviceE.retrieveEventiOrganizzatore(utenteLoggato);
             request.setAttribute("eventi",eventi);
             callDispatcher(request,response,"/WEB-INF/gestioneEventi/ListaEventiOrganizzatore.jsp");
         }
@@ -63,34 +61,26 @@ public class GestioneEventiController extends HttpServlet {
             String address = "/WEB-INF/gestioneEventi/RichiestaEvento.jsp";
             callDispatcher(request,response,address);
         }
-        if(request.getParameter("goToAllRichiesteEventi")!=null){
-            //no??? non dovrebbe esistere più elimina anche la jps
-            String tipoUtente=(String) session.getAttribute("tipoUtente");
-            List<EventoBean> richiesteEventi= serviceE.retriveAllRichiesteEventi(tipoUtente);
-            
-            request.setAttribute("richiesteEventi",richiesteEventi); //differenzia modifica
-            String address = "/WEB-INF/gestioneEventi/AllRichiesteEventi.jsp";
-            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-            dispatcher.forward(request, response);
-        }
         if(request.getParameter("eliminaEv")!=null){
             int id= Integer.parseInt(request.getParameter("idE"));
             serviceE.rimuoviEvento(id,utenteLoggato);
-            String address="/WEB-INF/index.jsp";
-
-            callDispatcher(request,response,address);
+            callDispatcher(request,response,"/index.html");
         }
         if(request.getParameter("goToRichiesteInserimento")!=null){
-            String tipoUtente=(String) session.getAttribute("tipoUtente");
-            List<EventoBean> richiesteEventi= serviceE.retrieveRichiesteInserimento(tipoUtente);
+            if(utenteLoggato==null){
+                throw new RuntimeException("operazione non autorizzata");
+            }
+            List<EventoBean> richiesteEventi= serviceE.retrieveRichiesteInserimento(utenteLoggato.getTipoUtente());
 
             request.setAttribute("richiesteEventi",richiesteEventi); //differenzia modifica
             String address = "/WEB-INF/gestioneEventi/RichiesteInserimento.jsp";
             callDispatcher(request,response,address);
         }
         if(request.getParameter("goToRichiesteModifica")!=null){
-            String tipoUtente=(String) session.getAttribute("tipoUtente");
-            List<EventoBean> richiesteEventi= serviceE.retrieveRichiesteModifica(tipoUtente);
+            if(utenteLoggato==null){
+                throw new RuntimeException("operazione non autorizzata");
+            }
+            List<EventoBean> richiesteEventi= serviceE.retrieveRichiesteModifica(utenteLoggato.getTipoUtente());
 
             request.setAttribute("richiesteEventi",richiesteEventi); //differenzia modifica
             String address = "/WEB-INF/gestioneEventi/RichiesteModifiche.jsp";

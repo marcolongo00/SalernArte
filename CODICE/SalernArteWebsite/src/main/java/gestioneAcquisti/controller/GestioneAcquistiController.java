@@ -35,7 +35,7 @@ public class GestioneAcquistiController extends HttpServlet {
         CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
 
         if(request.getParameter("goToCarrello")!=null){
-            boolean alertCarrello=false;
+            boolean alertCarrello=false; //in teoria gestito, testare
             if(carrello==null && utente==null){
                 carrello=new CarrelloBean();
 
@@ -49,8 +49,7 @@ public class GestioneAcquistiController extends HttpServlet {
             session.setAttribute("carrello",carrello);
             request.setAttribute("alertCarrello",alertCarrello);
             String address="WEB-INF/gestioneAcquisti/Carrello.jsp";
-            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
-            dispatcher.forward(request,response);
+            callDispatcher(request,response,address);
         }
         if(request.getParameter("svuotaCarrello")!=null){
             if(utente==null){
@@ -62,32 +61,23 @@ public class GestioneAcquistiController extends HttpServlet {
 
             session.setAttribute("carrello",carrello);
             String address="WEB-INF/gestioneAcquisti/Carrello.jsp";
-            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
-            dispatcher.forward(request,response);
+            callDispatcher(request,response,address);
         }
         if(request.getParameter("removeEventoFromCarrello")!=null){
             int idE= Integer.parseInt(request.getParameter("idE"));
             service.removeEventoFromCarrello(idE,carrello,utente);
             session.setAttribute("carrello", carrello);
 
-            String address=request.getHeader("referer");
-            if(address==null || address.contains("/gestione-acquisti") || address.trim().isEmpty()){
-                address=".";
-            }
-
-            response.sendRedirect(address);
+            callReferer(request,response);
         }
         if(request.getParameter("datiCartaAcquisto")!=null){
             //go to dettagli carta first
             String address="WEB-INF/gestioneAcquisti/DettagliPagamentoCarta.jsp";
-            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
-            dispatcher.forward(request,response);
+            callDispatcher(request,response,address);
         }
         String finalizzaAcquisto=request.getParameter("finalizzaAcquisto");
         if(finalizzaAcquisto!=null){
-
-
-            //finto controllo dati carta
+            //finto controllo dati carta!!!
 
             service.acquistaProdotti(carrello,utente);
             //session.setAttribute("notificaAll", "Acquisto completato");
@@ -95,8 +85,18 @@ public class GestioneAcquistiController extends HttpServlet {
             //se utente fosse null non si sarebbe potuto fare l'acquisto
 
             String address="WEB-INF/gestioneAcquisti/Acquistato.jsp";
-            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
-            dispatcher.forward(request,response);
+            callDispatcher(request,response,address);
         }
+    }
+    private void callDispatcher(HttpServletRequest request, HttpServletResponse response,String address) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+        dispatcher.forward(request, response);
+    }
+    private void callReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String address=request.getHeader("referer"); //gli da fastidio, devi completamente separare dispatcher e referer
+        if(address==null || address.contains("/gestione-acquisti") || address.trim().isEmpty()){
+            address=".";
+        }
+        response.sendRedirect(address);
     }
 }

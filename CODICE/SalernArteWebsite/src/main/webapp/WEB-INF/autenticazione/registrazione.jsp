@@ -41,13 +41,13 @@
                             <input type="date" id="dataDiNascita"  name="dataDiNascita">
                         </div>
                         <div class="genderContainer">
-                            <input type="radio" id="uomo" name="gender"  value="uomo">
+                            <input type="radio" id="uomo" name="gender"  value="0" required>
                             <label for="uomo"><b>Uomo</b></label>
 
-                            <input type="radio" id="donna" name="gender" value="donna">
+                            <input type="radio" id="donna" name="gender" value="1">
                             <label for="donna"><b>Donna</b></label>
 
-                            <input type="radio" id="altro" name="gender" value="altro">
+                            <input type="radio" id="altro" name="gender" value="2">
                             <label for="altro"><b>Altro</b></label>
                         </div>
                     </div>

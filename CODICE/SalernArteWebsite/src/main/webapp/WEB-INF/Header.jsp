@@ -42,8 +42,6 @@
                 <ul style="list-style-type: none">
                     <c:choose>
                         <c:when test="${(sessionScope.selezionato !=null) and (selezionato.tipoUtente=='amministratore')}">
-                            <li><a href="gestione-eventi?goToAllRichiesteEventi=true" > Richieste eventi</a></li>
-                            <hr>
                             <li><a href="gestione-eventi?goToRichiesteInserimento=true" > RICHIESTE INSERIMENTO EVENTI</a></li>
                             <hr>
                             <li><a href="gestione-eventi?goToRichiesteModifica=true" > RICHIESTE MODIFICHE EVENTI</a></li>
@@ -104,8 +102,6 @@
                             <ul style="list-style-type: none;">
                                 <c:choose>
                                     <c:when test="${(sessionScope.selezionato !=null) and (selezionato.tipoUtente=='amministratore')}">
-                                        <li><a href="gestione-eventi?goToAllRichiesteEventi=true" > Richieste eventi</a></li>
-                                        <hr>
                                         <li><a href="gestione-eventi?goToRichiesteInserimento=true" > RICHIESTE INSERIMENTO EVENTI</a></li>
                                         <hr>
                                         <li><a href="gestione-eventi?goToRichiesteModifica=true" > RICHIESTE MODIFICHE EVENTI</a></li>

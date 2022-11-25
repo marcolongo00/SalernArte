@@ -38,7 +38,7 @@
     <input class="expire" type="text" placeholder="MM / AAAA"/>
     <label>Numero di sicurezza</label>
     <input class="ccv" type="text" placeholder="CVC" maxlength="3" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
-    <button class="buy" onclick="window.location.href='gestione-acquisti?finalizzaAcquisto=true'"><i class="material-icons">lock</i> Paga --.-- €</button>
+    <button class="buy" onclick="window.location.href='gestione-acquisti?finalizzaAcquisto=true'"><i class="material-icons">lock</i> Paga ${sessionScope.carrello.prezzoTot} €</button>
   </div>
 </div>
 

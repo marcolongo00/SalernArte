@@ -74,7 +74,7 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
     public void removeEventoFromCarrello(int idE, CarrelloBean carrello, UtenteRegistratoBean utente) {
         // controllo che l'id sia corretto e che nel carrello sia presente il prodotto
         if(idE<= 0 || eventoDao.doRetrieveById(idE)==null || carrello.get(idE)==null)
-            throw new RuntimeException("qualcosa è andato storto ripsovare");
+            throw new RuntimeException("qualcosa è andato storto riprovare");
         checkAutorizzazioniUtente(utente);
         if(utente!=null)
             daoCarr.doDelete(utente.getId(),idE);
@@ -171,15 +171,12 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         prodotti=prodotti.substring(0,index)+";";
 
         acquistoDAO.setProdotti(acquisto.getNumOrdine(),prodotti);
-
-        if(utente!=null){
-            daoCarr.svuotaCarrello(utente.getId());
-        }
+        daoCarr.svuotaCarrello(utente.getId());
 
     }
 
     private void checkAutorizzazioniUtente(UtenteRegistratoBean utente){
-        if(utente != null && utente.getTipoUtente().compareTo("Utente")!=0 && utente.getTipoUtente().compareTo("Scolaresca")!=0 ) {
+        if(utente != null && utente.getTipoUtente().compareToIgnoreCase("utente")!=0 && utente.getTipoUtente().compareToIgnoreCase("scolaresca")!=0 ) {
             throw new RuntimeException("operazione non autorizzata");
         }
     }

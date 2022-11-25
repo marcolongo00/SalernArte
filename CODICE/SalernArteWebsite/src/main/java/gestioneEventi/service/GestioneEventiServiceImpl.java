@@ -151,10 +151,10 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
     }
 
     @Override
-    public EventoBean retriveEventoById(int idEvento) {
+    public EventoBean retrieveEventoById(int idEvento) {
         EventoBean result= daoEvento.doRetrieveById(idEvento);
         if(result==null){
-            throw new RuntimeException(); //myException si è verificato un errore evento non esiste ciao
+            throw new RuntimeException("Si è verificato un errore, l'evento selezionato non esiste ");
         }
         return result;
     }
@@ -170,9 +170,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
 
     @Override
     public List<EventoBean> retrieveEventiOrganizzatore(UtenteRegistratoBean utente){
-        if(utente==null || utente.getTipoUtente().compareToIgnoreCase("Organizzatore")!=0){ //funzione a prte controllaPermessi(UtenteReg utente, String permesso);
-            throw new RuntimeException("operazione non autorizzata"); //my exception
-        }
+        controllaPermessiOrganizzatore(utente);
         return daoEvento.doRetrieveByOrganizzatore(utente.getId());
     }
 
@@ -221,6 +219,9 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             if (e.getId() == idEvento) return daoBiglietto.doRetrievePrezzoBiglByRichiestaModifica(idEvento);
         }
         return daoBiglietto.doRetrievePrezzoBigliettoByEvento(idEvento);
+    }
+    public List<EventoBean> ricercaEventiByNomeOrDescrizione(String query){
+        return daoEvento.doRetrieveByNomeOrDescrizione(query);
     }
 
     private boolean getTypeEvento(String tipoEvento){

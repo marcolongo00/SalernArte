@@ -1,5 +1,7 @@
 package gestioneEventi.utils;
 
+import gestioneEventi.service.GestioneEventiService;
+import gestioneEventi.service.GestioneEventiServiceImpl;
 import model.dao.EventoDAO;
 import model.dao.EventoDAOImpl;
 import model.entity.EventoBean;
@@ -21,11 +23,11 @@ public class JSONSuggerimentiRicerca extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //nel service
+         GestioneEventiService service= new GestioneEventiServiceImpl();
         String query=request.getParameter("query")+"*";
         List<EventoBean> eventi= new ArrayList<>();
         if(query.trim().length()>1){
-            eventi=new EventoDAOImpl().doRetrieveByNomeOrDescrizione(query);
+            eventi=service.ricercaEventiByNomeOrDescrizione(query);
         }
 
         JSONArray ricercaTOTJSON= new JSONArray();

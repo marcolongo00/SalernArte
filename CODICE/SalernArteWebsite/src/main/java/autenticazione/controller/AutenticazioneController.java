@@ -24,12 +24,13 @@ public class AutenticazioneController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         AutenticazioneService serviceA= new AutenticazioneServiceImpl();
-
+        /*
         if(request.getParameter("goToLogin")!=null){
             //credo non venga mia usata. contorllare
             String address="WEB-INF/autenticazione/login.jsp";
             callDispatcher(request,response,address);
         }
+         */
 
         if(request.getParameter("Accedi")!=null){
             String email=request.getParameter("email");
@@ -73,7 +74,7 @@ public class AutenticazioneController extends HttpServlet {
     }
     private void callReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String address=request.getHeader("referer"); //gli da fastidio, devi completamente separare dispatcher e referer
-        if(address==null || address.contains("/gestione-eventi") || address.trim().isEmpty()){
+        if(address==null || address.contains("/autenticazione-controller") || address.trim().isEmpty()){
             address=".";
         }
         response.sendRedirect(address);

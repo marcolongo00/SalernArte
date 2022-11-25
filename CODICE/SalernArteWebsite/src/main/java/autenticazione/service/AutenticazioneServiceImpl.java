@@ -178,7 +178,7 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
         }
         if (iban == null || iban.isEmpty() || !iban.matches("^(it|IT)[0-9]{2}[A-Za-z][0-9]{10}[0-9A-Za-z]{12}$")) {
             //regEx per iban italia
-            throw new RuntimeException("Cognome non valido.");
+            throw new RuntimeException("Iban non valido.");
         }
         UtenteBean utenteAggiornato = new UtenteBean(utenteLoggato.getId(), gender, nome, cognome, email, passwordNoHash, dataDiNascita, isHash);
         daoUtente.doUpdate(utenteAggiornato);
