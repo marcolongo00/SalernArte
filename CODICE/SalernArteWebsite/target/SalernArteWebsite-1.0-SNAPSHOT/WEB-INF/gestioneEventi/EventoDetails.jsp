@@ -123,7 +123,7 @@
                     <div class="carrContainer">
                         <div id="carrQta">QUANTITA'</div>
                         <div id="barra">
-                            <div class="qtaValue">0</div>
+                            <div class="qtaValue">1</div>
                             <div class="arrow">
                                 <i class="fa fa-caret-down" ></i>
                                 <i class="fa fa-caret-up" ></i>

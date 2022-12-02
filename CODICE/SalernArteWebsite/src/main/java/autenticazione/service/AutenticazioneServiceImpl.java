@@ -14,6 +14,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+//regex password: "^(?=.*[az])(?=.*[AZ])(?=.*\d)[a-zA-Z\d]{6,}$"
+
 public class AutenticazioneServiceImpl implements AutenticazioneService{
     private UtenteRegistratoDAO daoU;
     private AmministratoreDAOImpl daoAmm;

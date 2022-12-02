@@ -78,7 +78,7 @@
         //document.getElementById("provaJS").innerHTML
         //  = "hai selezionato: "+document.querySelector('input[name="tipoUtente"]:checked').value;
 
-        if(checked=='utenteRegistrato'){
+        if(checked=='utente'){
             $(".utenteAndOrganizzatore").show();
         }else if(checked=='scolaresca'){
             $(".scolaresca").show();
