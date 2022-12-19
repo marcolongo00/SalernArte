@@ -8,11 +8,6 @@ import java.util.*;
 
 import model.entity.CarrelloBean.BigliettoQuantita;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 //regex password: "^(?=.*[az])(?=.*[AZ])(?=.*\d)[a-zA-Z\d]{6,}$"
 
@@ -189,29 +184,6 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
 
     @Override
     public void recuperaPassword(String emailTo) {
-        //no
-        //String host = "smtp.gmail.com";
-        String host="smtp.office365.com";
-        String username = "alessia.dellapepa99";
-        String password = "cH1cK.3UBU";
-        Properties props = new Properties();
-       // props.setProperty("mail.smtp.ssl.enable", "true");
-        props.setProperty("mail.smtp.host", host);
-        Session session = Session.getDefaultInstance(props);
-
-
-        try{
-            MimeMessage msg = new MimeMessage(session);
-            // set the message content here
-            msg.setFrom(new InternetAddress("alessia.dellapepa99@gmail.com"));
-            msg.addRecipient(Message.RecipientType.TO,new InternetAddress(emailTo));
-            msg.setSubject("test email");
-            msg.setText("Hello CULO this is example of sending email  ");
-            //Transport.send(msg, username, password);
-            Transport.send(msg);
-        }catch (Exception e){
-            throw new RuntimeException(e);
-        }
 
 
     }

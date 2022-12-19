@@ -2,8 +2,6 @@ package gestioneEventi.utils;
 
 import gestioneEventi.service.GestioneEventiService;
 import gestioneEventi.service.GestioneEventiServiceImpl;
-import model.dao.EventoDAO;
-import model.dao.EventoDAOImpl;
 import model.entity.EventoBean;
 import org.json.JSONArray;
 
