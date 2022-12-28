@@ -9,8 +9,6 @@ import java.util.*;
 import model.entity.CarrelloBean.BigliettoQuantita;
 
 
-//regex password: "^(?=.*[az])(?=.*[AZ])(?=.*\d)[a-zA-Z\d]{6,}$"
-
 public class AutenticazioneServiceImpl implements AutenticazioneService{
     private UtenteRegistratoDAO daoU;
     private AmministratoreDAOImpl daoAmm;
@@ -68,30 +66,37 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
         }
         List<AcquistoBean> ordini= daoAcq.doRetrieveListaAcquistiByIdUtente(idUtente);
 
-        Collections.reverse(ordini);
+        Collections.reverse(ordini); //per avere la lista in ordine dal più recente
         return ordini;
     }
 
 
     public UtenteRegistratoBean updateUtente(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String nome, String cognome, Date dataDiNascita, int gender) {
         boolean isHash = false;
-        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+)+$")) {
+        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
         if (passwordNoHash.isEmpty()) {
+            //se non viene inserita la password non dve eessere cambiata e si inserisce la vecchia
             isHash = true;
             passwordNoHash = utenteLoggato.getPasswordHash();
+        }else {
+            //altrimenti controllare il formato password inserito
+            if(!passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$")){
+                throw new RuntimeException("Password non valida.");
+            }
         }
-        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Nome non valido.");
         }
 
-        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Cognome non valido.");
         }
         Date dataAttuale = new Date(Calendar.getInstance().getTimeInMillis());
+        //se il formato data non è corretto sarà il parse nell'areaUtentecontroller a dare errore
         if (dataDiNascita.after(dataAttuale)) {
             throw new RuntimeException("impostazioni data di nascita inserite non valide");
         }
@@ -105,19 +110,25 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
     @Override
     public UtenteRegistratoBean updateAmministratore(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String nome, String cognome) {
         boolean isHash = false;
-        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+)+$")) {
+        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
         if (passwordNoHash.isEmpty()) {
+            //se non viene inserita la password non dve eessere cambiata e si inserisce la vecchia
             isHash = true;
             passwordNoHash = utenteLoggato.getPasswordHash();
+        }else {
+            //altrimenti controllare il formato password inserito
+            if(!passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$")){
+                throw new RuntimeException("Password non valida.");
+            }
         }
-        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Nome non valido.");
         }
 
-        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Cognome non valido.");
         }
@@ -129,14 +140,20 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
     @Override
     public UtenteRegistratoBean updateScolaresca(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String istituto) {
         boolean isHash = false;
-        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+)+$")) {
+        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
         if (passwordNoHash.isEmpty()) {
+            //se non viene inserita la password non dve eessere cambiata e si inserisce la vecchia
             isHash = true;
             passwordNoHash = utenteLoggato.getPasswordHash();
+        }else {
+            //altrimenti controllare il formato password inserito
+            if(!passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$")){
+                throw new RuntimeException("Password non valida.");
+            }
         }
-        if (istituto == null || istituto.isEmpty()) {
+        if (istituto == null || istituto.isEmpty() || !istituto.matches("^[ a-zA-Z\u00C0-\u00ff]{1,100}$")) {
             throw new RuntimeException("Istituto non valido.");
         }
         ScolarescaBean utenteAggiornato = new ScolarescaBean(utenteLoggato.getId(),email,passwordNoHash,istituto,isHash);
@@ -147,19 +164,25 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
     @Override
     public UtenteRegistratoBean updateOrganizzatore(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String nome, String cognome, Date dataDiNascita, int gender, String biografia, String iban) {
         boolean isHash = false;
-        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+)+$")) {
+        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
         if (passwordNoHash.isEmpty()) {
+            //se non viene inserita la password non dve eessere cambiata e si inserisce la vecchia
             isHash = true;
             passwordNoHash = utenteLoggato.getPasswordHash();
+        }else {
+            //altrimenti controllare il formato password inserito
+            if(!passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$")){
+                throw new RuntimeException("Password non valida.");
+            }
         }
-        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Nome non valido.");
         }
 
-        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Cognome non valido.");
         }
@@ -171,6 +194,7 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
             throw new RuntimeException("dati per genere non corretti");
         }
         if (biografia == null || biografia.isEmpty()) {
+            //BASTA CHE ABBIA ALMENO UN CARATTERE
             throw new RuntimeException("Biografia non valido.");
         }
         if (iban == null || iban.isEmpty() || !iban.matches("^(it|IT)[0-9]{2}[A-Za-z][0-9]{10}[0-9A-Za-z]{12}$")) {
@@ -184,7 +208,7 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
 
     @Override
     public void recuperaPassword(String emailTo) {
-
+        //DA FARE
 
     }
     public void eliminaProfiloUtente(UtenteRegistratoBean utenteLoggato){

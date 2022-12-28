@@ -14,6 +14,10 @@
           <element id="module-output" name="SalernArteWebsite" />
         </element>
         <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.json:json:20200518" />
+          <element id="library" level="project" name="Maven: org.apache.tomcat:tomcat-jdbc:10.1.0-M17" />
+          <element id="library" level="project" name="Maven: org.apache.tomcat:tomcat-juli:10.1.0-M17" />
+          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.3" />
           <element id="library" level="project" name="Maven: org.mockito:mockito-core:4.10.0" />
           <element id="library" level="project" name="Maven: net.bytebuddy:byte-buddy:1.12.19" />
           <element id="library" level="project" name="Maven: net.bytebuddy:byte-buddy-agent:1.12.19" />

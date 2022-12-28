@@ -221,6 +221,9 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         return daoBiglietto.doRetrievePrezzoBigliettoByEvento(idEvento);
     }
     public List<EventoBean> ricercaEventiByNomeOrDescrizione(String query){
+        if(!query.matches("^[0-9°A-zÀ-ù ‘-]+$")){
+            throw new RuntimeException("errore formato ricerca");
+        }
         return daoEvento.doRetrieveByNomeOrDescrizione(query);
     }
 

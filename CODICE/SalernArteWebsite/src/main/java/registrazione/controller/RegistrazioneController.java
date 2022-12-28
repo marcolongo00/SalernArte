@@ -70,8 +70,6 @@ public class RegistrazioneController extends HttpServlet {
                     //errore
                 }
                 session.setAttribute("selezionato",utenteResult);
-
-                //salva il carrello che sta in sessione nel db del nuovo utente
                 callReferer(request,response);
 
         }

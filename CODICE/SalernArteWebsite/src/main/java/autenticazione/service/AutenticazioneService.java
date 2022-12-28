@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AutenticazioneService {
     UtenteRegistratoBean loginUtente(String email, String passwordNotHash, String tipoUtente);
-    List<UtenteRegistratoBean> retrieveAllUtentiSistema(UtenteRegistratoBean utenteLoggato);
+    List<UtenteRegistratoBean> retrieveAllUtentiSistema(UtenteRegistratoBean utenteLoggato );
     List<AcquistoBean> retrieveListaOrdiniUtente(UtenteRegistratoBean utenteLoggato, int idUtente);
     UtenteRegistratoBean updateUtente(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String nome, String cognome, Date dataDiNascita, int gender);
     UtenteRegistratoBean updateAmministratore(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String nome, String cognome);

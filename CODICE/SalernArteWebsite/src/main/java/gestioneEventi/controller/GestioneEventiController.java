@@ -114,10 +114,9 @@ public class GestioneEventiController extends HttpServlet {
             callDispatcher(request,response,address);
         }
         if(request.getParameter("ricercaEventi")!=null){
-            // nel service !!!!!!
             String query=request.getParameter("query")+"*";
             if(query.trim().length()>1){
-                List<EventoBean> eventi=new EventoDAOImpl().doRetrieveByNomeOrDescrizione(query);
+                List<EventoBean> eventi=serviceE.ricercaEventiByNomeOrDescrizione(query);
                 request.setAttribute("eventi",eventi);
             }
 
@@ -125,6 +124,7 @@ public class GestioneEventiController extends HttpServlet {
             callDispatcher(request,response,address);
         }
         if(request.getParameter("inviaRichiestaEvento")!=null){
+            //RIVEDERE TUTTA OPERAZIONE
             OrganizzatoreBean organizzatore= (OrganizzatoreBean) session.getAttribute("selezionato"); //controllo sull'utente
             Date dataInizio=Date.valueOf(request.getParameter("dataInizio"));
             Date dataFine=Date.valueOf(request.getParameter("dataFine"));

@@ -47,7 +47,10 @@
     <orderEntry type="library" exported="" name="javax.mail" level="project" />
     <orderEntry type="library" exported="" name="javax.activation-1.2.0" level="project" />
     <orderEntry type="library" name="junit" level="project" />
-    <orderEntry type="library" name="jacoco.core" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20200518" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-jdbc:10.1.0-M17" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-juli:10.1.0-M17" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax:javaee-web-api:8.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.7.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.1.0" level="project" />

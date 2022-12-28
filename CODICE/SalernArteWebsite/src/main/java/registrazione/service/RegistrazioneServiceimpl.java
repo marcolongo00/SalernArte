@@ -17,18 +17,18 @@ public class RegistrazioneServiceimpl implements RegistrazioneService{
     public UtenteRegistratoBean registrazioneUtente(int gender, String nome, String cognome, String email, String passwordNoHash, Date dataDiNascita) {
         //controlli sui dati
         daoU=new UtenteDAOImpl();
-        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+)+$")) {
+        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
-        if (passwordNoHash==null) { //manca regular expression
+        if (passwordNoHash==null || !passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$" )) {
             throw new RuntimeException("Password non valida.");
         }
-        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Nome non valido.");
         }
 
-        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Cognome non valido.");
         }
@@ -48,13 +48,13 @@ public class RegistrazioneServiceimpl implements RegistrazioneService{
     @Override
     public UtenteRegistratoBean registrazioneScolaresca(String email, String passwordNoHash, String istituto) {
         daoU=new ScolarescaDAOImpl();
-        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+)+$")) {
+        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
-        if (passwordNoHash==null) { //manca regular expression
+        if (passwordNoHash==null || !passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$" )) {
             throw new RuntimeException("Password non valida.");
         }
-        if (istituto == null || istituto.isEmpty()) {
+        if (istituto == null || istituto.isEmpty()  || !istituto.matches("^[ a-zA-Z\u00C0-\u00ff]{1,100}$")) {
             throw new RuntimeException("Istituto non valido.");
         }
         UtenteRegistratoBean result= new ScolarescaBean(email,passwordNoHash,istituto,false);
@@ -65,18 +65,18 @@ public class RegistrazioneServiceimpl implements RegistrazioneService{
     @Override
     public UtenteRegistratoBean registrazioneOrganizzatore(int gender, String iban, String nome, String cognome, String email, String passwordNoHash, String biografia, String azienda, Date dataDiNascita) {
         daoU=new OrganizzatoreDAOImpl();
-        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+)+$")) {
+        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
-        if (passwordNoHash==null) { //manca regular expression
+        if (passwordNoHash==null || !passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$" )) {
             throw new RuntimeException("Password non valida.");
         }
-        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Nome non valido.");
         }
 
-        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]+$")) {
+        if (cognome == null || cognome.isEmpty() || !cognome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
             //regEx per stringa senza numeri
             throw new RuntimeException("Cognome non valido.");
         }
@@ -88,6 +88,7 @@ public class RegistrazioneServiceimpl implements RegistrazioneService{
             throw new RuntimeException("dati per genere non corretti");
         }
         if (biografia == null || biografia.isEmpty()) {
+            //batsa che abbia almeno un carattere, stringa not empty
             throw new RuntimeException("Biografia non valido.");
         }
         if (iban == null || iban.isEmpty() || !iban.matches("^(it|IT)[0-9]{2}[A-Za-z][0-9]{10}[0-9A-Za-z]{12}$")) {

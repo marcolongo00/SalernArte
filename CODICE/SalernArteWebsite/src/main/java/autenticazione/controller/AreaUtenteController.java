@@ -45,6 +45,7 @@ public class AreaUtenteController extends HttpServlet {
             callDispatcher(request,response,address);
         }
         if(request.getParameter("goToProfilo")!=null){
+            if(utenteLoggato==null) throw new RuntimeException("Devi essere loggato epr accedere al tuo profilo");
             String address = "/WEB-INF/gestioneUtente/ProfiloUtente.jsp";
             callDispatcher(request,response,address);
         }
