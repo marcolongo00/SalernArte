@@ -17,7 +17,7 @@ public interface GestioneEventiService {
     void attivaEvento(int idEvento,String tipoUtente);
     void rimuoviEvento(int idEvento,UtenteRegistratoBean utente);
     EventoBean retrieveEventoById(int idEvento);
-    List<EventoBean> retriveAllRichiesteEventi(String tipoUtente);
+    OrganizzatoreBean retriveBioOrganizzatore(int idOrg);
     void checkQuantitaCarrello(EventoBean evento, CarrelloBean carrelloSessione);
     boolean checkScaduta(EventoBean evento);
     double getPrezzoEvento(int idEvento);

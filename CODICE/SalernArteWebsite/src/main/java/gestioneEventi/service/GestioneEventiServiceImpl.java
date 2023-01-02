@@ -14,6 +14,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import model.entity.CarrelloBean.BigliettoQuantita;
+import model.entity.OrganizzatoreBean;
 import model.entity.UtenteRegistratoBean;
 
 public class GestioneEventiServiceImpl implements GestioneEventiService{
@@ -117,6 +118,8 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         //nel acso di rifiuto inseirmento l'evento viene rimosso. nel caso di rifiuta modifica no,
         // si riporta allo stato di prima e si avvisa l'organizzatore
         //metodo chiamato anche se l'ìorganizzatore elimina l'evento
+
+        //delete foto
         daoEvento.doDelete(idEvento);
     }
 
@@ -160,12 +163,9 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
     }
 
     @Override
-    public List<EventoBean> retriveAllRichiesteEventi(String tipoUtente) {
-        if(tipoUtente==null || tipoUtente.compareTo("amministratore")!=0){
-            throw  new RuntimeException(); // errore my exception
-        }
-        //differenzia la modifica e gli altri eventi non attivi. non so ancora come
-        return daoEvento.doRetrieveAllEventiNonAttivi(); // non va bene perchè ci sono i duplicati di quelli solo modifiche
+    public OrganizzatoreBean retriveBioOrganizzatore(int idOrg) {
+        OrganizzatoreDAOImpl daoOrg=new OrganizzatoreDAOImpl();
+        return daoOrg.doRetrieveById(idOrg);
     }
 
     @Override
@@ -176,16 +176,16 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
 
     @Override
     public List<EventoBean> retrieveRichiesteInserimento(String tipoUtente) {
-        if(tipoUtente==null || tipoUtente.compareTo("amministratore")!=0){
-            throw  new RuntimeException(); // errore my exception
+        if(tipoUtente==null || tipoUtente.compareToIgnoreCase("amministratore")!=0){
+            throw  new RuntimeException("operazione non autorizzata"); // errore my exception
         }
         return daoEvento.doRetrieveAllRichiesteInserimento();
     }
 
     @Override
     public List<EventoBean> retrieveRichiesteModifica(String tipoUtente) {
-        if(tipoUtente==null || tipoUtente.compareTo("amministratore")!=0){
-            throw  new RuntimeException(); // errore my exception
+        if(tipoUtente==null || tipoUtente.compareToIgnoreCase("amministratore")!=0){
+            throw  new RuntimeException("operazione non autorizzata"); // errore my exception
         }
         return daoEvento.doRetrieveAllRichiesteModifiche();
     }
@@ -221,7 +221,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         return daoBiglietto.doRetrievePrezzoBigliettoByEvento(idEvento);
     }
     public List<EventoBean> ricercaEventiByNomeOrDescrizione(String query){
-        if(!query.matches("^[0-9°A-zÀ-ù ‘-]+$")){
+        if(!query.matches("^[0-9°A-zÀ-ù ‘-]*\\*$")){
             throw new RuntimeException("errore formato ricerca");
         }
         return daoEvento.doRetrieveByNomeOrDescrizione(query);

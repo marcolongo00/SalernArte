@@ -23,5 +23,6 @@
     </c:otherwise>
 </c:choose>
 
-<jsp:include page="../Footer.jsp" />
+</body>
+</html>
 

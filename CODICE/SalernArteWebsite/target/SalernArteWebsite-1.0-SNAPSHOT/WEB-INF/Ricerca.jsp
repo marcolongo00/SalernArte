@@ -27,7 +27,6 @@
         </div>
     </c:otherwise>
 </c:choose>
-<jsp:include page="./Footer.jsp" />
 <script>
     $(document).ready(function () {
         var showChar = 100;  // caratteri mostrati

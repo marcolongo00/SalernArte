@@ -1,11 +1,9 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html>
-<head>
-    <title>Richiesta Evento</title>
-</head>
-<body>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<jsp:include page="../Header.jsp">
+    <jsp:param name="pageTitle" value="Richiesta Evento"/>
+</jsp:include>
 <form action="gestione-eventi" method="post"  enctype="multipart/form-data">
     <div class="dati">
         <div id="range">
@@ -39,6 +37,9 @@
             <textarea  name="desc" rows='10' class='mDescr' id='validaDescr'  placeholder="Descrizione"></textarea>
             <input type="text" name="indirizzo" placeholder="indirizzo">
             <input type="text" name="sede" placeholder="sede">
+            <div class="regolamento">
+                Cliccando sul pulsante PROCEDI confermi di aver accettato le nostre norme sulla privacy
+            </div>
         </div>
     </div>
     <input type="submit" id="insertMSubmit" name="inviaRichiestaEvento" value="PROCEDI">

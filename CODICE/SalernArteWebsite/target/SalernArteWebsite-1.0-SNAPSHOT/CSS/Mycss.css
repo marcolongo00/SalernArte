@@ -13,6 +13,10 @@ a{
     padding: 5px;
 
 }
+.regolamento{
+    text-align: center;
+    padding: 5px;
+}
 .container{
     display: flex;/*mode of display*/
     flex-direction: column;/*how to set our 3 items,children of container*/

@@ -77,7 +77,7 @@
             var idE=$(this).attr("id");
             var val=$("#"+idE+" option:selected").text();
 
-            var url="update-carr-qta?idE="+idE+"&qta="+val; //nopn esiste ancora
+            var url="update-carr-qta?idE="+idE+"&qta="+val;
             $.getJSON(url,function (data) {
                 location.reload();
             });

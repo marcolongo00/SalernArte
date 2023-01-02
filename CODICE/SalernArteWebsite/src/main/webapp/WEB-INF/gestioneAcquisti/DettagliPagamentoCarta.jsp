@@ -41,8 +41,6 @@
     <button class="buy" onclick="window.location.href='gestione-acquisti?finalizzaAcquisto=true'"><i class="material-icons">lock</i> Paga ${sessionScope.carrello.prezzoTot} €</button>
   </div>
 </div>
-
-</body>
 <script>
   // 4: VISA, 51 -> 55: MasterCard, 36-38-39: DinersClub, 34-37: American Express, 65: Discover, 5019: dankort
 
@@ -204,4 +202,5 @@
   });
 
 </script>
+</body>
 </html>

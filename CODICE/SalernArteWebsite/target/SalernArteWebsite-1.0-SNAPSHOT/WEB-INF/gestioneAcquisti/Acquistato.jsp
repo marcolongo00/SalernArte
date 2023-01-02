@@ -5,4 +5,5 @@
   <jsp:param name="pageTitle" value="acquisto effettuato con successo"/>
 </jsp:include>
 <br>acquisto completato SAMPLE<br>
-<jsp:include page="../Footer.jsp" />
+</body>
+</html>

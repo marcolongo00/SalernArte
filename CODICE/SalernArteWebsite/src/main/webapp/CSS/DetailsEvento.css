@@ -60,8 +60,9 @@
 .prezzoBiglContainer{
     font-weight: bold;
 }
-.prezzoBiglietto, .numBiglietti{
-    padding-left: 5px;
+
+.prezzoBiglietto, .numBiglietti, .sconto{
+    padding: 0px 10px;
 }
 .contAll{
     width:100%;

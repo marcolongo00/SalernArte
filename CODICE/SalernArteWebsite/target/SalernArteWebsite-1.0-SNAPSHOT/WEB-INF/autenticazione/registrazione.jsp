@@ -58,8 +58,10 @@
                         <input type="text" id="biografia" name="biografia"  placeholder="biografia" >
                         <input type="text" id="iban" name="iban"  placeholder="iban" >
                     </div>
+                    <div class="regolamento">
+                        Cliccando sul pulsante REGISTRA confermi di aver accettato le nostre norme sulla privacy
+                    </div>
                 </div>
-
             </div>
             <input type="submit" id="registrami"  name="registrazione" value="Registra">
             <p class="tipo" id="messaggio"></p>

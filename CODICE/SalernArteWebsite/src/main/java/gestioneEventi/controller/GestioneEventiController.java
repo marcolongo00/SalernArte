@@ -31,10 +31,12 @@ public class GestioneEventiController extends HttpServlet {
         GestioneEventiService serviceE=new GestioneEventiServiceImpl();
         if ( request.getParameter("detailsE")!=null) {
             int idE = Integer.parseInt(request.getParameter("idE"));
-
             EventoBean evento = serviceE.retrieveEventoById(idE);
-            CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
-            serviceE.checkQuantitaCarrello(evento,carrello);
+            if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase("utente")==0 || utenteLoggato.getTipoUtente().compareToIgnoreCase("scolaresca")==0){
+                CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
+                serviceE.checkQuantitaCarrello(evento,carrello);
+            }
+
             boolean alertScaduta=serviceE.checkScaduta(evento);
             double prezzoBiglietto=serviceE.getPrezzoEvento(evento.getId());
 
@@ -42,7 +44,11 @@ public class GestioneEventiController extends HttpServlet {
                 request.setAttribute("ins",true);
             }else if(request.getParameter("modifica")!=null){
                 request.setAttribute("modif",true);
-
+            }
+            if(utenteLoggato.getTipoUtente().compareToIgnoreCase("scolaresca")==0){
+                double scontoDaApplicare= prezzoBiglietto*30/100;
+                double prezzoScontato= prezzoBiglietto-scontoDaApplicare;
+                request.setAttribute("scontoScuola",prezzoScontato);
             }
 
             request.setAttribute("selectedEvento", evento);
@@ -58,6 +64,8 @@ public class GestioneEventiController extends HttpServlet {
             callDispatcher(request,response,"/WEB-INF/gestioneEventi/ListaEventiOrganizzatore.jsp");
         }
         if(request.getParameter("goToRichiestaEvento")!=null){
+            //pagina per richiedere l'inserimento di un evento sulla
+            // piattaforma da parte di un organizzatore di eventi
             String address = "/WEB-INF/gestioneEventi/RichiestaEvento.jsp";
             callDispatcher(request,response,address);
         }
@@ -67,12 +75,12 @@ public class GestioneEventiController extends HttpServlet {
             callDispatcher(request,response,"/index.html");
         }
         if(request.getParameter("goToRichiesteInserimento")!=null){
-            if(utenteLoggato==null){
+            if(utenteLoggato==null ){
                 throw new RuntimeException("operazione non autorizzata");
             }
             List<EventoBean> richiesteEventi= serviceE.retrieveRichiesteInserimento(utenteLoggato.getTipoUtente());
 
-            request.setAttribute("richiesteEventi",richiesteEventi); //differenzia modifica
+            request.setAttribute("richiesteEventi",richiesteEventi);
             String address = "/WEB-INF/gestioneEventi/RichiesteInserimento.jsp";
             callDispatcher(request,response,address);
         }
@@ -82,7 +90,7 @@ public class GestioneEventiController extends HttpServlet {
             }
             List<EventoBean> richiesteEventi= serviceE.retrieveRichiesteModifica(utenteLoggato.getTipoUtente());
 
-            request.setAttribute("richiesteEventi",richiesteEventi); //differenzia modifica
+            request.setAttribute("richiesteEventi",richiesteEventi);
             String address = "/WEB-INF/gestioneEventi/RichiesteModifiche.jsp";
             callDispatcher(request,response,address);
         }
@@ -90,8 +98,7 @@ public class GestioneEventiController extends HttpServlet {
             int idOrg=Integer.parseInt(request.getParameter("idOrganizzatore"));
             int idE = Integer.parseInt(request.getParameter("idE"));
             //fai in service
-            OrganizzatoreDAOImpl daoOrg=new OrganizzatoreDAOImpl();
-            OrganizzatoreBean org= daoOrg.doRetrieveById(idOrg);
+            OrganizzatoreBean org= serviceE.retriveBioOrganizzatore(idOrg);
             request.setAttribute("organizzatore",org);
             request.setAttribute("idE",idE);
             String address = "/WEB-INF/gestioneEventi/BioOrganizzatore.jsp";

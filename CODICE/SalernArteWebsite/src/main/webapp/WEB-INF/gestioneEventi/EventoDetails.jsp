@@ -100,7 +100,14 @@
             Sede: <div class="sedeCont">${selectedEvento.sede}</div>
         </div>
         <div class="mDescr">${selectedEvento.descrizione}</div>
-        <div class="prezzoBiglContainer">Costo biglietto: <div class="prezzoBiglietto">${prezzoBigl}</div>€</div>
+        <c:choose>
+            <c:when test="${scontoScuola!=null}">
+                <div class="prezzoBiglContainer">Costo biglietto: <div class="prezzoBiglietto"style="color: red; text-decoration: line-through;">${prezzoBigl} €</div> <i class="fas fa-arrow-right" ></i> <div class="sconto">${scontoScuola}</div> €</div>
+            </c:when>
+            <c:otherwise>
+                <div class="prezzoBiglContainer">Costo biglietto: <div class="prezzoBiglietto">${prezzoBigl}</div>€</div>
+            </c:otherwise>
+        </c:choose>
 
         <c:choose>
             <c:when test="${selectedEvento.numBiglietti eq 0}">
@@ -153,7 +160,7 @@
 </form>
 
 
-<jsp:include page="../Footer.jsp" />
+
 <script>
 
     function logFormatoData(str){

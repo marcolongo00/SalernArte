@@ -88,10 +88,15 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
         if(evento==null || evento.getDataFine().before(dataAttuale)) throw new RuntimeException("formato dati errato");
         checkAutorizzazioniUtente(utente);
+        double prezzoBiglietto=bigliettoDAO.doRetrievePrezzoBigliettoByEvento(idE);
+        if(utente.getTipoUtente().compareToIgnoreCase("scolaresca")==0){
+            double scontoDaApplicare= prezzoBiglietto*30/100;
+            prezzoBiglietto-= scontoDaApplicare;
+        }
 
        if(carrelloSessione==null){//può succedere solo se l'utente non è loggato, altirmenti avrei al più un carrello vuoto
            carrelloSessione=new CarrelloBean();
-           carrelloSessione.put(evento,quantita, bigliettoDAO.doRetrievePrezzoBigliettoByEvento(idE));
+           carrelloSessione.put(evento,quantita, prezzoBiglietto);
        }else{ //vale l'ipotesi che il carrello in sessione sarà sempre aggiornato al momento dell'inserimento
            BigliettoQuantita biQta=carrelloSessione.get(idE);//recupera bigliettoQuantità di quella mostra
            if (biQta != null) { //se è presente aggiorna quantità
@@ -105,7 +110,7 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
 
            } else { //se non sono mai stati aggiunti biglietti per quella mostra
                if(quantita>evento.getNumBiglietti()) throw new NumberFormatException();//se si cerca di aggiungere più biglietti di quelli disponibili
-               carrelloSessione.put(evento,quantita, bigliettoDAO.doRetrievePrezzoBigliettoByEvento(idE));
+               carrelloSessione.put(evento,quantita, prezzoBiglietto);
                if(utente!=null )  //se l'utente è loggato aggiorno anche il Database
                    daoCarr.doSave(utente.getId(),carrelloSessione.get(idE));
            }
