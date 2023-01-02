@@ -1,5 +1,7 @@
 package utils;
 
+import gestioneEventi.service.GestioneEventiService;
+import gestioneEventi.service.GestioneEventiServiceImpl;
 import model.dao.EventoDAO;
 import model.dao.EventoDAOImpl;
 import model.entity.EventoBean;
@@ -20,8 +22,11 @@ public class HomePageServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        EventoDAOImpl eventoDao=new EventoDAOImpl();
-        List<EventoBean> eventi= eventoDao.doRetrieveAllEventiAttiviNonScaduti();
+        //questa pagina sfrutterà il service relativo alla gestione eventi in quanto l'operazione
+        //che ci serve applicare è un retrive di tutti gli eventi non scaduti ed attivi del sistema
+        GestioneEventiService service= new GestioneEventiServiceImpl();
+
+        List<EventoBean> eventi= service.retrieveTuttiEventiNonScadutiAttivi();
         request.setAttribute("eventi",eventi);
         String address="/WEB-INF/index.jsp";
         RequestDispatcher dispatcher=request.getRequestDispatcher(address);

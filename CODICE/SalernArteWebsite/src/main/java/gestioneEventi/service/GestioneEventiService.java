@@ -27,4 +27,6 @@ public interface GestioneEventiService {
     void rifiutaModifica(int idEvento,String tipoUtente);
     List<EventoBean> retrieveEventiOrganizzatore(UtenteRegistratoBean utente);
     List<EventoBean> ricercaEventiByNomeOrDescrizione(String query);
+    List<EventoBean> retrieveEventiByTipo(String tipoEvento);
+    List<EventoBean> retrieveTuttiEventiNonScadutiAttivi();
 }

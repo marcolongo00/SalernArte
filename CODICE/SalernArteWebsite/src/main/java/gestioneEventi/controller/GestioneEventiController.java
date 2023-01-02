@@ -16,6 +16,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.sql.Date;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class GestioneEventiController extends HttpServlet {
             }else if(request.getParameter("modifica")!=null){
                 request.setAttribute("modif",true);
             }
-            if(utenteLoggato.getTipoUtente().compareToIgnoreCase("scolaresca")==0){
+            if(utenteLoggato!=null && utenteLoggato.getTipoUtente().compareToIgnoreCase("scolaresca")==0){
                 double scontoDaApplicare= prezzoBiglietto*30/100;
                 double prezzoScontato= prezzoBiglietto-scontoDaApplicare;
                 request.setAttribute("scontoScuola",prezzoScontato);
@@ -97,7 +98,6 @@ public class GestioneEventiController extends HttpServlet {
         if(request.getParameter("bioOrg")!=null){
             int idOrg=Integer.parseInt(request.getParameter("idOrganizzatore"));
             int idE = Integer.parseInt(request.getParameter("idE"));
-            //fai in service
             OrganizzatoreBean org= serviceE.retriveBioOrganizzatore(idOrg);
             request.setAttribute("organizzatore",org);
             request.setAttribute("idE",idE);
@@ -106,15 +106,8 @@ public class GestioneEventiController extends HttpServlet {
         }
         String goToTipo=request.getParameter("goToTipoEventi");
         if(goToTipo!=null){
-            //in service
-            EventoDAOImpl eventoDao=new EventoDAOImpl();
-            List<EventoBean> eventi= null;
+            List<EventoBean> eventi= serviceE.retrieveEventiByTipo(goToTipo);
 
-            if(goToTipo.compareTo("teatro")==0){
-                eventi=eventoDao.doRetrieveAllByTeatroAttiviNonScaduti();
-            }else{
-                eventi=eventoDao.doRetrieveAllByMostraAttiviNonScaduti();
-            }
             request.setAttribute("eventi",eventi);
             request.setAttribute("active",goToTipo);
             String address="/WEB-INF/index.jsp";
@@ -131,8 +124,9 @@ public class GestioneEventiController extends HttpServlet {
             callDispatcher(request,response,address);
         }
         if(request.getParameter("inviaRichiestaEvento")!=null){
-            //RIVEDERE TUTTA OPERAZIONE
-            OrganizzatoreBean organizzatore= (OrganizzatoreBean) session.getAttribute("selezionato"); //controllo sull'utente
+            if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase("organizzatore")!=0){
+                throw new RuntimeException("operazione non autorizzata");
+            }
             Date dataInizio=Date.valueOf(request.getParameter("dataInizio"));
             Date dataFine=Date.valueOf(request.getParameter("dataFine"));
             String nome=request.getParameter("nome");
@@ -152,39 +146,32 @@ public class GestioneEventiController extends HttpServlet {
             String indirizzo=request.getParameter("indirizzo");
             String sede=request.getParameter("sede");
 
-            serviceE.richiediInserimentoEvento(organizzatore.getId(),nome,tipoEvento,descrizione,pathSave,filePhoto,numBiglietti,prezzo,dataInizio,dataFine,indirizzo,sede);
-            //gestione biglietti
-            //gestione richiesta modifica
+            serviceE.richiediInserimentoEvento(utenteLoggato.getId(),nome,tipoEvento,descrizione,pathSave,filePhoto,numBiglietti,prezzo,dataInizio,dataFine,indirizzo,sede);
             callReferer(request,response);
         }else
             if(request.getParameter("accettaIns")!=null){
-            //contorlla errori
             int idEvento= Integer.parseInt(request.getParameter("idEvento"));
-            String tipoUtente=(String)session.getAttribute("tipoUtente");
-
-            serviceE.attivaEvento(idEvento,tipoUtente); // modifca nome operazione
+            if(utenteLoggato==null) throw new RemoteException("operazione non autorizzata");
+            serviceE.attivaEvento(idEvento,utenteLoggato.getTipoUtente()); // modifca nome operazione
                 callReferer(request, response);
             }else
                 if(request.getParameter("rifiutaIns")!=null){
-            //contorlla errori
             int idEvento= Integer.parseInt(request.getParameter("idEvento"));
 
             serviceE.rimuoviEvento(idEvento,utenteLoggato);
                     callReferer(request, response);
                 }else if(request.getParameter("accettaMod")!=null){
-                    //contorlla errori
                     int idEvento= Integer.parseInt(request.getParameter("idEvento"));
-                    String tipoUtente=(String)session.getAttribute("tipoUtente");
+                    if(utenteLoggato==null) throw new RemoteException("operazione non autorizzata");
 
-                    serviceE.accettaModifica(idEvento,tipoUtente);
+                    serviceE.accettaModifica(idEvento, utenteLoggato.getTipoUtente());
                     callReferer(request, response);
                 }else
                 if(request.getParameter("rifiutaMod")!=null){
-                    //contorlla errori
-                    int idEvento= Integer.parseInt(request.getParameter("idEvento"));
-                    String tipoUtente=(String)session.getAttribute("tipoUtente");
+                     int idEvento= Integer.parseInt(request.getParameter("idEvento"));
+                    if(utenteLoggato==null) throw new RemoteException("operazione non autorizzata");
 
-                    serviceE.rifiutaModifica(idEvento,tipoUtente);
+                    serviceE.rifiutaModifica(idEvento, utenteLoggato.getTipoUtente());
                     callReferer(request, response);
                 }
 
@@ -194,15 +181,6 @@ public class GestioneEventiController extends HttpServlet {
                     String tipo=request.getParameter("tipoEvMod");
                     String descrizione=request.getParameter("descrizioneMod");
                     Part filePhoto=request.getPart("pathMod");
-                    /*
-                    NO CONTROLLO PERCHè SE NON SI CAMBIA LA FOTO NON SERVE,
-                    SI PRENDERà IL PATH VECCHIO DELL'EVENTO E SI SALVERà QUELLO NEL CAMPO PATH DEL DB
-
-                    if (!(filePhoto != null && filePhoto.getSize()!=0 )) {
-                        throw new IOException();
-                    }
-                    if(ImageIO.read(filePhoto.getInputStream())== null) throw new IOException();
-                    */
                     String pathSave;
                     if (filePhoto != null && filePhoto.getSize()!=0 ) {
                         pathSave=getServletContext().getAttribute("pathNewEventi")+filePhoto.getSubmittedFileName();

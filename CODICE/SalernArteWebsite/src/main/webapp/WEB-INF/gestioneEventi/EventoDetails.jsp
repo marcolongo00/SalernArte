@@ -74,7 +74,7 @@
 
             <div id="barraTipo">
                 <div class="tipoModVal">0</div>
-                <div class="arrow">
+                <div class="arrow" id="arrowBarraTipo">
                     <i class="fa fa-caret-down" ></i>
                     <i class="fa fa-caret-up" ></i>
                 </div>
@@ -130,8 +130,8 @@
                     <div class="carrContainer">
                         <div id="carrQta">QUANTITA'</div>
                         <div id="barra">
-                            <div class="qtaValue">1</div>
-                            <div class="arrow">
+                            <div class="qtaValue">0</div>
+                            <div class="arrow" id="arrowBarraCarrello">
                                 <i class="fa fa-caret-down" ></i>
                                 <i class="fa fa-caret-up" ></i>
                             </div>
@@ -169,13 +169,16 @@
     $(document).ready(function () {
         $(".fa-caret-up, .carrContainer").hide();
         $("#barraTipo").hide();
-        $(".arrow").click(function () { //cambiare
+        $("#arrowBarraCarrello").click(function () {
             $(".allQta").slideToggle();
+        });
+        $("#arrowBarraTipo").click(function () {
             $(".allTipoEv").slideToggle();
         });
 
+
         $("#firstButton").click(function () {
-            $("input:submit").prop('disabled', true);
+            //$("input:submit").prop('disabled', true);
             $("#mFirstButton").hide();
             $(".carrContainer").css("display","flex");
         });
@@ -189,9 +192,7 @@
             $(".fa-caret-down").show();
             $(".fa-caret-up").hide();
             if($("#title").text()=="")  $("#title").html("QUANTITA'");
-            if($(".qtaValue").text()==0){
-                $("input:submit").prop('disabled', true);
-            }
+
         });
 
         $(".allSelected").click(function () {
@@ -200,13 +201,6 @@
             var value=$(this).text();
             $(".qtaValue").html(value);
             $("input[name='quantita']").val(value);
-
-            if(value==0){
-                $("input:submit").prop('disabled', true);
-            }
-            else{
-                $("input:submit").prop('disabled', false);
-            }
         });
 
         $(".allTipoSelected").click(function () {
@@ -220,18 +214,22 @@
             var idE=$("input[name='idEventoPreChange']").val();
             //quantita
             var quantita=$(".qtaValue").text();
-            var url="aggiungi-al-carrello?idE="+idE+"&quantita="+quantita;
-            $.getJSON(url,function(data) {
-                console.log(data);
-                if(data){
-                    //in teoria quello che viene fatto in annulla
-                    //oppure location.reload
-                    location.reload();
-                }else{
-                    alert("Errore nell' operazione, riprovare.");
-                    location.reload();
-                }
-            });
+            if(quantita==0){
+                alert("Non puoi aggiungere 0 biglietti al tuo carrello");
+            }else{
+                var url="aggiungi-al-carrello?idE="+idE+"&quantita="+quantita;
+                $.getJSON(url,function(data) {
+                    console.log(data);
+                    if(data){
+                        //in teoria quello che viene fatto in annulla
+                        //oppure location.reload
+                        location.reload();
+                    }else{
+                        alert("Errore nell' operazione, riprovare.");
+                        location.reload();
+                    }
+                });
+            }
 
         });
 

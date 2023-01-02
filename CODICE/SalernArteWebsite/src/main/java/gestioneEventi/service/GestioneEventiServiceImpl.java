@@ -31,14 +31,21 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             if(dataFine.before(dataInizio) || dataInizio.before(dataAttuale)){
                 throw  new RuntimeException("impostazioni data inserite non valide");
             }
-            if(nome==null || nome.trim().length()==0 || descrizione==null || descrizione.trim().length()==0 )
-                throw new RuntimeException("formato campi di testo errato");
+            if(nome==null || !nome.matches("^[0-9°A-zÀ-ù ‘-]{1,50}$"))
+                throw new RuntimeException("formato nome evento errato");
 
+            if(descrizione==null || !descrizione.matches("^[0-9°A-zÀ-ù ‘-]{1,320}$"))
+                throw new RuntimeException("formato descrizione evento errato");
+            if(tipoEvento.compareToIgnoreCase("mostra")!=0 && tipoEvento.compareToIgnoreCase("teatro")!=0){
+                throw new RuntimeException("formato tipo evento errato");
+            }
             if(numBiglietti <=0 || prezzoBiglietto<= 0)
                 throw new RuntimeException("formato numero biglietto e/o prezzo biglietti errato");
-
-            if(indirizzo==null || indirizzo.trim().length()==0 || sede==null || sede.trim().length()==0){
-                throw new RuntimeException("formato campi di testo errato");
+            if(sede==null || !sede.matches("^[0-9°A-zÀ-ù ‘-]{1,100}$")){
+                throw new RuntimeException("formato sede evento errato");
+            }
+            if(indirizzo==null || !indirizzo.matches("^[0-9°A-zÀ-ù ‘-]{2,30}$")){
+                throw new RuntimeException("formato indirizzo errato");
             }
             String path = "./immaginiEventi/" + filePhoto.getSubmittedFileName();
             saveImage(filePhoto.getInputStream(),pathContext);
@@ -60,16 +67,25 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
          try{
              if(dataFine.before(dataInizio) ){
                 throw  new RuntimeException("impostazioni data inserite non valide");
-            }
-            if(nome==null || nome.trim().length()==0 || descrizione==null || descrizione.trim().length()==0 )
-                throw new RuntimeException("formato campi di testo errato");
+             }
+             if(nome==null || !nome.matches("^[0-9°A-zÀ-ù ‘-]{1,50}$"))
+                 throw new RuntimeException("formato nome evento errato");
 
-            if(numBiglietti <=0 || prezzoBiglietto<= 0)
+             if(descrizione==null || !descrizione.matches("^[0-9°A-zÀ-ù ‘-]{1,320}$"))
+                 throw new RuntimeException("formato descrizione evento errato");
+
+             if(tipoEvento.compareToIgnoreCase("mostra")!=0 && tipoEvento.compareToIgnoreCase("teatro")!=0){
+                 throw new RuntimeException("formato tipo evento errato");
+             }
+             if(numBiglietti <=0 || prezzoBiglietto<= 0)
                 throw new RuntimeException("formato numero biglietto e/o prezzo biglietti errato");
 
-            if(indirizzo==null || indirizzo.trim().length()==0 || sede==null || sede.trim().length()==0){
-                throw new RuntimeException("formato campi di testo errato");
-            }
+             if(sede==null || !sede.matches("^[0-9°A-zÀ-ù ‘-]{1,100}$")){
+                 throw new RuntimeException("formato sede evento errato");
+             }
+             if(indirizzo==null || !indirizzo.matches("^[0-9°A-zÀ-ù ‘-]{2,30}$")){
+                 throw new RuntimeException("formato indirizzo errato");
+             }
             //retrieve evento da modificare per fare alcuni controlli
             EventoBean eventoDaModificare= daoEvento.doRetrieveById(idEvDaModificare);
             //controlla se il path foto modifica esiste altrimenti prendi quello vecchio
@@ -82,13 +98,11 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
                 saveImage(filePhoto.getInputStream(),pathContext);
             }
 
-            //trasforma i tipi di dati che non sono in formato corretto come tipoEvento
-            // crea un evento temp con i dati modificati e id ovviamente diverso da quello orginario
+             // crea un evento temp con i dati modificati e id ovviamente diverso da quello orginario
             EventoBean newEvento= new EventoBean(utenteLoggato.getId(),dataInizio,dataFine,nome,path,descrizione,indirizzo,sede,numBiglietti,getTypeEvento(tipoEvento));
             daoEvento.doSave(newEvento);
             //la creazione dei biglietti avverrà in accetta modifica da parte dell'admin
-
-             //crea un'istanza di richiesta modifica
+             // crea un'istanza di richiesta modifica
              daoEvento.doSaveRichiestaModificaEv(eventoDaModificare.getId(),newEvento.getId(),prezzoBiglietto);
 
         }catch (Exception e){
@@ -105,28 +119,28 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
 
     @Override
     public void attivaEvento(int idEvento, String tipoUtente) {
-        if(tipoUtente.compareTo("amministratore")!=0){
-            throw new RuntimeException(); //myexception
+        if(tipoUtente.compareToIgnoreCase("amministratore")!=0){
+            throw new RuntimeException("operazione non autorizzata"); //myexception
         }
         daoEvento.doUpdateAttivazioneEvento(idEvento,true);
     }
 
     public void rimuoviEvento(int idEvento, UtenteRegistratoBean utente){
-        if(utente.getTipoUtente().compareToIgnoreCase("amministratore")!=0 && utente.getTipoUtente().compareToIgnoreCase("organizzatore")!=0){ //non so se comprende tutti i casi
+        if(utente.getTipoUtente().compareToIgnoreCase("amministratore")!=0 && utente.getTipoUtente().compareToIgnoreCase("organizzatore")!=0){
             throw new RuntimeException("operazione non autorizzata"); //myexception
         }
         //nel acso di rifiuto inseirmento l'evento viene rimosso. nel caso di rifiuta modifica no,
         // si riporta allo stato di prima e si avvisa l'organizzatore
         //metodo chiamato anche se l'ìorganizzatore elimina l'evento
-
-        //delete foto
+        EventoBean evDaEliminare= daoEvento.doRetrieveById(idEvento);
+        deleteImage(evDaEliminare.getPath());
         daoEvento.doDelete(idEvento);
     }
 
     @Override
-    public void accettaModifica(int idEvento, String tipoUtente) { //anche stessa  funzione con flag per accetta rifiuta
+    public void accettaModifica(int idEvento, String tipoUtente) {
         if(tipoUtente.compareTo("amministratore")!=0){
-            throw new RuntimeException(); //myexception
+            throw new RuntimeException("operazione non autorizzata"); //myexception
         }
         //accetto al modifica poi trovo e cancello l'evento con i dati vecchi e in cascade si cancellerà la richiesta
         int idEventoPreModifica=daoEvento.retieveEventoFromidEventoModifica(idEvento);
@@ -138,18 +152,29 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         daoBiglietto.updatePrezzoBigliettoEvento(eventoPost.getId(),nuovoPrezzoBiglietto);
 
         daoBiglietto.doUpdateBigliettiModificaEvento(eventoPre,eventoPost);
-        daoEvento.doDelete(idEventoPreModifica);
         //attenzione al pathfoto se è diversp. da eliminare quello vecchio
+        if(eventoPre.getPath().compareTo(eventoPost.getPath())!=0){
+            deleteImage(eventoPre.getPath());
+        }
+        daoEvento.doDelete(idEventoPreModifica);
+
     }
 
     @Override
     public void rifiutaModifica(int idEvento, String tipoUtente) {
         if(tipoUtente.compareTo("amministratore")!=0){
-            throw new RuntimeException(); //myexception
+            throw new RuntimeException("operazione non autorizzata"); //myexception
         }
         //rifiuto la modifica quindi elimino temp e riporto evento originale ad attivo
         int idEventoPreModifica=daoEvento.retieveEventoFromidEventoModifica(idEvento);
         daoEvento.doUpdateAttivazioneEvento(idEventoPreModifica,true);
+        //se i path non coincidono vuol dire che è stata
+        // salvata anche la foto dell'evento post modifica e va eliminata
+        EventoBean eventoPre=daoEvento.doRetrieveById(idEventoPreModifica);
+        EventoBean eventoPost=daoEvento.doRetrieveById(idEvento);
+        if(eventoPre.getPath().compareTo(eventoPost.getPath())!=0){
+            deleteImage(eventoPost.getPath());
+        }
         daoEvento.doDelete(idEvento);
     }
 
@@ -225,6 +250,18 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             throw new RuntimeException("errore formato ricerca");
         }
         return daoEvento.doRetrieveByNomeOrDescrizione(query);
+    }
+    public List<EventoBean> retrieveEventiByTipo(String tipoEvento){
+        if(tipoEvento.compareToIgnoreCase("teatro")==0){
+            return daoEvento.doRetrieveAllByTeatroAttiviNonScaduti();
+        }else if(tipoEvento.compareToIgnoreCase("mostra")==0){
+            return  daoEvento.doRetrieveAllByMostraAttiviNonScaduti();
+        }else{
+            throw new RuntimeException("operazione non riconoscita");
+        }
+    }
+    public List<EventoBean> retrieveTuttiEventiNonScadutiAttivi(){
+       return  daoEvento.doRetrieveAllEventiAttiviNonScaduti();
     }
 
     private boolean getTypeEvento(String tipoEvento){

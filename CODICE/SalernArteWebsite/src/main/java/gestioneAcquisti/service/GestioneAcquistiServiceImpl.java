@@ -57,7 +57,7 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
                 }
             }
         }
-
+        //ok ma che succcede se l'evento non è attivo ma era già stato inserito in un carrello??? magari anche a livello di operazioni in cui si va a rendere non attivo un evento va cancellato anche nei carrelli utenti o bo
         /*for(Integer id:eventiToRemove){
             carrelloSessione.remove(id); //rimuove solo quelli scaduti a livello di data
         }*/
@@ -86,10 +86,11 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         if(idE<= 0 || quantita<=0)   throw new RuntimeException("formato dati errato");
         EventoBean evento= eventoDao.doRetrieveById(idE);
         Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
+        //or non attivo)
         if(evento==null || evento.getDataFine().before(dataAttuale)) throw new RuntimeException("formato dati errato");
         checkAutorizzazioniUtente(utente);
         double prezzoBiglietto=bigliettoDAO.doRetrievePrezzoBigliettoByEvento(idE);
-        if(utente.getTipoUtente().compareToIgnoreCase("scolaresca")==0){
+        if(utente!=null && utente.getTipoUtente().compareToIgnoreCase("scolaresca")==0){
             double scontoDaApplicare= prezzoBiglietto*30/100;
             prezzoBiglietto-= scontoDaApplicare;
         }
