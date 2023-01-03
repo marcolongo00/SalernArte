@@ -226,11 +226,21 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
                     if(saved.contains(bi)){
                         if(bi.getQuantita() != saved.get(bi.getProdotto().getId()).getQuantita())
                             daoCarr.doUpdateQuantita(utenteRegistratoBean.getId(),bi);
-                    }
-                    else
+                    }else{
                         daoCarr.doSave(utenteRegistratoBean.getId(),bi);
+                    }
                 }
         }
         return daoCarr.doRetrieveByIdUtente(utenteRegistratoBean.getId()) ;
+    }
+    public void applicaScontoScuola(CarrelloBean carrello){
+        double scontoDaApplicare;
+        double prezzoscontato;
+        Collection<BigliettoQuantita> prodotti=carrello.getProdotti();
+        for (BigliettoQuantita bi: prodotti) {
+            scontoDaApplicare= bi.getPrezzoBigl()*30/100;
+            prezzoscontato= bi.getPrezzoBigl()-scontoDaApplicare;
+            bi.setPrezzoBigl(prezzoscontato);
+        }
     }
 }

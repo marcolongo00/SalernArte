@@ -25,10 +25,14 @@ public class JSONUpdateQuantitaCarrello extends HttpServlet {
         boolean result=true;// serviva per la notifica di errore, rivedi poi
         int idE=Integer.parseInt(request.getParameter("idE"));
         int qta=Integer.parseInt(request.getParameter("qta"));
-        CarrelloBean carrelloSessione= (CarrelloBean) request.getSession().getAttribute("carrello");
-        UtenteRegistratoBean utente= (UtenteRegistratoBean) request.getSession().getAttribute("selezionato");
-          service.updateQuantitaCarrello(idE,qta,carrelloSessione,utente);
-        request.getSession().setAttribute("carrello", carrelloSessione);
+        try{
+            CarrelloBean carrelloSessione= (CarrelloBean) request.getSession().getAttribute("carrello");
+            UtenteRegistratoBean utente= (UtenteRegistratoBean) request.getSession().getAttribute("selezionato");
+            service.updateQuantitaCarrello(idE,qta,carrelloSessione,utente);
+            request.getSession().setAttribute("carrello", carrelloSessione);
+        }catch (Exception e){
+            result=false;
+        }
 
         String json=new Gson().toJson(result);
         response.getWriter().append(json);

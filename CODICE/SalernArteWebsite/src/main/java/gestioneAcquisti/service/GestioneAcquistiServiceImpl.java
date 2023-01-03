@@ -48,7 +48,7 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
                 int idE=bi.getProdotto().getId();
                 EventoBean temp=eventoDao.doRetrieveById(idE);
                 if(temp==null || temp.getDataFine().before(dataAttuale)){ //evento non esiste più o è scaduto
-                    //eventiToRemove.add(idE);
+                    //eventiToRemove.add(idE); viene direttamente rimosso qui, testare
                     carrelloSessione.remove(idE);
                     daoCarr.doDelete(utente.getId(),idE); //so che l'utente è != null per precondizione
                 }else
@@ -61,9 +61,17 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         /*for(Integer id:eventiToRemove){
             carrelloSessione.remove(id); //rimuove solo quelli scaduti a livello di data
         }*/
-        return alertCarrello;
+        return(alertCarrello || controlloEventiNonAttivi(carrelloSessione));
     }
-
+    public boolean controlloEventiNonAttivi(CarrelloBean carrello){
+       Collection<BigliettoQuantita> prodotti= carrello.getProdotti();
+        for (BigliettoQuantita bi: prodotti) {
+            if(!bi.getProdotto().isAttivo()){
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public void svuotaCarrello(CarrelloBean carrello, UtenteRegistratoBean utente) {
         checkAutorizzazioniUtente(utente);
@@ -137,7 +145,7 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         //fai con carrello nella sessione così puoi controllare se al momento
         // dell'acquisto ci sono prodotti già venduti
 
-        if(utente==null || carrelloSessione==null || carrelloSessione.getProdotti().isEmpty()){
+        if(utente==null || carrelloSessione==null || carrelloSessione.getProdotti().isEmpty() || controlloElementiCarrello(carrelloSessione,utente)){
             throw new RuntimeException("operazione non autorizzata");
         }else{
             checkAutorizzazioniUtente(utente);

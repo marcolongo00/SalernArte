@@ -157,7 +157,7 @@ insert into Evento(idOrganizzatore,nome,tipo,descrizione,pathFoto,numBiglietti,d
 (5,'evento di pippo',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2032-12-26','indirizzo prova','sede prova',true),
 (5,'evento di pippo3',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2032-12-26','indirizzo prova','sede prova',true),
 (5,'evento di pippo4',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2032-07-28','2032-12-26','indirizzo prova','sede prova',true),
-(5,'evento di pippo5',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2032-07-28','2032-12-26','indirizzo prova','sede prova',true),
+(5,'evento di pippo5',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-28','2022-12-26','indirizzo prova','sede prova',true),
 (5,'evento di pippo6 ',true,'descrizione evento prova','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2032-07-28','2032-12-26','indirizzo prova','sede prova',true),
 (5,'evento di pluto 2',false,'descrizione evento prova 2','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',3,'2022-07-22','2032-12-27','indirizzo prova 2','sede prova 2',false),
 (5,'evento di pluto 2 modificato',false,'descrizione evento prova 2 modificato','./immaginiEventi/photo_2022-06-11_16-53-57.jpg',2,'2032-07-22','2032-11-27','indirizzo prova 2','sede prova 2',false);
@@ -174,6 +174,8 @@ insert into Acquisto(numOrdine,data,totale,idUtente,prodotti) value
 (2,2,4,null),
 (3,2,4,null);
  
+ insert into Carrello(idUtente,idevento,quantita) values
+(4,4,1);
 # eventi da inserire ma non modifica
 SELECT 
     *

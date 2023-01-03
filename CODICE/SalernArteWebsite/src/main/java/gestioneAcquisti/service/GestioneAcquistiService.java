@@ -6,6 +6,7 @@ import model.entity.UtenteRegistratoBean;
 public interface GestioneAcquistiService {
     CarrelloBean retrieveCarrelloUtente(UtenteRegistratoBean utente);
     boolean controlloElementiCarrello(CarrelloBean carrelloSessione,UtenteRegistratoBean utente);
+    boolean controlloEventiNonAttivi(CarrelloBean carrello);
     void svuotaCarrello(CarrelloBean carrello,UtenteRegistratoBean utente);
     void removeEventoFromCarrello(int idE,CarrelloBean carrello, UtenteRegistratoBean utente);
     CarrelloBean aggiungiAlCarrello(int idE,int quantita, CarrelloBean carrelloSessione,UtenteRegistratoBean utente);

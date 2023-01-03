@@ -45,6 +45,9 @@ public class AutenticazioneController extends HttpServlet {
                         session.removeAttribute("carrello");
                 }else{
                     carrello=serviceA.mergeCarrelloSessioneAndCarrelloDBAfterLogin(utente,carrello);
+                    if (utente.getTipoUtente().compareToIgnoreCase("scolaresca")==0){
+                        serviceA.applicaScontoScuola(carrello);
+                    }
                     session.setAttribute("carrello",carrello);
                 }
             }else{

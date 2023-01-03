@@ -53,6 +53,8 @@ public class RegistrazioneController extends HttpServlet {
                     utenteResult= serviceA.registrazioneScolaresca(email,password,istituto);
                     CarrelloBean carrelloSessione= (CarrelloBean) session.getAttribute("carrello");
                     serviceA.salvaCarrelloSessione(utenteResult,carrelloSessione);
+                    serviceA.applicaScontoScuola(carrelloSessione);
+                    session.setAttribute("carrello",carrelloSessione);
                 }
                 else
                 if(tipoUtente.compareToIgnoreCase("organizzatore")==0){

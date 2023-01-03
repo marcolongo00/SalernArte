@@ -42,6 +42,8 @@ public class GestioneAcquistiController extends HttpServlet {
             }else if(carrello==null && utente!=null){
                 // non si può mai verificare eprchè se ho fatto il login il carrello non è null ma al più vuoto
                 carrello=service.retrieveCarrelloUtente(utente);
+                //contorllo elementi per eventi non attivi
+                alertCarrello=service.controlloEventiNonAttivi(carrello);
             }else if(carrello!=null && utente!=null){
                 alertCarrello=service.controlloElementiCarrello(carrello,utente);
             }
@@ -68,9 +70,15 @@ public class GestioneAcquistiController extends HttpServlet {
             service.removeEventoFromCarrello(idE,carrello,utente);
             session.setAttribute("carrello", carrello);
 
-            callReferer(request,response);
+            String address="WEB-INF/gestioneAcquisti/Carrello.jsp";
+            callDispatcher(request,response,address);
         }
         if(request.getParameter("datiCartaAcquisto")!=null){
+            if(utente==null || service.controlloElementiCarrello(carrello,utente)){
+                throw new RuntimeException("operazione non autorizzata");
+            } else if (utente.getTipoUtente().compareToIgnoreCase("utente")!=0 && utente.getTipoUtente().compareToIgnoreCase("scolaresca")!=0) {
+                throw new RuntimeException("operazione non autorizzata");
+            }
             //go to dettagli carta first
             String address="WEB-INF/gestioneAcquisti/DettagliPagamentoCarta.jsp";
             callDispatcher(request,response,address);

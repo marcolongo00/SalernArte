@@ -109,5 +109,15 @@ public class RegistrazioneServiceimpl implements RegistrazioneService{
             }
         }
     }
+    public void applicaScontoScuola(CarrelloBean carrello){
+        double scontoDaApplicare;
+        double prezzoscontato;
+        Collection<CarrelloBean.BigliettoQuantita> prodotti=carrello.getProdotti();
+        for (CarrelloBean.BigliettoQuantita bi: prodotti) {
+            scontoDaApplicare= bi.getPrezzoBigl()*30/100;
+            prezzoscontato= bi.getPrezzoBigl()-scontoDaApplicare;
+            bi.setPrezzoBigl(prezzoscontato);
+        }
+    }
 
 }

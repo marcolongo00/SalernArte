@@ -36,7 +36,7 @@
             <div class="itemTitle"><a href="gestione-eventi?idE=${pq.prodotto.id}&detailsE=true">${pq.prodotto.nome} </a></div>
             <div class="center">
                 <c:choose>
-                    <c:when test="${pq.prodotto.numBiglietti eq 0 || pq.prodotto.numBiglietti < pq.quantita}">
+                    <c:when test="${pq.prodotto.numBiglietti eq 0 || pq.prodotto.numBiglietti < pq.quantita || !pq.prodotto.attivo}">
                         <p class="errorProd">PRODOTTO NON PIU' DISPONIBILE</p>
                     </c:when>
 

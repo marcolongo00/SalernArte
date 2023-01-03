@@ -19,4 +19,5 @@ public interface AutenticazioneService {
     void recuperaPassword(String emailTo);
     void eliminaProfiloUtente(UtenteRegistratoBean utenteLoggato);
     CarrelloBean mergeCarrelloSessioneAndCarrelloDBAfterLogin(UtenteRegistratoBean utenteRegistratoBean, CarrelloBean carrelloSessione);
-   }
+    void applicaScontoScuola(CarrelloBean carrello);
+}
