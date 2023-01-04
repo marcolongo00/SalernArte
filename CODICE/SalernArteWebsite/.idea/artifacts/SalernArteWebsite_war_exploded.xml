@@ -32,7 +32,6 @@
           <element id="library" level="project" name="Maven: org.apache.maven:maven-repository-metadata:2.0.2" />
           <element id="library" level="project" name="Maven: org.apache.maven.wagon:wagon-provider-api:1.0-alpha-6" />
           <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-container-default:1.0-alpha-9" />
-          <element id="library" level="project" name="Maven: junit:junit:3.8.1" />
           <element id="library" level="project" name="Maven: classworlds:classworlds:1.1-alpha-2" />
           <element id="library" level="project" name="Maven: org.apache.maven.reporting:maven-reporting-api:3.0" />
           <element id="library" level="project" name="Maven: org.apache.maven.doxia:doxia-sink-api:1.0" />
