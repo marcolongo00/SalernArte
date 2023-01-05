@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CarrelloBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SalernArteWebsite</a> &gt; <a href="index.source.html" class="el_package">model.entity</a> &gt; <span class="el_source">CarrelloBean.java</span></div><h1>CarrelloBean.java</h1><pre class="source lang-java linenums">package model.entity;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+
+public class CarrelloBean { //un attimo n pausa, rivedere bean, dao e daoimpl quando si sarà sviluppata la parte servlet
+    public static class BigliettoQuantita {
+        private EventoBean evento;
+        private int quantita;
+        private double prezzoBigl;
+
+<span class="nc" id="L12">        public BigliettoQuantita() {</span>
+<span class="nc" id="L13">        }</span>
+
+<span class="nc" id="L15">        public BigliettoQuantita(EventoBean evento, int quantita, double prezzoBigl) {</span>
+<span class="nc" id="L16">            this.evento = evento;</span>
+<span class="nc" id="L17">            this.quantita = quantita;</span>
+<span class="nc" id="L18">            this.prezzoBigl = prezzoBigl;</span>
+<span class="nc" id="L19">        }</span>
+
+        public int getQuantita() {
+<span class="nc" id="L22">            return quantita;</span>
+        }
+
+        public void setQuantita(int quantita) {
+<span class="nc" id="L26">            this.quantita = quantita;</span>
+<span class="nc" id="L27">        }</span>
+
+<span class="nc" id="L29">        public double getPrezzoBigl() {return prezzoBigl;  }</span>
+
+<span class="nc" id="L31">        public void setPrezzoBigl(double prezzoBigl) { this.prezzoBigl = prezzoBigl; }</span>
+
+        public EventoBean getProdotto() {
+<span class="nc" id="L34">            return evento;</span>
+        }
+
+<span class="nc" id="L37">        public void setProdotto(EventoBean evento){ this.evento=evento;   }</span>
+
+<span class="nc" id="L39">        public double getPrezzoTot(){ return  this.prezzoBigl*this.quantita; }</span>
+    }
+
+<span class="nc" id="L42">    private LinkedHashMap&lt;Integer, BigliettoQuantita&gt; prodotti = new LinkedHashMap&lt;&gt;();</span>
+    private int idUtente;
+
+<span class="nc" id="L45">    public CarrelloBean() {</span>
+<span class="nc" id="L46">    }</span>
+
+<span class="nc" id="L48">    public CarrelloBean(int idUtente) {</span>
+<span class="nc" id="L49">        this.idUtente = idUtente;</span>
+<span class="nc" id="L50">    }</span>
+
+<span class="nc" id="L52">    public int getIdUtente() { return idUtente; }</span>
+
+<span class="nc" id="L54">    public void setIdUtente(int idUtente) { this.idUtente = idUtente; }</span>
+
+    public Collection&lt;BigliettoQuantita&gt; getProdotti() {
+<span class="nc" id="L57">        return prodotti.values();</span>
+    }
+
+    public BigliettoQuantita get(int prodId) {
+<span class="nc" id="L61">        return prodotti.get(prodId);</span>
+    }
+
+    public void put(EventoBean evento, int quantita, double prezzoBigl) {
+<span class="nc" id="L65">        prodotti.put(evento.getId(), new BigliettoQuantita(evento, quantita,prezzoBigl));</span>
+<span class="nc" id="L66">    }</span>
+    public boolean contains(BigliettoQuantita x){
+<span class="nc" id="L68">        return prodotti.containsKey(x.getProdotto().getId());</span>
+    }
+
+    public BigliettoQuantita remove(int prodId) {
+<span class="nc" id="L72">        return prodotti.remove(prodId);</span>
+    }
+
+<span class="nc" id="L75">    public double getPrezzoTot(){ return prodotti.values().stream().mapToDouble(p -&gt; p.getPrezzoTot()).sum(); }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

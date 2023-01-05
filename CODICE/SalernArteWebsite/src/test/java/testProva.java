@@ -1,5 +1,3 @@
-package GestioneEventi.controller;
-
 import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 import org.junit.Test;
