@@ -22,15 +22,15 @@ import java.util.List;
 
 @WebServlet(name = &quot;GestioneEventiController&quot;,urlPatterns = &quot;/gestione-eventi&quot;)
 @MultipartConfig
-<span class="nc" id="L25">public class GestioneEventiController extends HttpServlet {</span>
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="fc" id="L25">public class GestioneEventiController extends HttpServlet {</span>
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 <span class="nc" id="L27">        doGet(request,response);</span>
 <span class="nc" id="L28">    }</span>
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-<span class="nc" id="L30">        HttpSession session = request.getSession();</span>
-<span class="nc" id="L31">        UtenteRegistratoBean utenteLoggato= (UtenteRegistratoBean) session.getAttribute(&quot;selezionato&quot;);</span>
-<span class="nc" id="L32">        GestioneEventiService serviceE=new GestioneEventiServiceImpl();</span>
-<span class="nc bnc" id="L33" title="All 2 branches missed.">        if ( request.getParameter(&quot;detailsE&quot;)!=null) {</span>
+<span class="fc" id="L30">        HttpSession session = request.getSession();</span>
+<span class="fc" id="L31">        UtenteRegistratoBean utenteLoggato= (UtenteRegistratoBean) session.getAttribute(&quot;selezionato&quot;);</span>
+<span class="fc" id="L32">        GestioneEventiService serviceE=new GestioneEventiServiceImpl();</span>
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if ( request.getParameter(&quot;detailsE&quot;)!=null) {</span>
 <span class="nc" id="L34">            int idE = Integer.parseInt(request.getParameter(&quot;idE&quot;));</span>
 <span class="nc" id="L35">            EventoBean evento = serviceE.retrieveEventoById(idE);</span>
 <span class="nc bnc" id="L36" title="All 6 branches missed.">            if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase(&quot;utente&quot;)==0 || utenteLoggato.getTipoUtente().compareToIgnoreCase(&quot;scolaresca&quot;)==0){</span>
@@ -59,23 +59,23 @@ import java.util.List;
 <span class="nc" id="L59">            String address = &quot;/WEB-INF/gestioneEventi/EventoDetails.jsp&quot;;</span>
 <span class="nc" id="L60">            callDispatcher(request,response,address);</span>
         }
-<span class="nc bnc" id="L62" title="All 2 branches missed.">        if(request.getParameter(&quot;goToEventiOrganizzatore&quot;)!=null){</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if(request.getParameter(&quot;goToEventiOrganizzatore&quot;)!=null){</span>
 <span class="nc" id="L63">            List&lt;EventoBean&gt; eventi=serviceE.retrieveEventiOrganizzatore(utenteLoggato);</span>
 <span class="nc" id="L64">            request.setAttribute(&quot;eventi&quot;,eventi);</span>
 <span class="nc" id="L65">            callDispatcher(request,response,&quot;/WEB-INF/gestioneEventi/ListaEventiOrganizzatore.jsp&quot;);</span>
         }
-<span class="nc bnc" id="L67" title="All 2 branches missed.">        if(request.getParameter(&quot;goToRichiestaEvento&quot;)!=null){</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">        if(request.getParameter(&quot;goToRichiestaEvento&quot;)!=null){</span>
             //pagina per richiedere l'inserimento di un evento sulla
             // piattaforma da parte di un organizzatore di eventi
 <span class="nc" id="L70">            String address = &quot;/WEB-INF/gestioneEventi/RichiestaEvento.jsp&quot;;</span>
 <span class="nc" id="L71">            callDispatcher(request,response,address);</span>
         }
-<span class="nc bnc" id="L73" title="All 2 branches missed.">        if(request.getParameter(&quot;eliminaEv&quot;)!=null){</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if(request.getParameter(&quot;eliminaEv&quot;)!=null){</span>
 <span class="nc" id="L74">            int id= Integer.parseInt(request.getParameter(&quot;idE&quot;));</span>
 <span class="nc" id="L75">            serviceE.rimuoviEvento(id,utenteLoggato);</span>
 <span class="nc" id="L76">            callDispatcher(request,response,&quot;/index.html&quot;);</span>
         }
-<span class="nc bnc" id="L78" title="All 2 branches missed.">        if(request.getParameter(&quot;goToRichiesteInserimento&quot;)!=null){</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if(request.getParameter(&quot;goToRichiesteInserimento&quot;)!=null){</span>
 <span class="nc bnc" id="L79" title="All 2 branches missed.">            if(utenteLoggato==null ){</span>
 <span class="nc" id="L80">                throw new RuntimeException(&quot;operazione non autorizzata&quot;);</span>
             }
@@ -85,7 +85,7 @@ import java.util.List;
 <span class="nc" id="L85">            String address = &quot;/WEB-INF/gestioneEventi/RichiesteInserimento.jsp&quot;;</span>
 <span class="nc" id="L86">            callDispatcher(request,response,address);</span>
         }
-<span class="nc bnc" id="L88" title="All 2 branches missed.">        if(request.getParameter(&quot;goToRichiesteModifica&quot;)!=null){</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">        if(request.getParameter(&quot;goToRichiesteModifica&quot;)!=null){</span>
 <span class="nc bnc" id="L89" title="All 2 branches missed.">            if(utenteLoggato==null){</span>
 <span class="nc" id="L90">                throw new RuntimeException(&quot;operazione non autorizzata&quot;);</span>
             }
@@ -95,7 +95,7 @@ import java.util.List;
 <span class="nc" id="L95">            String address = &quot;/WEB-INF/gestioneEventi/RichiesteModifiche.jsp&quot;;</span>
 <span class="nc" id="L96">            callDispatcher(request,response,address);</span>
         }
-<span class="nc bnc" id="L98" title="All 2 branches missed.">        if(request.getParameter(&quot;bioOrg&quot;)!=null){</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if(request.getParameter(&quot;bioOrg&quot;)!=null){</span>
 <span class="nc" id="L99">            int idOrg=Integer.parseInt(request.getParameter(&quot;idOrganizzatore&quot;));</span>
 <span class="nc" id="L100">            int idE = Integer.parseInt(request.getParameter(&quot;idE&quot;));</span>
 <span class="nc" id="L101">            OrganizzatoreBean org= serviceE.retriveBioOrganizzatore(idOrg);</span>
@@ -104,8 +104,8 @@ import java.util.List;
 <span class="nc" id="L104">            String address = &quot;/WEB-INF/gestioneEventi/BioOrganizzatore.jsp&quot;;</span>
 <span class="nc" id="L105">            callDispatcher(request,response,address);</span>
         }
-<span class="nc" id="L107">        String goToTipo=request.getParameter(&quot;goToTipoEventi&quot;);</span>
-<span class="nc bnc" id="L108" title="All 2 branches missed.">        if(goToTipo!=null){</span>
+<span class="fc" id="L107">        String goToTipo=request.getParameter(&quot;goToTipoEventi&quot;);</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if(goToTipo!=null){</span>
 <span class="nc" id="L109">            List&lt;EventoBean&gt; eventi= serviceE.retrieveEventiByTipo(goToTipo);</span>
 
 <span class="nc" id="L111">            request.setAttribute(&quot;eventi&quot;,eventi);</span>
@@ -113,7 +113,7 @@ import java.util.List;
 <span class="nc" id="L113">            String address=&quot;/WEB-INF/index.jsp&quot;;</span>
 <span class="nc" id="L114">            callDispatcher(request,response,address);</span>
         }
-<span class="nc bnc" id="L116" title="All 2 branches missed.">        if(request.getParameter(&quot;ricercaEventi&quot;)!=null){</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if(request.getParameter(&quot;ricercaEventi&quot;)!=null){</span>
 <span class="nc" id="L117">            String query=request.getParameter(&quot;query&quot;)+&quot;*&quot;;</span>
 <span class="nc bnc" id="L118" title="All 2 branches missed.">            if(query.trim().length()&gt;1){</span>
 <span class="nc" id="L119">                List&lt;EventoBean&gt; eventi=serviceE.ricercaEventiByNomeOrDescrizione(query);</span>
@@ -123,19 +123,19 @@ import java.util.List;
 <span class="nc" id="L123">            String address=&quot;WEB-INF/Ricerca.jsp&quot;;</span>
 <span class="nc" id="L124">            callDispatcher(request,response,address);</span>
         }
-<span class="nc bnc" id="L126" title="All 2 branches missed.">        if(request.getParameter(&quot;inviaRichiestaEvento&quot;)!=null){</span>
-<span class="nc bnc" id="L127" title="All 4 branches missed.">            if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase(&quot;organizzatore&quot;)!=0){</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if(request.getParameter(&quot;inviaRichiestaEvento&quot;)!=null){</span>
+<span class="pc bpc" id="L127" title="2 of 4 branches missed.">            if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase(&quot;organizzatore&quot;)!=0){</span>
 <span class="nc" id="L128">                throw new RuntimeException(&quot;operazione non autorizzata&quot;);</span>
             }
-<span class="nc" id="L130">            Date dataInizio=Date.valueOf(request.getParameter(&quot;dataInizio&quot;));</span>
-<span class="nc" id="L131">            Date dataFine=Date.valueOf(request.getParameter(&quot;dataFine&quot;));</span>
-<span class="nc" id="L132">            String nome=request.getParameter(&quot;nome&quot;);</span>
-<span class="nc" id="L133">            String tipoEvento=request.getParameter(&quot;tipoEvento&quot;);</span>
-<span class="nc" id="L134">            int numBiglietti=Integer.parseInt(request.getParameter(&quot;numBiglietti&quot;));</span>
-<span class="nc" id="L135">            double prezzo=Double.parseDouble(request.getParameter(&quot;prezzo&quot;));</span>
-<span class="nc" id="L136">            Part filePhoto=request.getPart(&quot;path&quot;);</span>
-<span class="nc bnc" id="L137" title="All 4 branches missed.">            if (!(filePhoto != null &amp;&amp; filePhoto.getSize()!=0 )) {</span>
-<span class="nc" id="L138">                throw new IOException();</span>
+<span class="fc" id="L130">            Date dataInizio=Date.valueOf(request.getParameter(&quot;dataInizio&quot;));</span>
+<span class="fc" id="L131">            Date dataFine=Date.valueOf(request.getParameter(&quot;dataFine&quot;));</span>
+<span class="fc" id="L132">            String nome=request.getParameter(&quot;nome&quot;);</span>
+<span class="fc" id="L133">            String tipoEvento=request.getParameter(&quot;tipoEvento&quot;);</span>
+<span class="fc" id="L134">            int numBiglietti=Integer.parseInt(request.getParameter(&quot;numBiglietti&quot;));</span>
+<span class="fc" id="L135">            double prezzo=Double.parseDouble(request.getParameter(&quot;prezzo&quot;));</span>
+<span class="fc" id="L136">            Part filePhoto=request.getPart(&quot;path&quot;);</span>
+<span class="pc bpc" id="L137" title="3 of 4 branches missed.">            if (!(filePhoto != null &amp;&amp; filePhoto.getSize()!=0 )) {</span>
+<span class="fc" id="L138">                throw new IOException(&quot;path non valido&quot;);</span>
             }
 <span class="nc bnc" id="L140" title="All 2 branches missed.">            if(ImageIO.read(filePhoto.getInputStream())== null) throw new IOException();</span>
 

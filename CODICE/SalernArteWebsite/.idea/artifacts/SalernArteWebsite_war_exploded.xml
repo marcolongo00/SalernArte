@@ -63,6 +63,8 @@
           <element id="library" level="project" name="Maven: org.codehaus.plexus:plexus-java:1.0.5" />
           <element id="library" level="project" name="Maven: com.thoughtworks.qdox:qdox:2.0-M9" />
           <element id="library" level="project" name="Maven: org.apache.maven.surefire:surefire-shared-utils:3.0.0-M4" />
+          <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.1.0" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-test:3.1.1.RELEASE" />
         </element>
       </element>
       <element id="directory" name="META-INF">
