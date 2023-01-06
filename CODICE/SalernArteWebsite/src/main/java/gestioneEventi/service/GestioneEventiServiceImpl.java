@@ -28,7 +28,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
     public void richiediInserimentoEvento(int idOrganizzatore,String nome, String tipoEvento, String descrizione, String pathContext,Part filePhoto, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede){
         try{
             Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
-            if(dataFine.before(dataInizio) || dataInizio.before(dataAttuale)){
+            if( dataFine.before(dataInizio) || dataInizio.before(dataAttuale)){
                 throw  new RuntimeException("impostazioni data inserite non valide");
             }
             if(nome==null || !nome.matches("^[0-9°A-zÀ-ù ‘-]{1,50}$"))
@@ -54,8 +54,8 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             daoEvento.doSave(bean);
             creaBiglietti(numBiglietti,bean.getId(),prezzoBiglietto);
 
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

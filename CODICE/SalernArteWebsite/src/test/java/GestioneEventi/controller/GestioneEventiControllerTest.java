@@ -20,9 +20,9 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.sql.Date;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * Implementa il testing di unità per la classe
  * GestioneEventiController.
@@ -47,6 +47,7 @@ public class GestioneEventiControllerTest {
     private RequestDispatcher mockedDispatcher;
     private HttpSession session;
     private UtenteRegistratoBean utenteLoggato ;
+    MockMultipartFile fileFoto;
     /**
      * Parameters declaration.
      */
@@ -71,6 +72,11 @@ public class GestioneEventiControllerTest {
         UtenteRegistratoBean ut=new OrganizzatoreBean(5,0,"IT17J0300203280772191565161","pluto","prova","plutoprova@example.com","pluto","prova biografia", Date.valueOf("1999-07-21"),false);
          //forniamo i parametri per il nostro caso di test
 
+        fileFoto =
+                new MockMultipartFile("copertina",
+                        "filename.png",
+                        "image/png",
+                        "immagine di copertina".getBytes());
         Mockito.when(mockedRequest.getSession()).thenReturn(session);
         Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(ut);
 
@@ -81,8 +87,13 @@ public class GestioneEventiControllerTest {
      * Caso: il tipoEvento non rispetta il formato
      */
     @Test
-   public void TC_2p1_1() throws  IOException {
+   public void TC_2p1_1() throws Exception {
+        //non finito
          //forniamo i parametri per il nostro caso di test
+        /*this.mockMvc.perform(MockMvcRequestBuilders.multipart("/gestione-eventi")
+                        .file(fileFoto)
+                .param("inviaRichiestaEvnto","true")).andExpect(view().name("redirect:/pagina"));
+       */
         Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn("true");
         Mockito.when(mockedRequest.getParameter("dataInizio")).thenReturn("2023-03-03");
         Mockito.when(mockedRequest.getParameter("dataFine")).thenReturn("2023-03-23");
@@ -95,6 +106,7 @@ public class GestioneEventiControllerTest {
         } catch (ServletException e) {
             throw new IOException("path non valido");
         }
+
         Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("");
         Mockito.when(mockedRequest.getParameter("desc")).thenReturn("descrizione evento");
         Mockito.when(mockedRequest.getParameter("indirizzo")).thenReturn("indirizzo evento");
@@ -109,7 +121,7 @@ public class GestioneEventiControllerTest {
      * Cleanup the environment.
      */
     @AfterAll
-    void tearDown(){
+    public void tearDown(){
         servlet = null;
         mockedRequest = null;
         mockedResponse = null;
