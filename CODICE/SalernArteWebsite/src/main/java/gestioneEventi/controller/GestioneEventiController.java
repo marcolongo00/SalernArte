@@ -23,7 +23,7 @@ import java.util.List;
 @WebServlet(name = "GestioneEventiController",urlPatterns = "/gestione-eventi")
 @MultipartConfig
 public class GestioneEventiController extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request,response);
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -135,7 +135,7 @@ public class GestioneEventiController extends HttpServlet {
             double prezzo=Double.parseDouble(request.getParameter("prezzo"));
             Part filePhoto=request.getPart("path");
             if (!(filePhoto != null && filePhoto.getSize()!=0 )) {
-                throw new IOException();
+                throw new IOException("path non valido");
             }
             if(ImageIO.read(filePhoto.getInputStream())== null) throw new IOException();
 

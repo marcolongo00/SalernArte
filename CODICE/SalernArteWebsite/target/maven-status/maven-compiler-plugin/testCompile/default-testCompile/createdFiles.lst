@@ -1,2 +1,3 @@
 GestioneEventi\controller\GestioneEventiControllerTest.class
-GestioneEventi\controller\testProva.class
+GestioneEventi\service\GestioneEventiServiceImplTest.class
+testProva.class
