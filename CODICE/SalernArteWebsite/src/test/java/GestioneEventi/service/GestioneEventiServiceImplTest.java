@@ -9,8 +9,7 @@ import model.dao.EventoDAOImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.mockito.Mockito;
 
 import javax.servlet.http.Part;
@@ -73,7 +72,7 @@ public class GestioneEventiServiceImplTest {
     }
 
     @After
-    public  void cleanUp(){
+    public void cleanUp(){
         serviceE=null;
         mockedEventoDao=null;
         mockedBigliettoDao=null;

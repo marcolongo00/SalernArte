@@ -1,0 +1,251 @@
+* {
+    scrollbar-width: none;
+}
+
+@media only screen and (min-width: 800px){
+    .contAll{
+        display: inline-flex;
+    }
+    #formPerModifica{
+        display: contents;
+    }
+    .imgContainer{
+        left:0px;
+        width: 50%;
+        margin: auto;
+
+    }
+    .imgContainer img{
+        position: relative;
+        /*top:20%;*/
+        display: block;
+        max-width:600px;
+        max-height: 500px;
+        width:80%;
+        box-shadow: -12px 48px 65px 11px rgba(133,124,133,0.81);
+        margin:auto;
+        /*box-shadow: -115px 127px 135px -58px rgba(133,124,133,0.81),98px 127px 135px -58px rgba(133,124,133,0.81);
+         vertical-align: middle;
+        padding:20px;
+       */
+    }
+    .fluidDet{
+        width: 50%;
+        overflow-y: auto;
+    }
+
+    .singleQuad img{
+        width:200px;
+        height: auto;
+    }
+    .funzAdmin{position: absolute;}
+    .funzOrg{position: absolute;}
+}
+@media only screen and (max-width: 799px){
+    .imgContainer{display: none;}
+    .fluidDet{width: 100%;}
+    .singleQuad img{
+        width:150px;
+        height: 150px;
+    }
+    .funzAdmin{position: unset;}
+    .funzOrg{position: unset;}
+}
+.containerIndirizzo,.containerSede,.qtaOrgContainer, .prezzoBiglContainer{
+    display: flex;
+    margin: auto;
+    width: max-content;
+    padding: 10px 0px;
+}
+.prezzoBiglContainer{
+    font-weight: bold;
+}
+
+.prezzoBiglietto, .numBiglietti, .sconto{
+    padding: 0px 10px;
+}
+.contAll{
+    width:100%;
+    height: 90%;
+    overflow-y: auto;
+}
+::-webkit-scrollbar{display: none}
+.fluidQuad{
+    display: inline-flex;
+    width: 100%;
+    overflow-x: auto;
+    position: relative;
+    top:40px;
+    scrollbar-width: unset;
+
+}
+.fluidQuad::-webkit-scrollbar{display: inherit;}
+.singleQuad{
+    padding:10px;
+    margin: auto;
+}
+.mTitle, .qTitle{
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 30px;
+    margin:30px 0px 10px 0px;
+}
+.tipoEvento, .evBio{
+    text-align: center;
+    text-transform: uppercase;
+    font-size: medium;
+    margin:10px 0px;
+}
+.qTitle{
+    position: relative;
+    top: 40px;
+}
+.mDescr{
+    text-align:justify;
+    text-justify:inter-word;
+    font-size: 18px;
+    width:95%;
+    height: auto;
+    margin:40px 15px;
+}
+
+
+.itemsCarr{
+    width:100%;
+    height: 60px;
+    top:30px;
+    position: relative;
+}
+.carrContainer{
+    display: flex;
+    position:relative;
+    width: 370px;
+    height: inherit;
+    margin:auto;
+}
+#mFirstButton{
+    position: relative;
+    height: 40px;
+    margin:auto;
+}
+#firstButton{
+    width: max-content;
+    margin:auto;
+}
+.mButtons{
+    width: 180px;
+    height: inherit;
+}
+#carrQta{
+    font-size: 20px;
+    margin: auto;
+}
+#annulla{
+    position: relative;
+    width: max-content;
+    margin: 5px auto;
+}
+.qtaValue{
+    width:30px;
+    text-align: center;
+}
+#barra, #barraTipo {
+    display: inline-flex;
+    width:max-content;
+    height: max-content;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    margin:auto 20px;}
+.allQta{
+    display: none;
+    position: absolute;
+    width:40px;
+    text-align: center;
+    top:38px;
+    left:128px;
+    border-style: solid;
+    border-top-style: none;
+    border-width: 1px;
+    max-height: 45px;
+    overflow-y: auto;}
+.allTipoEv{
+    display: none;
+    width:max-content;
+    text-align: center;
+    margin: auto;
+    border-style: solid;
+    border-top-style: none;
+    border-width: 1px;
+    overflow-y: auto;
+    padding: 5px;}
+
+
+#file-upload{
+    width: max-content;
+    margin: auto;
+}
+.fa-caret-up,.carrContainer, #modAnnulla, #modConferma, input[type="file"]{display: none;}
+#soldOut{
+    text-align: center;
+    width: 100%;
+}
+
+.funzAdmin, .funzOrg {
+    width: 100%;
+    height: 30px;
+}
+#adminButtons{
+    position: relative;
+    display:flex;
+    width:380px;
+    margin:auto;
+    padding:5px;
+}
+#orgButtons{
+    position: relative;
+    display:flex;
+    width:max-content;
+    margin:auto;
+    padding:5px;
+}
+
+.bottonefileblu{
+    color: #4267b2;
+    background-color: #fff;
+    border: 2px solid #030303;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px;
+    margin: 0 10px;
+    height: 29px;
+    border-radius: 3px;/*bottone rotondo*/
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    transition: all 200ms ease-out;
+    top:5px;
+}
+/*form{ margin-block-end: unset;
+    margin-top:unset;}*/
+.bottonefileblu:hover, #modAnnulla:hover, #modMostra:hover{
+    color: #00e6e6;
+    box-shadow: 0 0 0 1px #66ffff;
+    transition: all 200ms ease-out;
+}
+#modMostra, #modAnnulla{
+    font-family: auto;
+}
+
+#modMostra, #modAnnulla, #modConferma, .bottonefileblu{
+    height: max-content;
+    position: relative;
+    z-index: 1;
+}
+.messageMod{
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 15px;
+    color: red;
+    margin-top:40px;
+}
+.singleQuad:hover{
+    opacity: 0.5;
+}
