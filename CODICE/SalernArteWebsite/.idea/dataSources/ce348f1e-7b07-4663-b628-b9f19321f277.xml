@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="DatabaseSalernarte@localhost">
-  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.43">
-    <root id="1">
-      <DefaultCasing>lower/lower</DefaultCasing>
-      <DefaultEngine>InnoDB</DefaultEngine>
-      <DefaultTmpEngine>InnoDB</DefaultTmpEngine>
-      <ServerVersion>8.0.21</ServerVersion>
-    </root>
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.45">
+    <root id="1"/>
     <schema id="2" parent="1" name="databasesalernarte">
       <Current>1</Current>
       <CollationName>utf8_general_ci</CollationName>
@@ -77,27 +72,27 @@
     </table>
     <column id="21" parent="11" name="numOrdine">
       <AutoIncrement>2</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="22" parent="11" name="data">
-      <DataType>date|0s</DataType>
+      <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
     <column id="23" parent="11" name="totale">
-      <DataType>decimal(10,2 digit)|0s</DataType>
+      <DasType>decimal(10,2 digit)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
     <column id="24" parent="11" name="idUtente">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
     <column id="25" parent="11" name="prodotti">
-      <DataType>longtext|0s</DataType>
+      <DasType>longtext|0s</DasType>
       <Position>5</Position>
     </column>
     <foreign-key id="26" parent="11" name="acquisto_ibfk_1">
@@ -123,17 +118,17 @@
     </key>
     <column id="30" parent="12" name="id">
       <AutoIncrement>3</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="31" parent="12" name="nome">
-      <DataType>varchar(50)|0s</DataType>
+      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
     <column id="32" parent="12" name="cognome">
-      <DataType>varchar(50)|0s</DataType>
+      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
@@ -156,22 +151,22 @@
     </key>
     <column id="36" parent="13" name="id">
       <AutoIncrement>3</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="37" parent="13" name="evento">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
     <column id="38" parent="13" name="costo">
-      <DataType>decimal(10,2 digit)|0s</DataType>
+      <DasType>decimal(10,2 digit)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
     <column id="39" parent="13" name="acquisto">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <Position>4</Position>
     </column>
     <foreign-key id="40" parent="13" name="biglietto_ibfk_1">
@@ -208,17 +203,17 @@ evento</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="46" parent="14" name="idUtente">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="47" parent="14" name="idEvento">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
     <column id="48" parent="14" name="quantita">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
@@ -253,62 +248,62 @@ idEvento</ColNames>
     </key>
     <column id="54" parent="15" name="id">
       <AutoIncrement>8</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="55" parent="15" name="idOrganizzatore">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
     <column id="56" parent="15" name="nome">
-      <DataType>varchar(50)|0s</DataType>
+      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
     <column id="57" parent="15" name="tipo">
-      <DataType>tinyint(1)|0s</DataType>
+      <DasType>tinyint(1)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
     <column id="58" parent="15" name="descrizione">
-      <DataType>varchar(320)|0s</DataType>
+      <DasType>varchar(320)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
     <column id="59" parent="15" name="pathFoto">
-      <DataType>varchar(200)|0s</DataType>
+      <DasType>varchar(200)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
     <column id="60" parent="15" name="numBiglietti">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
     <column id="61" parent="15" name="dataInizio">
-      <DataType>date|0s</DataType>
+      <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>8</Position>
     </column>
     <column id="62" parent="15" name="dataFine">
-      <DataType>date|0s</DataType>
+      <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>9</Position>
     </column>
     <column id="63" parent="15" name="indirizzo">
-      <DataType>varchar(100)|0s</DataType>
+      <DasType>varchar(100)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>10</Position>
     </column>
     <column id="64" parent="15" name="sede">
-      <DataType>varchar(100)|0s</DataType>
+      <DasType>varchar(100)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>11</Position>
     </column>
     <column id="65" parent="15" name="attivo">
-      <DataType>tinyint(1)|0s</DataType>
+      <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <Position>12</Position>
     </column>
@@ -340,37 +335,37 @@ descrizione</ColNames>
     </key>
     <column id="71" parent="16" name="id">
       <AutoIncrement>5</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="72" parent="16" name="nome">
-      <DataType>varchar(50)|0s</DataType>
+      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
     <column id="73" parent="16" name="cognome">
-      <DataType>varchar(50)|0s</DataType>
+      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
     <column id="74" parent="16" name="biografia">
-      <DataType>longtext|0s</DataType>
+      <DasType>longtext|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
     <column id="75" parent="16" name="dataDiNascita">
-      <DataType>date|0s</DataType>
+      <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
     <column id="76" parent="16" name="sesso">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
     <column id="77" parent="16" name="iban">
-      <DataType>varchar(27)|0s</DataType>
+      <DasType>varchar(27)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>7</Position>
     </column>
@@ -386,22 +381,22 @@ descrizione</ColNames>
     </key>
     <column id="80" parent="17" name="id">
       <AutoIncrement>1</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="81" parent="17" name="idEvento">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
     <column id="82" parent="17" name="idEventoTemp">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
     <column id="83" parent="17" name="nuovoPrezzoBiglietto">
-      <DataType>decimal(10,2 digit)|0s</DataType>
+      <DasType>decimal(10,2 digit)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
@@ -447,12 +442,12 @@ descrizione</ColNames>
     </key>
     <column id="92" parent="18" name="id">
       <AutoIncrement>1</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="93" parent="18" name="istituto">
-      <DataType>varchar(100)|0s</DataType>
+      <DasType>varchar(100)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
@@ -475,27 +470,27 @@ descrizione</ColNames>
     </key>
     <column id="97" parent="19" name="id">
       <AutoIncrement>4</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="98" parent="19" name="nome">
-      <DataType>varchar(50)|0s</DataType>
+      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
     <column id="99" parent="19" name="cognome">
-      <DataType>varchar(50)|0s</DataType>
+      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
     <column id="100" parent="19" name="dataDiNascita">
-      <DataType>date|0s</DataType>
+      <DasType>date|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>
     <column id="101" parent="19" name="sesso">
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
@@ -518,22 +513,22 @@ descrizione</ColNames>
     </key>
     <column id="105" parent="20" name="id">
       <AutoIncrement>5</AutoIncrement>
-      <DataType>int|0s</DataType>
+      <DasType>int|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
     <column id="106" parent="20" name="email">
-      <DataType>varchar(100)|0s</DataType>
+      <DasType>varchar(100)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
     <column id="107" parent="20" name="passwordHash">
-      <DataType>varchar(50)|0s</DataType>
+      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
     <column id="108" parent="20" name="tipoUtente">
-      <DataType>varchar(20)|0s</DataType>
+      <DasType>varchar(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
     </column>

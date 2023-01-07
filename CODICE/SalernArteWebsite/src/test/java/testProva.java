@@ -1,7 +1,6 @@
 import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 import org.junit.Test;
-import  static org.junit.Assert.assertTrue;
 import  static org.junit.Assert.assertEquals;
 
 public class testProva {
@@ -11,4 +10,6 @@ public class testProva {
         UtenteRegistratoBean utenteRegistratoBean= new UtenteBean();
         assertEquals("nulL",null,utenteRegistratoBean.getTipoUtente());
     }
+
+
 }
