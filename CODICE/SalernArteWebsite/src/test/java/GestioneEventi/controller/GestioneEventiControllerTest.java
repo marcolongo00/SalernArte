@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
+
+import javax.imageio.ImageIO;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -17,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 
@@ -94,6 +98,10 @@ public class GestioneEventiControllerTest {
                         .file(fileFoto)
                 .param("inviaRichiestaEvnto","true")).andExpect(view().name("redirect:/pagina"));
        */
+        BufferedImage bi= new BufferedImage(500,500,BufferedImage.TYPE_INT_RGB);
+        File image= new File("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\provaCreazione.jpg");
+        ImageIO.write(bi,"jpg",image);
+        image.delete();
         Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn("true");
         Mockito.when(mockedRequest.getParameter("dataInizio")).thenReturn("2023-03-03");
         Mockito.when(mockedRequest.getParameter("dataFine")).thenReturn("2023-03-23");
