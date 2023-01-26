@@ -1,0 +1,7 @@
+GestioneEventi\controller\GestioneEventiControllerTest.class
+GestioneUtente\service\GestioneUtenteServiceImplTest.class
+GestioneUtente\controller\GestioneUtenteControllerTest.class
+testProva.class
+GestioneAcquisti\controller\GestioneAcquistiControllerTest.class
+GestioneAcquisti\service\GestioneAcquistiServiceImplTest.class
+GestioneEventi\service\GestioneEventiServiceImplTest.class

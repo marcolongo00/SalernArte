@@ -139,8 +139,7 @@ public class GestioneEventiController extends HttpServlet {
             }
             if(ImageIO.read(filePhoto.getInputStream())== null) throw new IOException();
 
-
-            String pathSave=getServletContext().getAttribute("pathNewEventi")+filePhoto.getSubmittedFileName();
+            String pathSave=request.getServletContext().getAttribute("pathNewEventi")+filePhoto.getSubmittedFileName();
 
             String descrizione=request.getParameter("desc");
             String indirizzo=request.getParameter("indirizzo");

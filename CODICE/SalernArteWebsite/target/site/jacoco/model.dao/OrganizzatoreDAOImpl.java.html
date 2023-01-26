@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrganizzatoreDAOImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SalernArteWebsite</a> &gt; <a href="index.source.html" class="el_package">model.dao</a> &gt; <span class="el_source">OrganizzatoreDAOImpl.java</span></div><h1>OrganizzatoreDAOImpl.java</h1><pre class="source lang-java linenums">package model.dao;
+
+import model.entity.OrganizzatoreBean;
+import model.entity.UtenteBean;
+import model.entity.UtenteRegistratoBean;
+import singleton.ConPool;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="nc" id="L12">public class OrganizzatoreDAOImpl extends UtenteRegistratoDAOImpl{</span>
+    @Override
+    public List&lt;UtenteRegistratoBean&gt; doRetrieveAll() {
+<span class="nc" id="L15">        List&lt;UtenteRegistratoBean&gt; lista=new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L16">        try(Connection con= ConPool.getConnection()){</span>
+<span class="nc" id="L17">            Statement stm=con.createStatement();</span>
+<span class="nc" id="L18">            ResultSet rs=stm.executeQuery(&quot;SELECT * FROM UtenteRegistrato JOIN Organizzatore USING(id)&quot;);</span>
+<span class="nc bnc" id="L19" title="All 2 branches missed.">            while(rs.next()){</span>
+<span class="nc" id="L20">                int id= rs.getInt(&quot;id&quot;);</span>
+<span class="nc" id="L21">                String nome= rs.getString(&quot;nome&quot;);</span>
+<span class="nc" id="L22">                String cognome=rs.getString(&quot;cognome&quot;);</span>
+<span class="nc" id="L23">                String email= rs.getString(&quot;email&quot;);</span>
+<span class="nc" id="L24">                String passwordHash=rs.getString(&quot;passwordHash&quot;);</span>
+<span class="nc" id="L25">                String bio=rs.getString(&quot;biografia&quot;);</span>
+<span class="nc" id="L26">                Date dataNascita= rs.getDate(&quot;dataDiNascita&quot;);</span>
+<span class="nc" id="L27">                int sesso =rs.getInt(&quot;sesso&quot;);</span>
+<span class="nc" id="L28">                String iban= rs.getString(&quot;iban&quot;);</span>
+<span class="nc" id="L29">                lista.add(new OrganizzatoreBean(id,sesso,iban,nome,cognome,email,passwordHash,bio,dataNascita,true));</span>
+<span class="nc" id="L30">            }</span>
+<span class="nc" id="L31">            con.close();</span>
+<span class="nc" id="L32">            stm.close();</span>
+<span class="nc" id="L33">            rs.close();</span>
+<span class="nc" id="L34">            return lista;</span>
+<span class="nc" id="L35">        }catch(SQLException e){</span>
+<span class="nc" id="L36">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    @Override
+    public void doSave(UtenteRegistratoBean utente) {
+<span class="nc" id="L42">        super.doSave(utente);</span>
+
+<span class="nc" id="L44">        try(Connection con=ConPool.getConnection()){</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            if(!(utente instanceof OrganizzatoreBean)){ //controllata anche nelle service ma contorllo in più qui</span>
+<span class="nc" id="L46">                throw new RuntimeException();//myexception</span>
+            }
+
+<span class="nc" id="L49">            PreparedStatement ps=con.prepareStatement(&quot;INSERT INTO Organizzatore (id,nome,cognome,biografia,dataDiNascita,sesso,iban) VALUES(?,?,?,?,?,?,?)&quot;);</span>
+<span class="nc" id="L50">            ps.setInt(1,utente.getId());</span>
+<span class="nc" id="L51">            ps.setString(2,((OrganizzatoreBean)utente).getNome());</span>
+<span class="nc" id="L52">            ps.setString(3,((OrganizzatoreBean)utente).getCognome());</span>
+<span class="nc" id="L53">            ps.setString(4,((OrganizzatoreBean)utente).getBiografia());</span>
+<span class="nc" id="L54">            ps.setDate(5,((OrganizzatoreBean)utente).getDataDiNascita());</span>
+<span class="nc" id="L55">            ps.setInt(6,((OrganizzatoreBean)utente).getSesso());</span>
+<span class="nc" id="L56">            ps.setString(7,((OrganizzatoreBean)utente).getIban());</span>
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if(ps.executeUpdate() !=1)</span>
+            {
+<span class="nc" id="L60">                throw new RuntimeException(&quot;INSERT error.&quot;);</span>
+            }
+
+<span class="nc" id="L63">            con.close();</span>
+<span class="nc" id="L64">            ps.close();</span>
+<span class="nc" id="L65">        }catch(SQLException e){</span>
+<span class="nc" id="L66">            throw new RuntimeException(e);</span>
+<span class="nc" id="L67">        }</span>
+<span class="nc" id="L68">    }</span>
+
+    @Override
+    public UtenteRegistratoBean doRetrieveByEmailPassword(String email, String password) {
+<span class="nc" id="L72">        try(Connection con=ConPool.getConnection()){</span>
+<span class="nc" id="L73">            PreparedStatement stm=con.prepareStatement(&quot;SELECT * FROM UtenteRegistrato JOIN Organizzatore USING(id) WHERE email=? AND passwordHash=SHA1(?)&quot;);</span>
+<span class="nc" id="L74">            stm.setString(1,email);</span>
+<span class="nc" id="L75">            stm.setString(2,password);</span>
+<span class="nc" id="L76">            ResultSet rs=stm.executeQuery();</span>
+<span class="nc" id="L77">            OrganizzatoreBean scelto=null;</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            if(rs.next()){</span>
+<span class="nc" id="L79">                int id= rs.getInt(&quot;id&quot;);</span>
+<span class="nc" id="L80">                String nome= rs.getString(&quot;nome&quot;);</span>
+<span class="nc" id="L81">                String cognome=rs.getString(&quot;cognome&quot;);</span>
+<span class="nc" id="L82">                String passwordHash=rs.getString(&quot;passwordHash&quot;);</span>
+<span class="nc" id="L83">                String bio=rs.getString(&quot;biografia&quot;);</span>
+<span class="nc" id="L84">                Date dataNascita= rs.getDate(&quot;dataDiNascita&quot;);</span>
+<span class="nc" id="L85">                int sesso =rs.getInt(&quot;sesso&quot;);</span>
+<span class="nc" id="L86">                String iban= rs.getString(&quot;iban&quot;);</span>
+<span class="nc" id="L87">                scelto=new OrganizzatoreBean(id,sesso,iban,nome,cognome,email,passwordHash,bio,dataNascita,true);</span>
+<span class="nc" id="L88">            }else{</span>
+<span class="nc" id="L89">                throw new RuntimeException(&quot;Errore Autenticazione utente&quot;);</span>
+            }
+<span class="nc" id="L91">            con.close();</span>
+<span class="nc" id="L92">            stm.close();</span>
+<span class="nc" id="L93">            rs.close();</span>
+<span class="nc" id="L94">            return scelto;</span>
+<span class="nc" id="L95">        }catch(SQLException e){</span>
+<span class="nc" id="L96">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    @Override
+    public UtenteRegistratoBean doRetrieveByEmail(String email) {
+<span class="nc" id="L102">        try(Connection con=ConPool.getConnection()){</span>
+<span class="nc" id="L103">            PreparedStatement stm=con.prepareStatement(&quot;SELECT * FROM UtenteRegistrato JOIN Organizzatore USING(id) WHERE email=?&quot;);</span>
+<span class="nc" id="L104">            stm.setString(1,email);</span>
+<span class="nc" id="L105">            ResultSet rs=stm.executeQuery();</span>
+<span class="nc" id="L106">            OrganizzatoreBean scelto=null;</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">            if(rs.next()){</span>
+<span class="nc" id="L108">                int id= rs.getInt(&quot;id&quot;);</span>
+<span class="nc" id="L109">                String nome= rs.getString(&quot;nome&quot;);</span>
+<span class="nc" id="L110">                String cognome=rs.getString(&quot;cognome&quot;);</span>
+<span class="nc" id="L111">                String passwordHash=rs.getString(&quot;passwordHash&quot;);</span>
+<span class="nc" id="L112">                String bio=rs.getString(&quot;biografia&quot;);</span>
+<span class="nc" id="L113">                Date dataNascita= rs.getDate(&quot;dataDiNascita&quot;);</span>
+<span class="nc" id="L114">                int sesso =rs.getInt(&quot;sesso&quot;);</span>
+<span class="nc" id="L115">                String iban= rs.getString(&quot;iban&quot;);</span>
+<span class="nc" id="L116">                scelto=new OrganizzatoreBean(id,sesso,iban,nome,cognome,email,passwordHash,bio,dataNascita,true);</span>
+            }
+
+<span class="nc" id="L119">            con.close();</span>
+<span class="nc" id="L120">            stm.close();</span>
+<span class="nc" id="L121">            rs.close();</span>
+<span class="nc" id="L122">            return scelto;</span>
+<span class="nc" id="L123">        }catch(SQLException e){</span>
+<span class="nc" id="L124">            throw new RuntimeException(e);</span>
+        }
+    }
+    public OrganizzatoreBean doRetrieveById(int id) {
+<span class="nc" id="L128">        try(Connection con=ConPool.getConnection()){</span>
+<span class="nc" id="L129">            PreparedStatement stm=con.prepareStatement(&quot;SELECT * FROM UtenteRegistrato JOIN Organizzatore USING(id) WHERE id=?&quot;);</span>
+<span class="nc" id="L130">            stm.setInt(1,id);</span>
+<span class="nc" id="L131">            ResultSet rs=stm.executeQuery();</span>
+<span class="nc" id="L132">            OrganizzatoreBean scelto=null;</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            if(rs.next()){</span>
+<span class="nc" id="L134">                String email= rs.getString(&quot;email&quot;);</span>
+<span class="nc" id="L135">                String nome= rs.getString(&quot;nome&quot;);</span>
+<span class="nc" id="L136">                String cognome=rs.getString(&quot;cognome&quot;);</span>
+<span class="nc" id="L137">                String passwordHash=rs.getString(&quot;passwordHash&quot;);</span>
+<span class="nc" id="L138">                String bio=rs.getString(&quot;biografia&quot;);</span>
+<span class="nc" id="L139">                Date dataNascita= rs.getDate(&quot;dataDiNascita&quot;);</span>
+<span class="nc" id="L140">                int sesso =rs.getInt(&quot;sesso&quot;);</span>
+<span class="nc" id="L141">                String iban= rs.getString(&quot;iban&quot;);</span>
+<span class="nc" id="L142">                scelto=new OrganizzatoreBean(id,sesso,iban,nome,cognome,email,passwordHash,bio,dataNascita,true);</span>
+            }
+
+<span class="nc" id="L145">            con.close();</span>
+<span class="nc" id="L146">            stm.close();</span>
+<span class="nc" id="L147">            rs.close();</span>
+<span class="nc" id="L148">            return scelto;</span>
+<span class="nc" id="L149">        }catch(SQLException e){</span>
+<span class="nc" id="L150">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    @Override
+    public void doUpdate(UtenteRegistratoBean utente) {
+<span class="nc" id="L156">        try(Connection con=ConPool.getConnection()){</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">            if(!(utente instanceof OrganizzatoreBean)){</span>
+<span class="nc" id="L158">                throw  new RuntimeException(); //myexception</span>
+            }
+
+<span class="nc" id="L161">            PreparedStatement ps=con.prepareStatement(&quot;UPDATE UtenteRegistrato JOIN Organizzatore USING(id) SET nome=?, cognome=?, email=?,passwordHash=?, biografia=?, dataDiNascita=?, sesso=?, iban=? WHERE id=?&quot;);</span>
+<span class="nc" id="L162">            ps.setString(1,((OrganizzatoreBean)utente).getNome());</span>
+<span class="nc" id="L163">            ps.setString(2,((OrganizzatoreBean)utente).getCognome());</span>
+<span class="nc" id="L164">            ps.setString(3,utente.getEmail());</span>
+<span class="nc" id="L165">            ps.setString(4,utente.getPasswordHash());</span>
+<span class="nc" id="L166">            ps.setString(5,((OrganizzatoreBean)utente).getBiografia());</span>
+<span class="nc" id="L167">            ps.setDate(6,((OrganizzatoreBean)utente).getDataDiNascita());</span>
+<span class="nc" id="L168">            ps.setInt(7,((OrganizzatoreBean)utente).getSesso());</span>
+<span class="nc" id="L169">            ps.setString(8,((OrganizzatoreBean)utente).getIban());</span>
+<span class="nc" id="L170">            ps.setInt(9,utente.getId());</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">            if(ps.executeUpdate() !=1)</span>
+            {
+<span class="nc" id="L173">                throw new RuntimeException(&quot;UPDATE Organizzatore error.&quot;);</span>
+            }
+<span class="nc" id="L175">            con.close();</span>
+<span class="nc" id="L176">            ps.close();</span>
+<span class="nc" id="L177">        }catch(SQLException e){</span>
+<span class="nc" id="L178">            throw new RuntimeException(e);</span>
+<span class="nc" id="L179">        }</span>
+<span class="nc" id="L180">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

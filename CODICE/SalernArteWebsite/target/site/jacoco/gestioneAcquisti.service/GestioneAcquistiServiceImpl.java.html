@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GestioneAcquistiServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SalernArteWebsite</a> &gt; <a href="index.source.html" class="el_package">gestioneAcquisti.service</a> &gt; <span class="el_source">GestioneAcquistiServiceImpl.java</span></div><h1>GestioneAcquistiServiceImpl.java</h1><pre class="source lang-java linenums">package gestioneAcquisti.service;
+
+import model.dao.*;
+import model.entity.AcquistoBean;
+import model.entity.CarrelloBean;
+import model.entity.EventoBean;
+import model.entity.UtenteRegistratoBean;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+
+import model.entity.CarrelloBean.BigliettoQuantita;
+
+public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
+    private CarrelloDAO daoCarr;
+    private EventoDAO eventoDao;
+    private BigliettoDAO bigliettoDAO;
+
+    private AcquistoDAO acquistoDAO;
+<span class="fc" id="L23">    public GestioneAcquistiServiceImpl() {</span>
+<span class="fc" id="L24">        daoCarr=new CarrelloDAOImpl();</span>
+<span class="fc" id="L25">        eventoDao= new EventoDAOImpl();</span>
+<span class="fc" id="L26">        bigliettoDAO= new BigliettoDAOImpl();</span>
+<span class="fc" id="L27">        acquistoDAO= new AcquistoDAOImpl();</span>
+<span class="fc" id="L28">    }</span>
+
+
+    @Override
+    public CarrelloBean retrieveCarrelloUtente(UtenteRegistratoBean utente) { //forse non serve questa funzione
+<span class="nc" id="L33">        checkAutorizzazioniUtente(utente);</span>
+<span class="nc" id="L34">        return daoCarr.doRetrieveByIdUtente(utente.getId());</span>
+    }
+
+    @Override
+    public boolean controlloElementiCarrello(CarrelloBean carrelloSessione,UtenteRegistratoBean utente) {
+
+<span class="nc" id="L40">        boolean alertCarrello=false; //serve per allertare della presenza di prodotti non più disponibili nel</span>
+        // carrello senza automaticamente toglierli dal carrello
+
+<span class="nc" id="L43">        List&lt;Integer&gt; eventiToRemove= new ArrayList&lt;&gt;(); //eventi passati</span>
+<span class="nc" id="L44">        Collection&lt;BigliettoQuantita&gt; prodotti= carrelloSessione.getProdotti();</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if(!prodotti.isEmpty()){</span>
+<span class="nc" id="L46">            Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            for (BigliettoQuantita bi: prodotti) {</span>
+<span class="nc" id="L48">                int idE=bi.getProdotto().getId();</span>
+<span class="nc" id="L49">                EventoBean temp=eventoDao.doRetrieveById(idE);</span>
+<span class="nc bnc" id="L50" title="All 4 branches missed.">                if(temp==null || temp.getDataFine().before(dataAttuale)){ //evento non esiste più o è scaduto</span>
+                    //eventiToRemove.add(idE); viene direttamente rimosso qui, testare
+<span class="nc" id="L52">                    carrelloSessione.remove(idE);</span>
+<span class="nc" id="L53">                    daoCarr.doDelete(utente.getId(),idE); //so che l'utente è != null per precondizione</span>
+                }else
+<span class="nc bnc" id="L55" title="All 4 branches missed.">                if(temp.getNumBiglietti()==0 || temp.getNumBiglietti()&lt;bi.getQuantita()){</span>
+<span class="nc" id="L56">                    alertCarrello=true;</span>
+                }
+<span class="nc" id="L58">            }</span>
+        }
+        //ok ma che succcede se l'evento non è attivo ma era già stato inserito in un carrello??? magari anche a livello di operazioni in cui si va a rendere non attivo un evento va cancellato anche nei carrelli utenti o bo
+        /*for(Integer id:eventiToRemove){
+            carrelloSessione.remove(id); //rimuove solo quelli scaduti a livello di data
+        }*/
+<span class="nc bnc" id="L64" title="All 4 branches missed.">        return(alertCarrello || controlloEventiNonAttivi(carrelloSessione));</span>
+    }
+    public boolean controlloEventiNonAttivi(CarrelloBean carrello){
+<span class="nc" id="L67">       Collection&lt;BigliettoQuantita&gt; prodotti= carrello.getProdotti();</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        for (BigliettoQuantita bi: prodotti) {</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">            if(!bi.getProdotto().isAttivo()){</span>
+<span class="nc" id="L70">                return true;</span>
+            }
+<span class="nc" id="L72">        }</span>
+<span class="nc" id="L73">        return false;</span>
+    }
+    @Override
+    public void svuotaCarrello(CarrelloBean carrello, UtenteRegistratoBean utente) {
+<span class="nc" id="L77">        checkAutorizzazioniUtente(utente);</span>
+<span class="nc" id="L78">        daoCarr.svuotaCarrello(utente.getId());</span>
+<span class="nc" id="L79">    }</span>
+
+    @Override
+    public void removeEventoFromCarrello(int idE, CarrelloBean carrello, UtenteRegistratoBean utente) {
+        // controllo che l'id sia corretto e che nel carrello sia presente il prodotto
+<span class="nc bnc" id="L84" title="All 6 branches missed.">        if(idE&lt;= 0 || eventoDao.doRetrieveById(idE)==null || carrello.get(idE)==null)</span>
+<span class="nc" id="L85">            throw new RuntimeException(&quot;qualcosa è andato storto riprovare&quot;);</span>
+<span class="nc" id="L86">        checkAutorizzazioniUtente(utente);</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if(utente!=null)</span>
+<span class="nc" id="L88">            daoCarr.doDelete(utente.getId(),idE);</span>
+<span class="nc" id="L89">        carrello.remove(idE);</span>
+<span class="nc" id="L90">    }</span>
+
+    @Override
+    public CarrelloBean aggiungiAlCarrello(int idE, int quantita, CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
+<span class="nc bnc" id="L94" title="All 4 branches missed.">        if(idE&lt;= 0 || quantita&lt;=0)   throw new RuntimeException(&quot;formato dati errato&quot;);</span>
+<span class="nc" id="L95">        EventoBean evento= eventoDao.doRetrieveById(idE);</span>
+<span class="nc" id="L96">        Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());</span>
+        //or non attivo)
+<span class="nc bnc" id="L98" title="All 4 branches missed.">        if(evento==null || evento.getDataFine().before(dataAttuale)) throw new RuntimeException(&quot;formato dati errato&quot;);</span>
+<span class="nc" id="L99">        checkAutorizzazioniUtente(utente);</span>
+<span class="nc" id="L100">        double prezzoBiglietto=bigliettoDAO.doRetrievePrezzoBigliettoByEvento(idE);</span>
+<span class="nc bnc" id="L101" title="All 4 branches missed.">        if(utente!=null &amp;&amp; utente.getTipoUtente().compareToIgnoreCase(&quot;scolaresca&quot;)==0){</span>
+<span class="nc" id="L102">            double scontoDaApplicare= prezzoBiglietto*30/100;</span>
+<span class="nc" id="L103">            prezzoBiglietto-= scontoDaApplicare;</span>
+        }
+
+<span class="nc bnc" id="L106" title="All 2 branches missed.">       if(carrelloSessione==null){//può succedere solo se l'utente non è loggato, altirmenti avrei al più un carrello vuoto</span>
+<span class="nc" id="L107">           carrelloSessione=new CarrelloBean();</span>
+<span class="nc" id="L108">           carrelloSessione.put(evento,quantita, prezzoBiglietto);</span>
+       }else{ //vale l'ipotesi che il carrello in sessione sarà sempre aggiornato al momento dell'inserimento
+<span class="nc" id="L110">           BigliettoQuantita biQta=carrelloSessione.get(idE);//recupera bigliettoQuantità di quella mostra</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">           if (biQta != null) { //se è presente aggiorna quantità</span>
+<span class="nc" id="L112">               int qtaTot=biQta.getQuantita()+quantita;</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">               if(qtaTot&gt;evento.getNumBiglietti()){ //se si cerca di aggiungere più biglietti di quelli disponibili</span>
+<span class="nc" id="L114">                   throw new NumberFormatException();</span>
+               }
+<span class="nc" id="L116">               biQta.setQuantita(qtaTot);</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">               if(utente!= null) //se l'utente è loggato aggiorno anche il Database</span>
+<span class="nc" id="L118">                   daoCarr.doUpdateQuantita(utente.getId(),biQta);</span>
+
+<span class="nc" id="L120">           } else { //se non sono mai stati aggiunti biglietti per quella mostra</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">               if(quantita&gt;evento.getNumBiglietti()) throw new NumberFormatException();//se si cerca di aggiungere più biglietti di quelli disponibili</span>
+<span class="nc" id="L122">               carrelloSessione.put(evento,quantita, prezzoBiglietto);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">               if(utente!=null )  //se l'utente è loggato aggiorno anche il Database</span>
+<span class="nc" id="L124">                   daoCarr.doSave(utente.getId(),carrelloSessione.get(idE));</span>
+           }
+       }
+<span class="nc" id="L127">        return carrelloSessione;</span>
+    }
+
+    @Override
+    public void updateQuantitaCarrello(int idE, int quantita, CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
+<span class="nc" id="L132">        EventoBean evento= eventoDao.doRetrieveById(idE);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if(evento==null) throw new RuntimeException(&quot;errore aggiornamento carrello&quot;);</span>
+<span class="nc" id="L134">        BigliettoQuantita biQta=carrelloSessione.get(idE);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if(biQta==null ) throw new RuntimeException(&quot;errore aggiornamento carrello&quot;);</span>
+<span class="nc bnc" id="L136" title="All 4 branches missed.">        if(quantita &gt; evento.getNumBiglietti() || quantita&lt;=0 ) throw new NumberFormatException();</span>
+<span class="nc" id="L137">        biQta.setQuantita(quantita);</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if(utente!= null)</span>
+<span class="nc" id="L139">            daoCarr.doUpdateQuantita(utente.getId(),biQta);</span>
+<span class="nc" id="L140">    }</span>
+
+    @Override
+    public void acquistaProdotti(CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
+        //controlla se i prodotti esistono ancora al momento dell'acquisto o se sono scaduti
+        //fai con carrello nella sessione così puoi controllare se al momento
+        // dell'acquisto ci sono prodotti già venduti
+
+<span class="nc bnc" id="L148" title="All 8 branches missed.">        if(utente==null || carrelloSessione==null || carrelloSessione.getProdotti().isEmpty() || controlloElementiCarrello(carrelloSessione,utente)){</span>
+<span class="nc" id="L149">            throw new RuntimeException(&quot;operazione non autorizzata&quot;);</span>
+        }else{
+<span class="nc" id="L151">            checkAutorizzazioniUtente(utente);</span>
+        }
+
+        //prendo la stringa dei prodotti e gli altri dati da salvare nell'acquisto
+<span class="nc" id="L155">        String prodotti=&quot;&quot;;</span>
+<span class="nc" id="L156">        double prezzoTotale= carrelloSessione.getPrezzoTot();</span>
+<span class="nc" id="L157">        Date dataAttuale = new Date(Calendar.getInstance().getTimeInMillis());</span>
+<span class="nc" id="L158">        AcquistoBean acquisto=new AcquistoBean(utente.getId(),dataAttuale,prezzoTotale);</span>
+<span class="nc" id="L159">        acquistoDAO.doSave(acquisto);</span>
+        //la stringa con i prodotti verrà settata nel database successivamente
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        for(BigliettoQuantita x: carrelloSessione.getProdotti()){</span>
+<span class="nc" id="L162">            EventoBean evento=x.getProdotto();</span>
+<span class="nc" id="L163">            int quantita=x.getQuantita();</span>
+<span class="nc" id="L164">            double prezzo= x.getPrezzoBigl(); //forse no</span>
+            //controllo che l'evento salvato in database sia disponibile
+<span class="nc" id="L166">            EventoBean savedE=eventoDao.doRetrieveById(evento.getId());</span>
+<span class="nc bnc" id="L167" title="All 10 branches missed.">            if(savedE==null || !savedE.isAttivo() || quantita==0 || savedE.getNumBiglietti()&lt; quantita || savedE.getDataFine().before(dataAttuale)){</span>
+                //se c'è stato un errore cancello l'acquisto creato e lancio eccezione
+<span class="nc" id="L169">                acquistoDAO.doDelete(acquisto.getNumOrdine());</span>
+<span class="nc" id="L170">                throw new RuntimeException(&quot;errore acquisto, ricaricare la pagina&quot;);</span>
+            }
+
+<span class="nc" id="L173">            bigliettoDAO.sellBiglietto(evento.getId(),quantita,acquisto.getNumOrdine());</span>
+            //aggiorno anche num biglietti disponibili
+<span class="nc" id="L175">            int bigliettiRimasti= evento.getNumBiglietti()-quantita;</span>
+<span class="nc" id="L176">            eventoDao.doUpdateNumBiglietti(evento.getId(),bigliettiRimasti);</span>
+
+            //metodo dao controllo biglietti carrelli e aggiorna quantità
+<span class="nc" id="L179">            daoCarr.doUpdateQuantitaFromCarrelliAfterAcquisto(evento.getId(), bigliettiRimasti);</span>
+<span class="nc" id="L180">            prodotti+=evento.getNome()+&quot;(qta:&quot;+quantita+&quot;), &quot;;</span>
+<span class="nc" id="L181">        }</span>
+
+        //tolgo la virgola per l'ultimo prodotto
+<span class="nc" id="L184">        int index=prodotti.lastIndexOf(&quot;,&quot;);</span>
+<span class="nc" id="L185">        prodotti=prodotti.substring(0,index)+&quot;;&quot;;</span>
+
+<span class="nc" id="L187">        acquistoDAO.setProdotti(acquisto.getNumOrdine(),prodotti);</span>
+<span class="nc" id="L188">        daoCarr.svuotaCarrello(utente.getId());</span>
+
+<span class="nc" id="L190">    }</span>
+
+    private void checkAutorizzazioniUtente(UtenteRegistratoBean utente){
+<span class="nc bnc" id="L193" title="All 6 branches missed.">        if(utente != null &amp;&amp; utente.getTipoUtente().compareToIgnoreCase(&quot;utente&quot;)!=0 &amp;&amp; utente.getTipoUtente().compareToIgnoreCase(&quot;scolaresca&quot;)!=0 ) {</span>
+<span class="nc" id="L194">            throw new RuntimeException(&quot;operazione non autorizzata&quot;);</span>
+        }
+<span class="nc" id="L196">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

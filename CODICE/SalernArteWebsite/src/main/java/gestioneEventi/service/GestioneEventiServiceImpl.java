@@ -24,11 +24,15 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         daoEvento= new EventoDAOImpl();
         daoBiglietto=new BigliettoDAOImpl();
     }
+    public GestioneEventiServiceImpl(EventoDAO daoEv,BigliettoDAO daoBigl){
+        daoEvento=daoEv;
+        daoBiglietto=daoBigl;
+    }
 
-    public void richiediInserimentoEvento(int idOrganizzatore,String nome, String tipoEvento, String descrizione, String pathContext,Part filePhoto, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede){
+    public boolean richiediInserimentoEvento(int idOrganizzatore,String nome, String tipoEvento, String descrizione, String pathContext,Part filePhoto, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede){
         try{
             Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
-            if( dataFine.before(dataInizio) || dataInizio.before(dataAttuale)){
+            if( dataFine.before(dataInizio) || dataFine.getTime()==dataInizio.getTime() || dataInizio.before(dataAttuale) || dataInizio.getTime()==dataAttuale.getTime()){
                 throw  new RuntimeException("impostazioni data inserite non valide");
             }
             if(nome==null || !nome.matches("^[0-9°A-zÀ-ù ‘-]{1,50}$"))
@@ -53,19 +57,19 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             EventoBean bean= new EventoBean(idOrganizzatore,dataInizio,dataFine,nome,path,descrizione,indirizzo,sede,numBiglietti,getTypeEvento(tipoEvento));
             daoEvento.doSave(bean);
             creaBiglietti(numBiglietti,bean.getId(),prezzoBiglietto);
-
+            return true;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void richiediModificaEvento(int idEvDaModificare, UtenteRegistratoBean utenteLoggato, String nome, String tipoEvento, String descrizione, String pathContext, Part filePhoto, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede) {
+    public boolean richiediModificaEvento(int idEvDaModificare, UtenteRegistratoBean utenteLoggato, String nome, String tipoEvento, String descrizione, String pathContext, Part filePhoto, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede) {
         //controllo autorizzazione utente operazione
         controllaPermessiOrganizzatore(utenteLoggato);
         //controllo sul formato dei dati
          try{
-             if(dataFine.before(dataInizio) ){
+             if(dataFine.before(dataInizio) || dataFine.getTime()==dataInizio.getTime() ){
                 throw  new RuntimeException("impostazioni data inserite non valide");
              }
              if(nome==null || !nome.matches("^[0-9°A-zÀ-ù ‘-]{1,50}$"))
@@ -104,8 +108,8 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             //la creazione dei biglietti avverrà in accetta modifica da parte dell'admin
              // crea un'istanza di richiesta modifica
              daoEvento.doSaveRichiestaModificaEv(eventoDaModificare.getId(),newEvento.getId(),prezzoBiglietto);
-
-        }catch (Exception e){
+            return true;
+        }catch (IOException e){
             throw new RuntimeException(e);
         }
     }
