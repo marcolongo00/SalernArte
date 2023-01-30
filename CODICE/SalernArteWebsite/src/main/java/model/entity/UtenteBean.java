@@ -10,7 +10,7 @@ public class UtenteBean extends UtenteRegistratoBean{
     public UtenteBean() {
     }
 
-    public UtenteBean(int sesso, String nome, String cognome, String email, String passwordHash, Date dataDiNascita,boolean hash) {
+    public UtenteBean(int sesso, String nome, String cognome, String email, String passwordHash, Date dataDiNascita, boolean hash) {
         super(email,passwordHash,"utente",hash);
         this.sesso = sesso;
         this.nome = nome;

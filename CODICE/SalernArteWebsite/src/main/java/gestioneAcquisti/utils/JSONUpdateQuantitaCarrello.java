@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @WebServlet(name = "JSONUpdateQuantitaCarrello",urlPatterns = "/update-carr-qta")
 public class JSONUpdateQuantitaCarrello extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     doGet(request,response);
     }
 

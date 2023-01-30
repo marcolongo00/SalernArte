@@ -10,7 +10,7 @@ public interface GestioneAcquistiService {
     void svuotaCarrello(CarrelloBean carrello,UtenteRegistratoBean utente);
     void removeEventoFromCarrello(int idE,CarrelloBean carrello, UtenteRegistratoBean utente);
     CarrelloBean aggiungiAlCarrello(int idE,int quantita, CarrelloBean carrelloSessione,UtenteRegistratoBean utente);
-    void updateQuantitaCarrello(int idE,int quantita, CarrelloBean carrelloSessione, UtenteRegistratoBean utente);
+    boolean updateQuantitaCarrello(int idE,int quantita, CarrelloBean carrelloSessione, UtenteRegistratoBean utente);
 
     void acquistaProdotti(CarrelloBean carrelloSessione, UtenteRegistratoBean utente);
 }

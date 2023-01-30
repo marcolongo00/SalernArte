@@ -2,12 +2,8 @@ package gestioneAcquisti.controller;
 
 import gestioneAcquisti.service.GestioneAcquistiService;
 import gestioneAcquisti.service.GestioneAcquistiServiceImpl;
-import model.dao.CarrelloDAOImpl;
-import model.dao.EventoDAOImpl;
 import model.entity.CarrelloBean;
-import model.entity.EventoBean;
 import model.entity.UtenteRegistratoBean;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,11 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.rmi.RemoteException;
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.List;
-
 
 @WebServlet(name = "GestioneAcquistiController",urlPatterns = "/gestione-acquisti")
 public class GestioneAcquistiController extends HttpServlet {
@@ -40,7 +31,7 @@ public class GestioneAcquistiController extends HttpServlet {
                 carrello=new CarrelloBean();
 
             }else if(carrello==null && utente!=null){
-                // non si può mai verificare eprchè se ho fatto il login il carrello non è null ma al più vuoto
+                // non si può mai verificare perchè se ho fatto il login il carrello non è null ma al più vuoto
                 carrello=service.retrieveCarrelloUtente(utente);
                 //contorllo elementi per eventi non attivi
                 alertCarrello=service.controlloEventiNonAttivi(carrello);

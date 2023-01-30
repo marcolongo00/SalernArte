@@ -27,7 +27,6 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         acquistoDAO= new AcquistoDAOImpl();
     }
 
-
     @Override
     public CarrelloBean retrieveCarrelloUtente(UtenteRegistratoBean utente) { //forse non serve questa funzione
         checkAutorizzazioniUtente(utente);
@@ -91,7 +90,8 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
 
     @Override
     public CarrelloBean aggiungiAlCarrello(int idE, int quantita, CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
-        if(idE<= 0 || quantita<=0)   throw new RuntimeException("formato dati errato");
+        if(idE<= 0 || quantita<=0)
+            throw new RuntimeException("formato dati errato");
         EventoBean evento= eventoDao.doRetrieveById(idE);
         Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
         //or non attivo)
@@ -128,15 +128,20 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
     }
 
     @Override
-    public void updateQuantitaCarrello(int idE, int quantita, CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
+    public boolean updateQuantitaCarrello(int idE, int quantita, CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
         EventoBean evento= eventoDao.doRetrieveById(idE);
         if(evento==null) throw new RuntimeException("errore aggiornamento carrello");
         BigliettoQuantita biQta=carrelloSessione.get(idE);
         if(biQta==null ) throw new RuntimeException("errore aggiornamento carrello");
-        if(quantita > evento.getNumBiglietti() || quantita<=0 ) throw new NumberFormatException();
+        if(quantita > evento.getNumBiglietti() || quantita<=0 ) throw new NumberFormatException("quantità non valida");
         biQta.setQuantita(quantita);
         if(utente!= null)
+        {
             daoCarr.doUpdateQuantita(utente.getId(),biQta);
+            return true;
+        }
+        else
+            return false;
     }
 
     @Override
