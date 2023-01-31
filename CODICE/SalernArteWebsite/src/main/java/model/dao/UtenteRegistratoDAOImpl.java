@@ -48,6 +48,30 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
         }
     }
 
+    @Override
+    public UtenteRegistratoBean doRetrieveById(int id) {
+        try (Connection con = ConPool.getConnection()){
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM UtenteRegistrato WHERE id = ? ");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            UtenteRegistratoBean utente = null;
+
+            if(rs.next())
+            {
+                utente = (UtenteRegistratoBean) rs.getObject(1);
+            }
+            else {
+                throw new RuntimeException("Questo id non è presente nel database, riprova");
+            }
+            con.close();
+            ps.close();
+            rs.close();
+            return utente;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void doSave(UtenteRegistratoBean utente){//implementato poi sovrascritto dai figli
         try(Connection con=ConPool.getConnection()){
             PreparedStatement ps=con.prepareStatement("insert into UtenteRegistrato(email,passwordHash,tipoUtente)VALUES(?,?,?)",Statement.RETURN_GENERATED_KEYS);

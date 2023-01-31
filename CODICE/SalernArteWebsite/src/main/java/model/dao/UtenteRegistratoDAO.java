@@ -12,4 +12,6 @@ public interface UtenteRegistratoDAO {
     void doUpdate(UtenteRegistratoBean utente);//implementato poi sovrascritto dai figli
     UtenteRegistratoBean doRetrieveByEmail(String email);
     void doDelete(int idUtente);//implementato
+
+    UtenteRegistratoBean doRetrieveById(int id);
 }

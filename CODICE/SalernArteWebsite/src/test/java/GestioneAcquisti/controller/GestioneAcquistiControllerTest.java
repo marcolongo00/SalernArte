@@ -1,14 +1,13 @@
 package GestioneAcquisti.controller;
 
+import com.google.gson.Gson;
 import gestioneAcquisti.utils.JSONAggiungiAlCarrello;
 import gestioneAcquisti.utils.JSONUpdateQuantitaCarrello;
-import model.entity.CarrelloBean;
 import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -27,6 +26,7 @@ public class GestioneAcquistiControllerTest {
     private ServletContext mockedServletContext;
     private RequestDispatcher mockedDispatcher;
     private HttpSession mockedsession;
+    private Gson gson;
 
 
     @Before
@@ -38,6 +38,7 @@ public class GestioneAcquistiControllerTest {
         mockedServletContext = Mockito.mock(ServletContext.class);
         mockedDispatcher = Mockito.mock(RequestDispatcher.class);
         mockedsession = Mockito.mock(HttpSession.class);
+        gson = Mockito.mock(Gson.class);
         UtenteRegistratoBean utente = new UtenteBean();
         utente.setId(3);
         utente.setTipoUtente("utente");
@@ -63,6 +64,7 @@ public class GestioneAcquistiControllerTest {
         Mockito.when(mockedRequest.getParameter("idE")).thenReturn("2");
         Mockito.when(mockedRequest.getParameter("quantita")).thenReturn("2");
 
+        //CarrelloBean bean = (CarrelloBean) mockedsession.getAttribute("carrello");
         aggiungiAlCarrello.doPost(mockedRequest,mockedResponse);
         Mockito.verify(mockedsession).setAttribute("notificaAll", "Biglietti aggiunti al carrello");
     }
@@ -85,8 +87,10 @@ public class GestioneAcquistiControllerTest {
         Mockito.when(mockedRequest.getParameter("idE")).thenReturn("2");
         Mockito.when(mockedRequest.getParameter("qta")).thenReturn("2");
 
-        aggiungiAlCarrello.doPost(mockedRequest,mockedResponse);
-        //Mockito.verify(mockedRequest).setAttribute("carrello", "carrelloSessione");
+        updateQuantitaCarrello.doPost(mockedRequest,mockedResponse);
+        //boolean result = assertTrue(gson.fromJson("true", boolean));
+      //  assertEquals(result,true);
+
     }
 
     @After

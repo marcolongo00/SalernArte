@@ -18,10 +18,16 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
     private CarrelloDAO daoCarr;
     private EventoDAO eventoDao;
     private BigliettoDAO bigliettoDAO;
-
     private AcquistoDAO acquistoDAO;
     public GestioneAcquistiServiceImpl() {
         daoCarr=new CarrelloDAOImpl();
+        eventoDao= new EventoDAOImpl();
+        bigliettoDAO= new BigliettoDAOImpl();
+        acquistoDAO= new AcquistoDAOImpl();
+    }
+
+    public GestioneAcquistiServiceImpl(CarrelloDAO carrelloDAO){
+        this.daoCarr = carrelloDAO;
         eventoDao= new EventoDAOImpl();
         bigliettoDAO= new BigliettoDAOImpl();
         acquistoDAO= new AcquistoDAOImpl();

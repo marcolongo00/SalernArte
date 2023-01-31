@@ -161,7 +161,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             rs.close();
             return costo;
         }catch (SQLException e){
-            throw  new RuntimeException(e);
+            throw  new RuntimeException("Prezzo biglietto null");
         }
     }
     public double doRetrievePrezzoBiglByRichiestaModifica( int idEventoPostMod) {

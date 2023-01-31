@@ -16,7 +16,7 @@ import java.io.IOException;
 @WebServlet(name = "JSONUpdateQuantitaCarrello",urlPatterns = "/update-carr-qta")
 public class JSONUpdateQuantitaCarrello extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    doGet(request,response);
+        doGet(request,response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -33,7 +33,6 @@ public class JSONUpdateQuantitaCarrello extends HttpServlet {
         }catch (Exception e){
             result=false;
         }
-
         String json=new Gson().toJson(result);
         response.getWriter().append(json);
     }

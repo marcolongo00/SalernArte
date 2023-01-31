@@ -22,7 +22,6 @@ public class JSONAggiungiAlCarrello extends HttpServlet {
         CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
         GestioneAcquistiService service= new GestioneAcquistiServiceImpl();
 
-
         boolean result=true;
         try{
             int quantita=Integer.parseInt(request.getParameter("quantita")); //se non sono numeri darà errore la parse
@@ -39,6 +38,6 @@ public class JSONAggiungiAlCarrello extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            doGet(request,response);
+        doGet(request,response);
     }
 }
