@@ -22,6 +22,7 @@ public class GestioneAcquistiServiceImplTest {
     private UtenteRegistratoDAO utenteDAO;
     private int idE, quantità;
 
+    @Ignore
     @Before
     public void startUp(){
         serviceA= new GestioneAcquistiServiceImpl(carrelloDAO);
@@ -52,7 +53,7 @@ public class GestioneAcquistiServiceImplTest {
      * Caso: La quantità inserita è valida
      * Metodo della classe service di riferimento: CarrelloBean aggiungiAlCarrello(...)
      * */
-   @Ignore
+    @Ignore
     @Test
     public void TC_3p1_2(){
         assertNotNull(serviceA.aggiungiAlCarrello(idE,quantità,carrelloBean,utenteBean));
@@ -77,17 +78,20 @@ public class GestioneAcquistiServiceImplTest {
      * Caso: La quantità inserita è valida
      * Metodo della classe service di riferimento: void updateQuantitaCarrello(...)
      * */
+
     @Ignore
     @Test
-    /*
+
     public void TC_3p2_2(){
         int idE = 2;
         int quantità = 2;
         assertTrue(serviceA.updateQuantitaCarrello(idE,quantità,carrelloBean,utenteBean));
-    }*/
+    }
 
+    @Ignore
     @After
     public void cleanUp(){
         serviceA=null;
     }
+
 }

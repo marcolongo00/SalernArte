@@ -50,7 +50,7 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
     }
 
     @Override
-    public void doSave(int idUtente, BigliettoQuantita carr) {
+    public boolean doSave(int idUtente, BigliettoQuantita carr) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("INSERT INTO Carrello(idUtente,idEvento,quantita) VALUES(?,?,?)");
             ps.setInt(1,idUtente);
@@ -61,14 +61,14 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
             }
             conn.close();
             ps.close();
-        }catch (SQLException e){
+            return true;
+        }catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
-    public void doDelete(int idUtente, int idEvento) {
+    public boolean doDelete(int idUtente, int idEvento) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("DELETE FROM Carrello WHERE idEvento=? AND idUtente=?");
             ps.setInt(1,idEvento);
@@ -77,13 +77,14 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
                 throw new RuntimeException("DELETE Evento from carrello error");
             conn.close();
             ps.close();
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void svuotaCarrello(int idUtente) {
+    public boolean svuotaCarrello(int idUtente) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("DELETE FROM Carrello WHERE idUtente=?");
             ps.setInt(1,idUtente);
@@ -91,13 +92,14 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
                 throw new RuntimeException("svuota carrello error");
             conn.close();
             ps.close();
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void doUpdateQuantita(int idUtente, BigliettoQuantita carr) {
+    public boolean doUpdateQuantita(int idUtente, BigliettoQuantita carr) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("UPDATE Carrello SET quantita=? WHERE idUtente=? AND idEvento=?");
             ps.setInt(1,carr.getQuantita());
@@ -108,6 +110,7 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
             }
             conn.close();
             ps.close();
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
