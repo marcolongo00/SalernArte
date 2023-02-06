@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="29" failures="0" name="GestioneEventi.service.GestioneEventiServiceImplTest" time="0.033" errors="0" skipped="0">
+<testsuite tests="29" failures="0" name="GestioneEventi.service.GestioneEventiServiceImplTest" time="0.035" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.2.4"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -45,7 +45,7 @@
     <property name="java.class.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven3\boot\plexus-classworlds-2.6.0.jar;C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven3\boot\plexus-classworlds.license"/>
     <property name="java.vm.specification.version" value="14"/>
     <property name="sun.arch.data.model" value="64"/>
-    <property name="sun.java.command" value="org.codehaus.classworlds.Launcher -Didea.version=2022.2.4 clean test"/>
+    <property name="sun.java.command" value="org.codehaus.classworlds.Launcher -Didea.version=2022.2.4 test"/>
     <property name="java.home" value="C:\Program Files\Java\jdk-14.0.2"/>
     <property name="user.language" value="it"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
@@ -61,33 +61,33 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_1" time="0.006"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_2" time="0.001"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_3" time="0"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_1" time="0.001"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_2" time="0"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_3" time="0.001"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_4" time="0"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_5" time="0"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_6" time="0.001"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_7" time="0.001"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_7" time="0.002"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_8" time="0"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_9" time="0.001"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_1" time="0.003"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_2" time="0.002"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_3" time="0.001"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_9" time="0"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_1" time="0.004"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_2" time="0.001"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_3" time="0.003"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_4" time="0"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_5" time="0"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_6" time="0.003"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_7" time="0.001"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_6" time="0.002"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_7" time="0.003"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_8" time="0"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_9" time="0"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p3_1" time="0.001"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p3_1" time="0.003"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p3_2" time="0"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_10" time="0"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_11" time="0"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_12" time="0"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_12" time="0.002"/>
   <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_13" time="0.001"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_14" time="0.003"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_10" time="0.002"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_11" time="0.001"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_12" time="0.002"/>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_13" time="0.003"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p1_14" time="0.005"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_10" time="0"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_11" time="0.002"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_12" time="0"/>
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="TC_2p2_13" time="0.004"/>
 </testsuite>

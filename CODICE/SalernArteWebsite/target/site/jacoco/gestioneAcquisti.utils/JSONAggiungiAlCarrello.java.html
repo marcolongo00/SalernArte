@@ -22,24 +22,23 @@ import java.io.IOException;
 <span class="nc" id="L22">        CarrelloBean carrello=(CarrelloBean) session.getAttribute(&quot;carrello&quot;);</span>
 <span class="nc" id="L23">        GestioneAcquistiService service= new GestioneAcquistiServiceImpl();</span>
 
-
-<span class="nc" id="L26">        boolean result=true;</span>
+<span class="nc" id="L25">        boolean result=true;</span>
         try{
-<span class="nc" id="L28">            int quantita=Integer.parseInt(request.getParameter(&quot;quantita&quot;)); //se non sono numeri darà errore la parse</span>
-<span class="nc" id="L29">            int idE=Integer.parseInt(request.getParameter(&quot;idE&quot;));</span>
-<span class="nc" id="L30">            carrello=service.aggiungiAlCarrello(idE,quantita,carrello,utente);</span>
-<span class="nc" id="L31">            session.setAttribute(&quot;carrello&quot;, carrello);</span>
-<span class="nc" id="L32">            request.getSession().setAttribute(&quot;notificaAll&quot;, &quot;Biglietti aggiunti al carrello.&quot;); //per ora non ho la notifica</span>
-<span class="nc" id="L33">        }catch(Exception e){</span>
-<span class="nc" id="L34">            result=false;</span>
-<span class="nc" id="L35">        }</span>
-<span class="nc" id="L36">        String json=new Gson().toJson(result);</span>
-<span class="nc" id="L37">        response.getWriter().append(json);</span>
-<span class="nc" id="L38">    }</span>
+<span class="nc" id="L27">            int quantita=Integer.parseInt(request.getParameter(&quot;quantita&quot;)); //se non sono numeri darà errore la parse</span>
+<span class="nc" id="L28">            int idE=Integer.parseInt(request.getParameter(&quot;idE&quot;));</span>
+<span class="nc" id="L29">            carrello=service.aggiungiAlCarrello(idE,quantita,carrello,utente);</span>
+<span class="nc" id="L30">            session.setAttribute(&quot;carrello&quot;, carrello);</span>
+<span class="nc" id="L31">            request.getSession().setAttribute(&quot;notificaAll&quot;, &quot;Biglietti aggiunti al carrello.&quot;); //per ora non ho la notifica</span>
+<span class="nc" id="L32">        }catch(Exception e){</span>
+<span class="nc" id="L33">            result=false;</span>
+<span class="nc" id="L34">        }</span>
+<span class="nc" id="L35">        String json=new Gson().toJson(result);</span>
+<span class="nc" id="L36">        response.getWriter().append(json);</span>
+<span class="nc" id="L37">    }</span>
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-<span class="nc" id="L42">            doGet(request,response);</span>
-<span class="nc" id="L43">    }</span>
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L41">        doGet(request,response);</span>
+<span class="nc" id="L42">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

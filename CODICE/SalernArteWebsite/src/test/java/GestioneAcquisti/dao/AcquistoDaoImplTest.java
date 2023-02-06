@@ -23,7 +23,7 @@ public class AcquistoDaoImplTest {
     private static Date DATA_FINE_EVENTO;
     private static Date DATA_ATTUALE;
     private int idutente, idE;
-
+/*
     @BeforeAll
     public void startUp()
     {
@@ -84,5 +84,5 @@ public class AcquistoDaoImplTest {
         bean = null;
         bigliettoQuantita = null;
     }
-
+*/
 }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite tests="24" failures="0" name="GestioneEventi.dao.EventoDAOImplTest" time="0.265" errors="0" skipped="0">
+  <properties>
+    <property name="idea.version" value="2022.2.4"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="java.vm.version" value="14.0.2+12-46"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-14.0.2\bin"/>
+    <property name="user.country.format" value="GB"/>
+    <property name="maven.multiModuleProjectDirectory" value="C:\Users\aless\Desktop\SalernArte\CODICE\SalernArteWebsite"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="path.separator" value=";"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="user.script" value=""/>
+    <property name="user.country" value="IT"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="C:\Users\aless\Desktop\SalernArte\CODICE\SalernArteWebsite"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="java.runtime.version" value="14.0.2+12-46"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\aless\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="maven.ext.class.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven-event-listener.jar"/>
+    <property name="classworlds.conf" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven3\bin\m2.conf"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-14.0.2\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\intel64\compiler;C:\Program Files (x86)\VMware\VMware Player\bin\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Calibre2\;C:\Program Files\Git\cmd;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\Cloudflare\Cloudflare WARP\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\aless\AppData\Local\Microsoft\WindowsApps;;."/>
+    <property name="maven.conf" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven3/conf"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="java.class.version" value="58.0"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="10.0"/>
+    <property name="user.home" value="C:\Users\aless"/>
+    <property name="user.timezone" value="Europe/Budapest"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="14"/>
+    <property name="user.name" value="aless"/>
+    <property name="java.class.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven3\boot\plexus-classworlds-2.6.0.jar;C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven3\boot\plexus-classworlds.license"/>
+    <property name="java.vm.specification.version" value="14"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="sun.java.command" value="org.codehaus.classworlds.Launcher -Didea.version=2022.2.4 test"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk-14.0.2"/>
+    <property name="user.language" value="it"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language.format" value="en"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.version" value="14.0.2"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven3"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.version.date" value="2020-07-14"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllByTeatroAttiviNonScadutiTest" time="0.022"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="retrieveEventoFromidEventoModificaTest" time="0.036"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByNomeOrDescrizioneTest" time="0.005"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllByMostraAttiviNonScadutiTest" time="0.018"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveRichiestaModificaEvTest" time="0.024"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllEventiNonAttiviTest" time="0.009"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateTest" time="0.011"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateNumBigliettiTestError" time="0.001"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doDeleteTestError" time="0.003"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllRichiesteModificheTest" time="0.019"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllEventiAttiviNonScadutiTest" time="0.017"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateTestError" time="0.011"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllRichiesteInserimentoTest" time="0.01"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateAttivazioneEventoTestError" time="0.003"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateNumBigliettiTest" time="0.009"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveTest" time="0.014"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByIdTestError" time="0.002"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByIdTest" time="0.002"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveRichiestaModificaEvTestError" time="0.007"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByOrganizzatoreTestError" time="0"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doDeleteTest" time="0.019"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByOrganizzatoreTest" time="0.003"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateAttivazioneEventoTest" time="0.016"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveTestError" time="0.004"/>
+</testsuite>

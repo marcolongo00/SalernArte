@@ -21,16 +21,16 @@ public interface EventoDAO {
     List<EventoBean> doRetrieveByNomeOrDescrizione(String against); // per la ricerca
     List<EventoBean> doRetrieveAllRichiesteInserimento();
     List<EventoBean> doRetrieveAllRichiesteModifiche();
-    int retieveEventoFromidEventoModifica(int idEventoTemp);
+    int retrieveEventoFromidEventoModifica(int idEventoTemp);
 
    // public List<EventoBean> doRetrieveAllRichiesteEventi();
    // potrebbe funzionare come doRetrieveAllRichieste e per ogni next della query fare doRetrieveById di evento
-    void doSave (EventoBean evento);
+    boolean doSave (EventoBean evento);
 
-    void doSaveRichiestaModificaEv(int idOldEvento, int idEventoModificato, double nuovoPrezzoBiglietto);
-    void doUpdate(EventoBean evento);
-    void doUpdateNumBiglietti( int idEvento, int numBiglietti);
-    void doUpdateAttivazioneEvento(int idEvento,boolean attivo);
-    void doDelete(int idEvento);
+    boolean doSaveRichiestaModificaEv(int idOldEvento, int idEventoModificato, double nuovoPrezzoBiglietto);
+    boolean doUpdate(EventoBean evento);
+    boolean doUpdateNumBiglietti( int idEvento, int numBiglietti);
+    boolean doUpdateAttivazioneEvento(int idEvento,boolean attivo);
+    boolean doDelete(int idEvento);
 
 }

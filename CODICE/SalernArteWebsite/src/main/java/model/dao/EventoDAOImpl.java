@@ -38,7 +38,7 @@ public class EventoDAOImpl implements EventoDAO{
             return temp;
 
         }catch (SQLException e){
-            throw new RuntimeException(e);
+            throw new RuntimeException("retrieve by id error");
         }
     }
 
@@ -293,7 +293,7 @@ public class EventoDAOImpl implements EventoDAO{
 
 
     @Override
-    public void doSave(EventoBean evento) {
+    public boolean doSave(EventoBean evento) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("INSERT INTO Evento(idOrganizzatore,nome,tipo,descrizione,pathFoto,numBiglietti,dataInizio,dataFine,indirizzo,sede,attivo) VALUES(?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
@@ -310,7 +310,7 @@ public class EventoDAOImpl implements EventoDAO{
             ps.setBoolean(11,evento.isAttivo());
 
             if(ps.executeUpdate()!=1)
-                throw new RuntimeException("INSERT error");
+                throw new RuntimeException("INSERT evento error");
             ResultSet rs=ps.getGeneratedKeys();
             rs.next();
             int id=rs.getInt(1);
@@ -319,11 +319,12 @@ public class EventoDAOImpl implements EventoDAO{
             conn.close();
             ps.close();
             rs.close();
+            return true;
         }catch(SQLException e){
-            throw new RuntimeException(e);
+            throw new RuntimeException("INSERT evento error");
         }
     }
-    public void doSaveRichiestaModificaEv(int idOldEvento, int idEventoModificato, double nuovoPrezzoBiglietto) {
+    public boolean doSaveRichiestaModificaEv(int idOldEvento, int idEventoModificato, double nuovoPrezzoBiglietto) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("INSERT INTO RichiestaEvento(idEvento,idEventoTemp,nuovoPrezzoBiglietto) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
@@ -333,7 +334,7 @@ public class EventoDAOImpl implements EventoDAO{
 
 
             if(ps.executeUpdate()!=1)
-                throw new RuntimeException("INSERT error");
+                throw new RuntimeException("INSERT Richiesta Modfica error");
             /*ResultSet rs=ps.getGeneratedKeys();
             rs.next();
             int id=rs.getInt(1);
@@ -347,12 +348,13 @@ public class EventoDAOImpl implements EventoDAO{
             conn.close();
             ps.close();
            // rs.close();
+            return true;
         }catch(SQLException e){
-            throw new RuntimeException(e);
+            throw new RuntimeException("INSERT Richiesta Modfica error");
         }
     }
     @Override
-    public void doUpdate(EventoBean evento) {
+    public boolean doUpdate(EventoBean evento) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("UPDATE Evento SET nome=?, tipo=?, descrizione=?, pathFoto=?, numBiglietti=?, dataInizio=?, dataFine=?, indirizzo=?,sede=? WHERE id=?");
             ps.setString(1,evento.getNome());
@@ -371,45 +373,48 @@ public class EventoDAOImpl implements EventoDAO{
             }
             conn.close();
             ps.close();
+            return true;
         }catch (SQLException e){
-            throw  new RuntimeException(e);
+            throw  new RuntimeException("UPDATE Mostra error");
         }
     }
 
     @Override
-    public void doUpdateNumBiglietti(int idEvento, int numBiglietti) {
+    public boolean doUpdateNumBiglietti(int idEvento, int numBiglietti) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("UPDATE Evento SET numBiglietti=? WHERE id=?");
             ps.setInt(1,numBiglietti);
             ps.setInt(2,idEvento);
-            if(ps.executeUpdate()!=1){
+            if(ps.executeUpdate()<1){
                 throw new RuntimeException("UPDATE numBiglietti error");
             }
             conn.close();
             ps.close();
+            return true;
         }catch (SQLException e){
             throw  new RuntimeException(e);
         }
     }
 
     @Override
-    public void doUpdateAttivazioneEvento(int idEvento, boolean attivo) {
+    public boolean doUpdateAttivazioneEvento(int idEvento, boolean attivo) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("UPDATE Evento SET attivo=? WHERE id=?");
             ps.setBoolean(1,attivo);
             ps.setInt(2,idEvento);
             if(ps.executeUpdate()!=1){
-                throw new RuntimeException("UPDATE attivazione error");
+                throw new SQLException();
             }
             conn.close();
             ps.close();
+            return true;
         }catch (SQLException e){
-            throw  new RuntimeException(e);
+            throw  new RuntimeException("UPDATE attivazione error");
         }
     }
 
     @Override
-    public void doDelete(int idEvento) {
+    public boolean doDelete(int idEvento) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("DELETE FROM Evento WHERE id=?");
             ps.setInt(1,idEvento);
@@ -417,13 +422,13 @@ public class EventoDAOImpl implements EventoDAO{
                 throw new RuntimeException("DELETE error");
             conn.close();
             ps.close();
-
+            return true;
         }catch (SQLException e){
-            throw  new RuntimeException(e);
+            throw  new RuntimeException("DELETE error");
         }
     }
 
-    public int retieveEventoFromidEventoModifica(int idEventoTemp){
+    public int retrieveEventoFromidEventoModifica(int idEventoTemp){
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("SELECT idEvento FROM RichiestaEvento WHERE idEventoTemp=?");
             ps.setInt(1,idEventoTemp);

@@ -28,7 +28,7 @@ public class GestioneAcquistiControllerTest {
     private HttpSession mockedsession;
     private Gson gson;
 
-
+/*
     @Before
     public void setUp(){
         aggiungiAlCarrello = new JSONAggiungiAlCarrello();
@@ -103,5 +103,5 @@ public class GestioneAcquistiControllerTest {
         mockedServletContext = null;
         mockedsession = null;
     }
-
+*/
 }

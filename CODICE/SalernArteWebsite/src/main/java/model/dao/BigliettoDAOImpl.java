@@ -36,11 +36,12 @@ public class BigliettoDAOImpl implements BigliettoDAO{
     }
 
     @Override
-    public List<BigliettoBean> doRetrieveAllNonAcquistati() {
+    public List<BigliettoBean> doRetrieveAllNonAcquistati(int idEvento) {
         try(Connection conn=ConPool.getConnection()){
             List<BigliettoBean> biglietti= new ArrayList<>();
-            Statement st=conn.createStatement();
-            ResultSet rs=st.executeQuery("SELECT * FROM Biglietto WHERE acquisto is null");
+            PreparedStatement ps= conn.prepareStatement("SELECT * FROM Biglietto WHERE evento=? AND acquisto is null");
+            ps.setInt(1,idEvento);
+            ResultSet rs=ps.executeQuery();
             while(rs.next()){
                 BigliettoBean temp= new BigliettoBean();
                 temp.setIdBiglietto(rs.getInt("id"));
@@ -51,7 +52,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
                 biglietti.add(temp);
             }
             conn.close();
-            st.close();
+            ps.close();
             rs.close();
             return biglietti;
         }catch(SQLException e){
@@ -60,11 +61,12 @@ public class BigliettoDAOImpl implements BigliettoDAO{
     }
 
     @Override
-    public List<BigliettoBean> doRetrieveAllAcquistati() {
+    public List<BigliettoBean> doRetrieveAllAcquistati(int idEvento) {
         try(Connection conn=ConPool.getConnection()){
             List<BigliettoBean> biglietti= new ArrayList<>();
-            Statement st=conn.createStatement();
-            ResultSet rs=st.executeQuery("SELECT * FROM Biglietto WHERE acquisto is not null");
+            PreparedStatement ps= conn.prepareStatement("SELECT * FROM Biglietto WHERE evento=? AND acquisto is not null");
+            ps.setInt(1,idEvento);
+            ResultSet rs=ps.executeQuery();
             while(rs.next()){
                 BigliettoBean temp= new BigliettoBean();
                 temp.setIdBiglietto(rs.getInt("id"));
@@ -75,7 +77,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
                 biglietti.add(temp);
             }
             conn.close();
-            st.close();
+            ps.close();
             rs.close();
             return biglietti;
         }catch(SQLException e){
@@ -84,7 +86,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
     }
 
     @Override
-    public void sellBiglietto(int idEvento, int quantita, int numAcquisto) {
+    public boolean sellBiglietto(int idEvento, int quantita, int numAcquisto) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement psMin=conn.prepareStatement("SELECT MIN(id) FROM Biglietto WHERE evento=? AND acquisto is null");
             psMin.setInt(1,idEvento);
@@ -107,6 +109,8 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             ps.executeBatch();
             conn.close();
             ps.close();
+
+            return true;
         }catch(BatchUpdateException e1){
             throw new RuntimeException("batch sell biglietti error");
         }catch(SQLException e){
@@ -115,7 +119,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
     }
 
     @Override
-    public void updatePrezzoBigliettoEvento(int idEvento, double costo) {
+    public boolean updatePrezzoBigliettoEvento(int idEvento, double costo) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("UPDATE Biglietto SET costo=? WHERE evento=? AND acquisto is null");
             ps.setDouble(1,costo);
@@ -125,13 +129,14 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             }
             conn.close();
             ps.close();
+            return true;
         }catch (SQLException e){
             throw  new RuntimeException(e);
         }
     }
 
     @Override
-    public void doSave(int idEvento, double prezzo) {
+    public boolean doSave(int idEvento, double prezzo) {
         try(Connection conn= ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("INSERT INTO Biglietto(evento,costo) VALUES(?,?)",
                     Statement.RETURN_GENERATED_KEYS);
@@ -141,8 +146,10 @@ public class BigliettoDAOImpl implements BigliettoDAO{
                 throw new RuntimeException("INSERT error");
             conn.close();
             ps.close();
+
+            return true;
         }catch(SQLException e){
-            throw new RuntimeException(e);
+            throw new RuntimeException("INSERT error");
         }
     }
 
@@ -161,7 +168,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             rs.close();
             return costo;
         }catch (SQLException e){
-            throw  new RuntimeException("Prezzo biglietto null");
+            throw  new RuntimeException("retrieve Prezzo biglietto error");
         }
     }
     public double doRetrievePrezzoBiglByRichiestaModifica( int idEventoPostMod) {
@@ -181,7 +188,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             throw new RuntimeException(e);
         }
     }
-    public void doUpdateBigliettiModificaEvento(EventoBean eventoPreModifica, EventoBean eventoModifica) {
+    public boolean doUpdateBigliettiModificaEvento(EventoBean eventoPreModifica, EventoBean eventoModifica) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("UPDATE Biglietto SET evento=? WHERE evento=?");
             ps.setInt(1,eventoModifica.getId());
@@ -191,8 +198,8 @@ public class BigliettoDAOImpl implements BigliettoDAO{
             }
 
             if(eventoModifica.getNumBiglietti()<eventoPreModifica.getNumBiglietti()){
-                List<BigliettoBean> bigliettiNonAcquistati= doRetrieveAllAcquistati();
-                if(eventoModifica.getNumBiglietti()<bigliettiNonAcquistati.size()) throw new RuntimeException("non puoi rendere disponibili meno biglietti di quelli già acquistati");
+                List<BigliettoBean> bigliettiAcquistati= doRetrieveAllAcquistati(eventoPreModifica.getId());
+                if(eventoModifica.getNumBiglietti()<bigliettiAcquistati.size()) throw new RuntimeException("non puoi rendere disponibili meno biglietti di quelli già acquistati");
                 int numDaEliminare=eventoPreModifica.getNumBiglietti()-eventoModifica.getNumBiglietti();
                 doDeleteOnlyNonAcquistati(eventoModifica.getId(),numDaEliminare);
 
@@ -205,13 +212,14 @@ public class BigliettoDAOImpl implements BigliettoDAO{
 
             conn.close();
             ps.close();
+            return true;
         }catch (SQLException e){
-            throw  new RuntimeException(e);
+            throw  new RuntimeException(e.getMessage());
         }
     }
 
     @Override
-    public void doDelete(int idEvento, int idBiglietto) {
+    public boolean doDelete(int idEvento, int idBiglietto) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("DELETE FROM Biglietto WHERE id=? and evento=?");
             ps.setInt(1,idBiglietto);
@@ -220,7 +228,7 @@ public class BigliettoDAOImpl implements BigliettoDAO{
                 throw new RuntimeException("DELETE error");
             conn.close();
             ps.close();
-
+            return true;
         }catch (SQLException e){
             throw  new RuntimeException(e);
         }

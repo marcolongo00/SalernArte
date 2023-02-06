@@ -52,7 +52,10 @@ create table Organizzatore(
     dataDiNascita date not null,    
     sesso int not null, #0(maschio), 1(femmina), 2(non specificato)
     iban varchar(27) not null, 
-    primary key(id)
+    primary key(id),
+     foreign key(id) references UtenteRegistrato(id)
+    on delete cascade
+    on update cascade
 );
 
 create table Evento(

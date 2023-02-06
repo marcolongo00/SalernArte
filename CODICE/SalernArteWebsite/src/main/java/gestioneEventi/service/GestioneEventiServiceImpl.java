@@ -147,7 +147,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             throw new RuntimeException("operazione non autorizzata"); //myexception
         }
         //accetto al modifica poi trovo e cancello l'evento con i dati vecchi e in cascade si cancellerà la richiesta
-        int idEventoPreModifica=daoEvento.retieveEventoFromidEventoModifica(idEvento);
+        int idEventoPreModifica=daoEvento.retrieveEventoFromidEventoModifica(idEvento);
         daoEvento.doUpdateAttivazioneEvento(idEvento,true);
         EventoBean eventoPre=daoEvento.doRetrieveById(idEventoPreModifica);
         EventoBean eventoPost=daoEvento.doRetrieveById(idEvento);
@@ -170,7 +170,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             throw new RuntimeException("operazione non autorizzata"); //myexception
         }
         //rifiuto la modifica quindi elimino temp e riporto evento originale ad attivo
-        int idEventoPreModifica=daoEvento.retieveEventoFromidEventoModifica(idEvento);
+        int idEventoPreModifica=daoEvento.retrieveEventoFromidEventoModifica(idEvento);
         daoEvento.doUpdateAttivazioneEvento(idEventoPreModifica,true);
         //se i path non coincidono vuol dire che è stata
         // salvata anche la foto dell'evento post modifica e va eliminata

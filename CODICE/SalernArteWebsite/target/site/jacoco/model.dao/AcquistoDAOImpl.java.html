@@ -61,26 +61,26 @@ import java.util.List;
 
     @Override
     public void doSave(AcquistoBean acquisto) {
-<span class="nc" id="L64">        try(Connection conn=ConPool.getConnection()){</span>
-<span class="nc" id="L65">            PreparedStatement ps=conn.prepareStatement(&quot;INSERT INTO Acquisto(data,totale,idUtente) VALUES(?,?,?)&quot;,</span>
+<span class="fc" id="L64">        try(Connection conn=ConPool.getConnection()){</span>
+<span class="fc" id="L65">            PreparedStatement ps=conn.prepareStatement(&quot;INSERT INTO Acquisto(data,totale,idUtente) VALUES(?,?,?)&quot;,</span>
                     Statement.RETURN_GENERATED_KEYS);
 
-<span class="nc" id="L68">            ps.setDate(1,acquisto.getData());</span>
-<span class="nc" id="L69">            ps.setDouble(2,acquisto.getTotale());</span>
-<span class="nc" id="L70">            ps.setInt(3,acquisto.getIdUtente());</span>
-<span class="nc bnc" id="L71" title="All 2 branches missed.">            if(ps.executeUpdate()!=1)</span>
+<span class="fc" id="L68">            ps.setDate(1,acquisto.getData());</span>
+<span class="fc" id="L69">            ps.setDouble(2,acquisto.getTotale());</span>
+<span class="fc" id="L70">            ps.setInt(3,acquisto.getIdUtente());</span>
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">            if(ps.executeUpdate()!=1)</span>
 <span class="nc" id="L72">                throw new RuntimeException(&quot;INSERT error&quot;);</span>
-<span class="nc" id="L73">            ResultSet rs=ps.getGeneratedKeys();</span>
-<span class="nc" id="L74">            rs.next();</span>
-<span class="nc" id="L75">            int numOrdine=rs.getInt(1);</span>
-<span class="nc" id="L76">            acquisto.setNumOrdine(numOrdine);</span>
-<span class="nc" id="L77">            conn.close();</span>
-<span class="nc" id="L78">            ps.close();</span>
-<span class="nc" id="L79">            rs.close();</span>
-<span class="nc" id="L80">        }catch(SQLException e){</span>
-<span class="nc" id="L81">            throw new RuntimeException(e);</span>
-<span class="nc" id="L82">        }</span>
-<span class="nc" id="L83">    }</span>
+<span class="fc" id="L73">            ResultSet rs=ps.getGeneratedKeys();</span>
+<span class="fc" id="L74">            rs.next();</span>
+<span class="fc" id="L75">            int numOrdine=rs.getInt(1);</span>
+<span class="fc" id="L76">            acquisto.setNumOrdine(numOrdine);</span>
+<span class="fc" id="L77">            conn.close();</span>
+<span class="fc" id="L78">            ps.close();</span>
+<span class="fc" id="L79">            rs.close();</span>
+<span class="fc" id="L80">        }catch(SQLException e){</span>
+<span class="fc" id="L81">            throw new RuntimeException(e);</span>
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">    }</span>
 
     @Override
     public void doUpdateProdottiByNumOrdine(int numOrdine, String prodotti) {

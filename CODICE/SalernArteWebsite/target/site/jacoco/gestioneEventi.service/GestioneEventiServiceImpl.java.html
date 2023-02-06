@@ -147,7 +147,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
 <span class="nc" id="L147">            throw new RuntimeException(&quot;operazione non autorizzata&quot;); //myexception</span>
         }
         //accetto al modifica poi trovo e cancello l'evento con i dati vecchi e in cascade si cancellerà la richiesta
-<span class="nc" id="L150">        int idEventoPreModifica=daoEvento.retieveEventoFromidEventoModifica(idEvento);</span>
+<span class="nc" id="L150">        int idEventoPreModifica=daoEvento.retrieveEventoFromidEventoModifica(idEvento);</span>
 <span class="nc" id="L151">        daoEvento.doUpdateAttivazioneEvento(idEvento,true);</span>
 <span class="nc" id="L152">        EventoBean eventoPre=daoEvento.doRetrieveById(idEventoPreModifica);</span>
 <span class="nc" id="L153">        EventoBean eventoPost=daoEvento.doRetrieveById(idEvento);</span>
@@ -170,7 +170,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
 <span class="nc" id="L170">            throw new RuntimeException(&quot;operazione non autorizzata&quot;); //myexception</span>
         }
         //rifiuto la modifica quindi elimino temp e riporto evento originale ad attivo
-<span class="nc" id="L173">        int idEventoPreModifica=daoEvento.retieveEventoFromidEventoModifica(idEvento);</span>
+<span class="nc" id="L173">        int idEventoPreModifica=daoEvento.retrieveEventoFromidEventoModifica(idEvento);</span>
 <span class="nc" id="L174">        daoEvento.doUpdateAttivazioneEvento(idEventoPreModifica,true);</span>
         //se i path non coincidono vuol dire che è stata
         // salvata anche la foto dell'evento post modifica e va eliminata
