@@ -5,14 +5,10 @@ import model.dao.CarrelloDAO;
 import model.dao.EventoDAO;
 import model.entity.CarrelloBean;
 import model.entity.EventoBean;
-import org.junit.Test;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import static org.junit.jupiter.api.Assertions.*;
-import java.sql.Date;
-import java.util.Calendar;
 
-public class AcquistoDaoImplTest {
+import java.sql.Date;
+
+public class CarrelloDaoImplTest {
     private EventoDAO eventoDAO;
     private BigliettoDAO bigliettoDAO;
     private CarrelloDAO carrelloDAO;
