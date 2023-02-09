@@ -1,10 +1,8 @@
 GestioneEventi\controller\GestioneEventiControllerTest.class
 GestioneEventi\dao\BigliettoDaoImplTest.class
-GestioneUtente\service\GestioneUtenteServiceImplTest.class
 GestioneAcquisti\dao\AcquistoDaoImplTest.class
 GestioneAcquisti\dao\CarrelloDaoImplTest.class
 GestioneEventi\dao\EventoDAOImplTest.class
-GestioneUtente\controller\GestioneUtenteControllerTest.class
 testProva.class
 GestioneAcquisti\controller\GestioneAcquistiControllerTest.class
 GestioneAcquisti\service\GestioneAcquistiServiceImplTest.class

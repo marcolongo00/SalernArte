@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="2" failures="0" name="GestioneEventi.service.GestioneEventiServiceImplTest" time="1.099" errors="2" skipped="0">
+<testsuite tests="2" failures="0" name="GestioneEventi.service.GestioneEventiServiceImplTest" time="1.386" errors="2" skipped="0">
   <properties>
     <property name="idea.version" value="2022.3.2"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -60,7 +60,7 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="GestioneEventi.service.GestioneEventiServiceImplTest" time="0.549">
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="GestioneEventi.service.GestioneEventiServiceImplTest" time="0.693">
     <error message="javax.imageio.IIOException: Can&apos;t create an ImageOutputStream!" type="java.lang.RuntimeException">java.lang.RuntimeException: javax.imageio.IIOException: Can&apos;t create an ImageOutputStream!
 	at GestioneEventi.service.GestioneEventiServiceImplTest.startUp(GestioneEventiServiceImplTest.java:89)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -128,7 +128,7 @@ Caused by: javax.imageio.IIOException: Can&apos;t create an ImageOutputStream!
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
 </system-err>
   </testcase>
-  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="GestioneEventi.service.GestioneEventiServiceImplTest" time="0.55">
+  <testcase classname="GestioneEventi.service.GestioneEventiServiceImplTest" name="GestioneEventi.service.GestioneEventiServiceImplTest" time="0.693">
     <error type="java.lang.NullPointerException">java.lang.NullPointerException
 	at GestioneEventi.service.GestioneEventiServiceImplTest.cleanUp(GestioneEventiServiceImplTest.java:556)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)

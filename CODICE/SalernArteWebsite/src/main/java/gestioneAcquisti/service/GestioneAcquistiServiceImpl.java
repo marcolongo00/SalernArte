@@ -26,10 +26,10 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         acquistoDAO= new AcquistoDAOImpl();
     }
 
-    public GestioneAcquistiServiceImpl(CarrelloDAO carrelloDAO){
+    public GestioneAcquistiServiceImpl(CarrelloDAO carrelloDAO, EventoDAO eventoDao, BigliettoDAO bigliettoDAO){
         this.daoCarr = carrelloDAO;
-        eventoDao= new EventoDAOImpl();
-        bigliettoDAO= new BigliettoDAOImpl();
+        this.eventoDao= eventoDao;
+        this.bigliettoDAO= bigliettoDAO;
         acquistoDAO= new AcquistoDAOImpl();
     }
 

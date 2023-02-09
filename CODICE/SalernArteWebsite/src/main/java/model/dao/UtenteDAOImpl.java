@@ -36,7 +36,7 @@ public class UtenteDAOImpl extends UtenteRegistratoDAOImpl {//prova extends e no
     }
 
     @Override
-    public void doSave(UtenteRegistratoBean utente) {
+    public boolean doSave(UtenteRegistratoBean utente) {
         super.doSave(utente);
 
         try(Connection con=ConPool.getConnection()){
@@ -44,8 +44,7 @@ public class UtenteDAOImpl extends UtenteRegistratoDAOImpl {//prova extends e no
                 throw new RuntimeException();//myexception
             }
 
-           PreparedStatement ps=con.prepareStatement("insert into Utente(id,nome,cognome,dataDiNascita,sesso) values(?,?,?,?,?)");
-
+            PreparedStatement ps=con.prepareStatement("insert into Utente(id,nome,cognome,dataDiNascita,sesso) values(?,?,?,?,?)");
             ps.setInt(1,utente.getId());
             ps.setString(2,((UtenteBean)utente).getNome());
             ps.setString(3,((UtenteBean)utente).getCognome());
@@ -53,12 +52,11 @@ public class UtenteDAOImpl extends UtenteRegistratoDAOImpl {//prova extends e no
             ps.setInt(5,((UtenteBean)utente).getSesso());
 
             if(ps.executeUpdate() !=1)
-            {
                 throw new RuntimeException("INSERT error.");
-            }
 
             con.close();
             ps.close();
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
