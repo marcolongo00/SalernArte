@@ -72,7 +72,7 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
         }
     }
 
-    public void doSave(UtenteRegistratoBean utente){//implementato poi sovrascritto dai figli
+    public boolean doSave(UtenteRegistratoBean utente){//implementato poi sovrascritto dai figli
         try(Connection con=ConPool.getConnection()){
             PreparedStatement ps=con.prepareStatement("insert into UtenteRegistrato(email,passwordHash,tipoUtente)VALUES(?,?,?)",Statement.RETURN_GENERATED_KEYS);
             ps.setString(1,utente.getEmail());
@@ -91,6 +91,7 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
             con.close();
             ps.close();
             rs.close();
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

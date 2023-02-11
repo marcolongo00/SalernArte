@@ -33,7 +33,7 @@ public class ScolarescaDAOImpl extends UtenteRegistratoDAOImpl{
     }
 
     @Override
-    public void doSave(UtenteRegistratoBean utente) {
+    public boolean doSave(UtenteRegistratoBean utente) {
         super.doSave(utente);
 
         try(Connection con=ConPool.getConnection()){
@@ -50,6 +50,7 @@ public class ScolarescaDAOImpl extends UtenteRegistratoDAOImpl{
 
             con.close();
             ps.close();
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: GestioneEventi.service.GestioneEventiServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.55 sec <<< FAILURE!
-GestioneEventi.service.GestioneEventiServiceImplTest  Time elapsed: 0.549 sec  <<< ERROR!
+Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.693 sec <<< FAILURE!
+GestioneEventi.service.GestioneEventiServiceImplTest  Time elapsed: 0.693 sec  <<< ERROR!
 java.lang.RuntimeException: javax.imageio.IIOException: Can't create an ImageOutputStream!
 	at GestioneEventi.service.GestioneEventiServiceImplTest.startUp(GestioneEventiServiceImplTest.java:89)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
@@ -34,7 +34,7 @@ Caused by: javax.imageio.IIOException: Can't create an ImageOutputStream!
 	at GestioneEventi.service.GestioneEventiServiceImplTest.startUp(GestioneEventiServiceImplTest.java:85)
 	... 24 more
 
-GestioneEventi.service.GestioneEventiServiceImplTest  Time elapsed: 0.55 sec  <<< ERROR!
+GestioneEventi.service.GestioneEventiServiceImplTest  Time elapsed: 0.693 sec  <<< ERROR!
 java.lang.NullPointerException
 	at GestioneEventi.service.GestioneEventiServiceImplTest.cleanUp(GestioneEventiServiceImplTest.java:556)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)

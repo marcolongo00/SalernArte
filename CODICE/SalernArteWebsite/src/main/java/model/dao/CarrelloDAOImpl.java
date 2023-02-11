@@ -16,6 +16,8 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
 
     @Override
     public CarrelloBean doRetrieveByIdUtente(int idUtente) {
+        if(idUtente < 0)
+            throw new RuntimeException("doRetrieveByIdUtente failed because of idUtente is not correct");
         try(Connection conn= ConPool.getConnection()){
             CarrelloBean carrello= new CarrelloBean(idUtente);
             PreparedStatement ps= conn.prepareStatement("SELECT * FROM Evento as e JOIN Carrello as c on e.id=c.idevento WHERE c.idUtente=?");
@@ -40,6 +42,7 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
                 int quantita=rs.getInt("quantita");
                 carrello.put(temp,quantita,new BigliettoDAOImpl().doRetrievePrezzoBigliettoByEvento(idE));
             }
+
             conn.close();
             ps.close();
             rs.close();
@@ -51,6 +54,8 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
 
     @Override
     public boolean doSave(int idUtente, BigliettoQuantita carr) {
+        /*if(idUtente < 0 || carr.getProdotto().getId() < 0)
+            throw new RuntimeException("Error because of idUtente or idEvento is not valid");*/
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("INSERT INTO Carrello(idUtente,idEvento,quantita) VALUES(?,?,?)");
             ps.setInt(1,idUtente);

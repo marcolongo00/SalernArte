@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="24" failures="0" name="GestioneEventi.dao.EventoDAOImplTest" time="0.185" errors="0" skipped="0">
+<testsuite tests="24" failures="0" name="GestioneEventi.dao.EventoDAOImplTest" time="0.123" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.3.2"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -60,28 +60,28 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllByTeatroAttiviNonScadutiTest" time="0.021"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="retrieveEventoFromidEventoModificaTest" time="0.02"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByNomeOrDescrizioneTest" time="0.004"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllByMostraAttiviNonScadutiTest" time="0.01"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveRichiestaModificaEvTest" time="0.014"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllEventiNonAttiviTest" time="0.011"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateTest" time="0.007"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateNumBigliettiTestError" time="0.003"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doDeleteTestError" time="0.002"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllRichiesteModificheTest" time="0.018"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllEventiAttiviNonScadutiTest" time="0.011"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateTestError" time="0.009"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllRichiesteInserimentoTest" time="0.008"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateAttivazioneEventoTestError" time="0.003"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateNumBigliettiTest" time="0.004"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveTest" time="0.004"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByIdTestError" time="0.003"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllByTeatroAttiviNonScadutiTest" time="0.015"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="retrieveEventoFromidEventoModificaTest" time="0.011"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByNomeOrDescrizioneTest" time="0.014"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllByMostraAttiviNonScadutiTest" time="0.004"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveRichiestaModificaEvTest" time="0.006"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllEventiNonAttiviTest" time="0.004"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateTest" time="0.003"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateNumBigliettiTestError" time="0.001"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doDeleteTestError" time="0.001"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllRichiesteModificheTest" time="0.009"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllEventiAttiviNonScadutiTest" time="0.005"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateTestError" time="0.003"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveAllRichiesteInserimentoTest" time="0.006"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateAttivazioneEventoTestError" time="0.002"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateNumBigliettiTest" time="0.002"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveTest" time="0.003"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByIdTestError" time="0.002"/>
   <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByIdTest" time="0.002"/>
   <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveRichiestaModificaEvTestError" time="0.002"/>
   <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByOrganizzatoreTestError" time="0.002"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doDeleteTest" time="0.008"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByOrganizzatoreTest" time="0.007"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateAttivazioneEventoTest" time="0.007"/>
-  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveTestError" time="0.005"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doDeleteTest" time="0.016"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doRetrieveByOrganizzatoreTest" time="0.004"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doUpdateAttivazioneEventoTest" time="0.004"/>
+  <testcase classname="GestioneEventi.dao.EventoDAOImplTest" name="doSaveTestError" time="0.002"/>
 </testsuite>

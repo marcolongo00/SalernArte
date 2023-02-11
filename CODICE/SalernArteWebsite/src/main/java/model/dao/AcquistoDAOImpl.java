@@ -10,6 +10,8 @@ import java.util.List;
 public class AcquistoDAOImpl implements AcquistoDAO {
     @Override
     public List<AcquistoBean> doRetrieveListaAcquistiByIdUtente(int idUtente) {
+        if(idUtente < 0)
+            throw new RuntimeException("Retrieve error because of idUser is not valid");
         try(Connection conn= ConPool.getConnection()){
             List<AcquistoBean> acquisti= new ArrayList<>();
             PreparedStatement ps=conn.prepareStatement("SELECT * FROM Acquisto WHERE idUtente=?");
@@ -60,7 +62,9 @@ public class AcquistoDAOImpl implements AcquistoDAO {
     }
 
     @Override
-    public void doSave(AcquistoBean acquisto) {
+    public boolean doSave(AcquistoBean acquisto) {
+        if(acquisto.getIdUtente() < 0)
+            throw new RuntimeException("Insert error because of idUser is not valid");
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("INSERT INTO Acquisto(data,totale,idUtente) VALUES(?,?,?)",
                     Statement.RETURN_GENERATED_KEYS);
@@ -77,13 +81,14 @@ public class AcquistoDAOImpl implements AcquistoDAO {
             conn.close();
             ps.close();
             rs.close();
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void doUpdateProdottiByNumOrdine(int numOrdine, String prodotti) {
+    public boolean doUpdateProdottiByNumOrdine(int numOrdine, String prodotti) {
         try(Connection conn= ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("UPDATE Acquisto SET prodotti=? WHERE numOrdine=?");
             ps.setString(1,prodotti);
@@ -94,6 +99,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
             }
             conn.close();
             ps.close();
+            return true;
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
@@ -101,7 +107,9 @@ public class AcquistoDAOImpl implements AcquistoDAO {
     }
 
     @Override
-    public void setProdotti(int numAcquisto, String prodotti) {
+    public boolean setProdotti(int numAcquisto, String prodotti) {
+        if(prodotti == null)
+            throw new RuntimeException("SET Prodotti fattura error");
         try(Connection conn= ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("UPDATE Acquisto SET prodotti=? WHERE numOrdine=?");
             ps.setString(1,prodotti);
@@ -112,13 +120,14 @@ public class AcquistoDAOImpl implements AcquistoDAO {
             }
             conn.close();
             ps.close();
+            return true;
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void doDelete(int numOrdine) {
+    public boolean doDelete(int numOrdine) {
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("DELETE FROM Acquisto WHERE numOrdine=?");
             ps.setInt(1,numOrdine);
@@ -126,6 +135,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
                 throw new RuntimeException("DELETE error");
             conn.close();
             ps.close();
+            return true;
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
