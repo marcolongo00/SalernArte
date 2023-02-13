@@ -127,14 +127,26 @@ public class GestioneEventiController extends HttpServlet {
             if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase("organizzatore")!=0){
                 throw new RuntimeException("operazione non autorizzata");
             }
-            Date dataInizio=Date.valueOf(request.getParameter("dataInizio"));
-            Date dataFine=Date.valueOf(request.getParameter("dataFine"));
+            Date dataInizio;
+            try{
+                String dataString=request.getParameter("dataInizio");
+                dataInizio=Date.valueOf(dataString);
+            }catch (IllegalArgumentException e){
+                throw new RuntimeException("la Data Inizio non rispetta il formato");
+            }
+
+            Date dataFine;
+            try{
+                dataFine=Date.valueOf(request.getParameter("dataFine"));
+            }catch (IllegalArgumentException e){
+                throw new RuntimeException("la Data Fine non rispetta il formato");
+            }
             String nome=request.getParameter("nome");
             String tipoEvento=request.getParameter("tipoEvento");
             int numBiglietti=Integer.parseInt(request.getParameter("numBiglietti"));
             double prezzo=Double.parseDouble(request.getParameter("prezzo"));
             Part filePhoto=request.getPart("path");
-            if (!(filePhoto != null && filePhoto.getSize()!=0 )) {
+            if (!(filePhoto != null )) {
                 throw new IOException("path non valido");
             }
             if(ImageIO.read(filePhoto.getInputStream())== null) throw new IOException();
@@ -146,6 +158,7 @@ public class GestioneEventiController extends HttpServlet {
             String sede=request.getParameter("sede");
 
             serviceE.richiediInserimentoEvento(utenteLoggato.getId(),nome,tipoEvento,descrizione,pathSave,filePhoto,numBiglietti,prezzo,dataInizio,dataFine,indirizzo,sede);
+            request.setAttribute("messaggio","esecuzione andata a buon fine");
             callReferer(request,response);
         }else
             if(request.getParameter("accettaIns")!=null){
@@ -181,13 +194,28 @@ public class GestioneEventiController extends HttpServlet {
                     String descrizione=request.getParameter("descrizioneMod");
                     Part filePhoto=request.getPart("pathMod");
                     String pathSave;
-                    if (filePhoto != null && filePhoto.getSize()!=0 ) {
+                    if (filePhoto != null ) {
                         pathSave=getServletContext().getAttribute("pathNewEventi")+filePhoto.getSubmittedFileName();
                     }else{
                         pathSave=""; //<------ inserire old pathsave
                     }
-                    Date dataInizio=Date.valueOf(request.getParameter("dataInizioEvMod"));
-                    Date dataFine=Date.valueOf(request.getParameter("dataFineEvMod"));
+
+                    Date dataInizio;
+                    try{
+                        dataInizio=Date.valueOf(request.getParameter("dataInizioEvMod"));
+                    }catch (IllegalArgumentException e){
+                        throw new RuntimeException("la Data Inizio non rispetta il formato");
+                    }
+
+                    Date dataFine;
+                    String fine;
+
+                    try{
+                        fine=request.getParameter("dataFineEvMod");
+                        dataFine=Date.valueOf(fine);
+                    }catch (IllegalArgumentException e){
+                        throw new RuntimeException("la Data Fine non rispetta il formato");
+                    }
                     int numBiglietti=Integer.parseInt(request.getParameter("numBigliettiEvMod"));
                     double prezzo= Double.parseDouble(request.getParameter("prezzoBigliettoEvMod"));
                     String indirizzo= request.getParameter("indirizzoEvMod");

@@ -13,6 +13,17 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * Implementa il testing di unità per la classe
+ *               BigliettoDAOImpl.
+ * i nomi dei metodi di test faranno riferimento alla firma
+ * dell'operazione di riferimento nella classe che stiamo testando
+ *
+ * esempio:
+ *          firma metodo: boolean doSave(Object obj)
+ *          metodo di test: void doSaveTest()
+ * @author Alessia Della Pepa
+ */
 public class BigliettoDaoImplTest {
     private static OrganizzatoreBean org;
     private static EventoBean eventoTest;

@@ -1,6 +1,11 @@
 package GestioneEventi.controller;
 
 import gestioneEventi.controller.GestioneEventiController;
+import model.dao.EventoDAO;
+import model.dao.EventoDAOImpl;
+import model.dao.OrganizzatoreDAO;
+import model.dao.OrganizzatoreDAOImpl;
+import model.entity.EventoBean;
 import model.entity.OrganizzatoreBean;
 import model.entity.UtenteRegistratoBean;
 import org.junit.*;
@@ -14,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -61,23 +67,30 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 
 public class GestioneEventiControllerTest {
-    public static GestioneEventiController servlet;
     private static HttpServletRequest mockedRequest;
     private static HttpServletResponse mockedResponse;
     private static ServletContext mockedServletContext;
     private static RequestDispatcher mockedDispatcher;
+    private static File image;
+    private static Part FILE_PHOTO;
+    private static String dataI;
+    private static String dataF;
     private static Date DATA_INIZIO_EVENTO;
     private static  Date DATA_FINE_EVENTO;
-    private static final Date DATA_ATTUALE= new Date(Calendar.getInstance().getTimeInMillis());
+    private static Date DATA_ATTUALE;
+    private static final String PATHCONTEXT="C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\fotoSample.jpg"; //AAA
+    private static  String pathInEvento;
     private static HttpSession session;
-    private UtenteRegistratoBean utenteLoggato ;
-    MockMultipartFile fileFoto;
     private static final String NOME = "EventoTennis"; //etc
+    private static DateFormat df;
+    private static final ServletConfig servletConfig = Mockito.mock(ServletConfig.class);
+    private static final  GestioneEventiController servlet = new GestioneEventiController();
 
     @BeforeClass
-    public static void setUp(){
+    public static void setUp() throws ServletException {
+        df = new SimpleDateFormat("yyyy-MM-dd");
         //Servlet, mockedRequest, mockedResponse and Session instantiation.
-        servlet = new GestioneEventiController();
+        servlet.init(servletConfig);
         mockedRequest = Mockito.mock(HttpServletRequest.class);
         mockedResponse = Mockito.mock(HttpServletResponse.class);
         mockedServletContext = Mockito.mock(ServletContext.class);
@@ -90,99 +103,273 @@ public class GestioneEventiControllerTest {
 
         Mockito.when(mockedRequest.getSession()).thenReturn(session);
         Mockito.when(mockedRequest.getServletContext()).thenReturn(mockedServletContext);
-
+        //inizializzazione date da usate per test eventi
+        DATA_ATTUALE= new Date(Calendar.getInstance().getTimeInMillis());
         Calendar c= Calendar.getInstance();
         c.setTime(DATA_ATTUALE);
         c.add(Calendar.DATE,5);
+
         DATA_INIZIO_EVENTO=new Date(c.getTimeInMillis());
+        //dataI= "2023-05-05";
+       dataI= df.format(DATA_INIZIO_EVENTO);
         c.add(Calendar.DATE,10);
         DATA_FINE_EVENTO= new Date(c.getTimeInMillis());
-
-        //save utente in db
+        //dataF="2023-06-01";
+        dataF=df.format(DATA_FINE_EVENTO);
+        //creazione immagine che verrà passata nelle request
+        BufferedImage bi= new BufferedImage(500,500,BufferedImage.TYPE_INT_RGB);
+        image= new File(PATHCONTEXT);
+        try {
+            ImageIO.write(bi,"jpg",image);
+            Path path= Paths.get(PATHCONTEXT);
+            FILE_PHOTO= new MockPart("fotoSample.jpg","fotoSample.jpg", Files.readAllBytes(path));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        pathInEvento="./immaginiEventi/fotoSample.jpg";
 
     }
-    @Ignore
+
+    /** Operazione di riferimento nel Test Plan: Richiesta Inserimento Evento
+     * Caso: la Data Inizio non rispetta il formato
+     */
     @Test
     public void TC_2p1_8(){
-
-    }
-    @Ignore
-    @Test
-    public void TC_2p1_10(){
-
-    }
-    @Ignore
-    @Test
-    public void TC_2p2_8(){
-
-    }
-    @Ignore
-    @Test
-    public void TC_2p2_10(){
-
-    }
-    /**
-     * Operazione di riferimento: Richiesta Inserimento Evento
-     * Caso: il tipoEvento non rispetta il formato
-     */
-   @Ignore
-    @Test
-   public void TC_2p1_1() throws Exception {
-        UtenteRegistratoBean ut=new OrganizzatoreBean(1,0,"IT17J0300203280772191565161","pluto","prova","plutoprova@example.com","pluto","prova biografia", Date.valueOf("1999-07-21"),false);
-        //forniamo i parametri per il nostro caso di test
+        cleanRequest(mockedRequest);
+        //salviamo l'utente che compie l'azione
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        daoOrg.doSave(ut);
+        //simuliamo con mockito i parametro passati alla classe controller attraverso la request
         Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(ut);
-        /*
-        //non finito
-         //forniamo i parametri per il nostro caso di test
-        this.mockMvc.perform(MockMvcRequestBuilders.multipart("/gestione-eventi")
-                        .file(fileFoto)
-                .param("inviaRichiestaEvnto","true")).andExpect(view().name("redirect:/pagina"));
-
-         */
-        BufferedImage bi= new BufferedImage(500,500,BufferedImage.TYPE_INT_RGB);
-        File image= new File("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\provaCreazione.jpg");
-        ImageIO.write(bi,"jpg",image);
-        //image.delete();
-        DateFormat df = new SimpleDateFormat("yyyy/mm/dd");
-        String text = df.format(DATA_ATTUALE);
         Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn("true");
-        Mockito.when(mockedRequest.getParameter("dataInizio")).thenReturn(df.format(DATA_INIZIO_EVENTO));
-        Mockito.when(mockedRequest.getParameter("dataFine")).thenReturn(df.format(DATA_FINE_EVENTO));
+        Mockito.when(mockedRequest.getParameter("dataInizio")).thenReturn("");
+        Mockito.when(mockedRequest.getParameter("dataFine")).thenReturn(dataF);
         Mockito.when(mockedRequest.getParameter("nome")).thenReturn("nomeEvento");
-            Mockito.when(mockedRequest.getParameter("tipoEvento")).thenReturn("teatro");
+        Mockito.when(mockedRequest.getParameter("tipoEvento")).thenReturn("teatro");
         Mockito.when(mockedRequest.getParameter("numBiglietti")).thenReturn("4");
         Mockito.when(mockedRequest.getParameter("prezzo")).thenReturn("4");
-        Path path= Paths.get("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\provaCreazione.jpg");
-
         try {
-            Mockito.when(mockedRequest.getPart("path")).thenReturn(new MockPart("provaCrezione","provaCreazione.jpg",Files.readAllBytes(path)));
+            Mockito.when(mockedRequest.getPart("path")).thenReturn(FILE_PHOTO);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } catch (ServletException e) {
-            throw new IOException("path non valido");
+            throw new RuntimeException(e);
         }
 
         Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
         Mockito.when(mockedRequest.getParameter("desc")).thenReturn("descrizione evento");
         Mockito.when(mockedRequest.getParameter("indirizzo")).thenReturn("indirizzo evento");
         Mockito.when(mockedRequest.getParameter("sede")).thenReturn("sede evento");
+
+
         RuntimeException exception;
         exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
-
-        String message="path non valido";
+        daoOrg.doDelete(ut.getId());
+        String message="la Data Inizio non rispetta il formato";
+        mockedRequest.removeAttribute("inviaRichiestaEvento");
         assertEquals(message,exception.getMessage());
 
+    }
 
+    /** Operazione di riferimento nel Test Plan: Richiesta Inserimento Evento
+     * Caso: la Data Fine non rispetta il formato
+     */
+     @Test
+    public void TC_2p1_10(){
+         cleanRequest(mockedRequest);
+        //salviamo l'utente che compie l'azione
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        daoOrg.doSave(ut);
+        //simuliamo con mockito i parametro passati alla classe controller attraverso la request
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(ut);
+        Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("dataInizio")).thenReturn(dataI);
+        Mockito.when(mockedRequest.getParameter("dataFine")).thenReturn("");
+        Mockito.when(mockedRequest.getParameter("nome")).thenReturn("nomeEvento");
+        Mockito.when(mockedRequest.getParameter("tipoEvento")).thenReturn("teatro");
+        Mockito.when(mockedRequest.getParameter("numBiglietti")).thenReturn("4");
+        Mockito.when(mockedRequest.getParameter("prezzo")).thenReturn("4");
+        try {
+            Mockito.when(mockedRequest.getPart("path")).thenReturn(FILE_PHOTO);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+        Mockito.when(mockedRequest.getParameter("desc")).thenReturn("descrizione evento");
+        Mockito.when(mockedRequest.getParameter("indirizzo")).thenReturn("indirizzo evento");
+        Mockito.when(mockedRequest.getParameter("sede")).thenReturn("sede evento");
+
+
+        RuntimeException exception;
+        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
+        daoOrg.doDelete(ut.getId());
+        String message="la Data Fine non rispetta il formato";
+        assertEquals(message,exception.getMessage());
+
+    }
+
+    /** Operazione di riferimento nel Test Plan: Richiesta Modifica Evento
+     * Caso: la Data Inizio non rispetta il formato
+     */
+
+    @Test
+    public void TC_2p2_8(){
+        cleanRequest(mockedRequest);
+        //salviamo l'utente che compie l'azione
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        daoOrg.doSave(ut);
+        //salva evento che verrà modificato
+        EventoDAO daoEv= new EventoDAOImpl();
+        EventoBean evento=new EventoBean(ut.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nomeNuovo","pathNuovo","descrizione Test","indirizzo Test","sede Test",2,true);
+        daoEv.doSave(evento);
+        //simuliamo con mockito i parametro passati alla classe controller attraverso la request
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(ut);
+        Mockito.when(mockedRequest.getParameter("richiestaModEventoOrg")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("idEventoPreChange")).thenReturn(""+evento.getId());
+        Mockito.when(mockedRequest.getParameter("titoloEvMod")).thenReturn("nomeEvento");
+        Mockito.when(mockedRequest.getParameter("tipoEvMod")).thenReturn("teatro");
+        Mockito.when(mockedRequest.getParameter("descrizioneMod")).thenReturn("descrizione evento");
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+
+        try {
+            Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+
+        Mockito.when(mockedRequest.getParameter("dataInizioEvMod")).thenReturn("");
+        Mockito.when(mockedRequest.getParameter("dataFineEvMod")).thenReturn(dataF);
+        Mockito.when(mockedRequest.getParameter("numBigliettiEvMod")).thenReturn("4");
+        Mockito.when(mockedRequest.getParameter("prezzoBigliettoEvMod")).thenReturn("4");
+        Mockito.when(mockedRequest.getParameter("indirizzoEvMod")).thenReturn("indirizzo evento");
+        Mockito.when(mockedRequest.getParameter("sedeEvMod")).thenReturn("sede evento");
+
+
+        RuntimeException exception;
+        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
+        daoOrg.doDelete(ut.getId());
+        String message="la Data Inizio non rispetta il formato";
+        assertEquals(message,exception.getMessage());
+    }
+
+    /** Operazione di riferimento nel Test Plan: Richiesta Modifica Evento
+     * Caso: la Data Fine non rispetta il formato
+     */
+    @Test
+    public void TC_2p2_9(){
+        cleanRequest(mockedRequest);
+        //salviamo l'utente che compie l'azione
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        daoOrg.doSave(ut);
+        //salva evento che verrà modificato
+        EventoDAO daoEv= new EventoDAOImpl();
+        EventoBean evento=new EventoBean(ut.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nomeNuovo","pathNuovo","descrizione Test","indirizzo Test","sede Test",2,true);
+        daoEv.doSave(evento);
+        //simuliamo con mockito i parametro passati alla classe controller attraverso la request
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(ut);
+        Mockito.when(mockedRequest.getParameter("richiestaModEventoOrg")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("idEventoPreChange")).thenReturn(""+evento.getId());
+        Mockito.when(mockedRequest.getParameter("titoloEvMod")).thenReturn("nomeEvento");
+        Mockito.when(mockedRequest.getParameter("tipoEvMod")).thenReturn("teatro");
+        Mockito.when(mockedRequest.getParameter("descrizioneMod")).thenReturn("descrizione evento");
+        try {
+            Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+
+        Mockito.when(mockedRequest.getParameter("dataInizioEvMod")).thenReturn(dataI);
+        Mockito.when(mockedRequest.getParameter("dataFineEvMod")).thenReturn("");
+        Mockito.when(mockedRequest.getParameter("numBigliettiEvMod")).thenReturn("4");
+        Mockito.when(mockedRequest.getParameter("prezzoBigliettoEvMod")).thenReturn("4");
+        Mockito.when(mockedRequest.getParameter("indirizzoEvMod")).thenReturn("indirizzo evento");
+        Mockito.when(mockedRequest.getParameter("sedeEvMod")).thenReturn("sede evento");
+
+
+        RuntimeException exception;
+        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
+        daoOrg.doDelete(ut.getId());
+        String message="la Data Fine non rispetta il formato";
+        assertEquals(message,exception.getMessage());
+    }
+    /** Operazione di riferimento nel Test Plan: Richiesta Inserimento Evento
+     * Caso: corretto
+     */
+    @Test
+    public void richiestaInserimentoEventoTestIntegrazione(){
+        cleanRequest(mockedRequest);
+        //salviamo l'utente che compie l'azione
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        daoOrg.doSave(ut);
+        //simuliamo con mockito i parametro passati alla classe controller attraverso la request
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(ut);
+        Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("dataInizio")).thenReturn(dataI);
+        Mockito.when(mockedRequest.getParameter("dataFine")).thenReturn(dataF);
+        Mockito.when(mockedRequest.getParameter("nome")).thenReturn("nomeEvento");
+        Mockito.when(mockedRequest.getParameter("tipoEvento")).thenReturn("teatro");
+        Mockito.when(mockedRequest.getParameter("numBiglietti")).thenReturn("4");
+        Mockito.when(mockedRequest.getParameter("prezzo")).thenReturn("4");
+        try {
+            Mockito.when(mockedRequest.getPart("path")).thenReturn(FILE_PHOTO);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+        Mockito.when(mockedRequest.getParameter("desc")).thenReturn("descrizione evento");
+        Mockito.when(mockedRequest.getParameter("indirizzo")).thenReturn("indirizzo evento");
+        Mockito.when(mockedRequest.getParameter("sede")).thenReturn("sede evento");
+
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        daoOrg.doDelete(ut.getId());
+        //??
+         Mockito.verify(mockedRequest).setAttribute("messaggio","esecuzione andata a buon fine");
+      // String result= mockedRequest.getParameter("messaggio");
+       // mockedRequest.setAttribute("messaggio",null);
+        //assertEquals("esecuzione andata a buon fine", result);
+    }
+
+
+    private void cleanRequest(HttpServletRequest mocked){
+        Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn(null);
+        Mockito.when(mockedRequest.getParameter("richiestaModEventoOrg")).thenReturn(null);
     }
     /**
      * Cleanup the environment.
      */
     @AfterClass
     public static void tearDown(){
-        servlet = null;
         mockedRequest = null;
         mockedResponse = null;
         mockedServletContext = null;
         mockedDispatcher = null;
         session = null;
+        FILE_PHOTO=null;
+        //rimozione immagine creata per le classi di test
+        image.delete();
+
         //etc etc mancano dati
     }
 

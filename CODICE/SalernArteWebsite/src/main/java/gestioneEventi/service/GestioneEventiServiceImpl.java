@@ -4,7 +4,9 @@ import model.dao.*;
 import model.entity.CarrelloBean;
 import model.entity.EventoBean;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.Part;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,8 @@ import model.entity.UtenteRegistratoBean;
 public class GestioneEventiServiceImpl implements GestioneEventiService{
     private EventoDAO daoEvento;
     private BigliettoDAO daoBiglietto;
+
+    private static final long  MEGABYTE = 1024L * 1024L;
     public GestioneEventiServiceImpl() {
         daoEvento= new EventoDAOImpl();
         daoBiglietto=new BigliettoDAOImpl();
@@ -52,6 +56,10 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
                 throw new RuntimeException("formato indirizzo errato");
             }
             String path = "./immaginiEventi/" + filePhoto.getSubmittedFileName();
+            BufferedImage bi= ImageIO.read(filePhoto.getInputStream());
+            if( filePhoto.getSize()/MEGABYTE>15  ||  bi.getWidth()> 1024 || bi.getHeight()>768){
+                throw new RuntimeException("formato file foto non corretto");
+            }
             saveImage(filePhoto.getInputStream(),pathContext);
 
             EventoBean bean= new EventoBean(idOrganizzatore,dataInizio,dataFine,nome,path,descrizione,indirizzo,sede,numBiglietti,getTypeEvento(tipoEvento));
@@ -99,6 +107,11 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             }else{
                 //se il path foto modifica esiste fai save photo
                 path = "./immaginiEventi/" + filePhoto.getSubmittedFileName();
+                BufferedImage bi= ImageIO.read(filePhoto.getInputStream());
+
+                if( filePhoto.getSize()/MEGABYTE>15  ||  bi.getWidth()> 1024 || bi.getHeight()>768){
+                    throw new RuntimeException("formato file foto non corretto");
+                }
                 saveImage(filePhoto.getInputStream(),pathContext);
             }
 
@@ -276,7 +289,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         }
     }
 
-    private static void saveImage(InputStream in,String path){
+    public static void saveImage(InputStream in,String path){
         File file=new File(path);
         try {
             Files.copy(in,file.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -285,7 +298,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         }
     }
 
-    private static void deleteImage(String path){
+    public static void deleteImage(String path){
         File file=new File(path);
         try {
             Files.delete(file.toPath());
