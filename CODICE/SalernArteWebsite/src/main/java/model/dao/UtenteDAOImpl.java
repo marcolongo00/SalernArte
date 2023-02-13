@@ -118,7 +118,7 @@ public class UtenteDAOImpl extends UtenteRegistratoDAOImpl {//prova extends e no
     }
 
     @Override
-    public void doUpdate(UtenteRegistratoBean utente) {
+    public boolean doUpdate(UtenteRegistratoBean utente) {
         try(Connection con=ConPool.getConnection()){
             if(!(utente instanceof UtenteBean)){ //controllata anche nelle service ma contorllo in più qui
                 throw new RuntimeException();//myexception
@@ -138,6 +138,7 @@ public class UtenteDAOImpl extends UtenteRegistratoDAOImpl {//prova extends e no
             }
             con.close();
             ps.close();
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

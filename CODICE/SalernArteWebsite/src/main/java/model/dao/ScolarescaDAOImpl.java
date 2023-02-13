@@ -1,7 +1,6 @@
 package model.dao;
 
 import model.entity.ScolarescaBean;
-import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 import singleton.ConPool;
 
@@ -105,7 +104,7 @@ public class ScolarescaDAOImpl extends UtenteRegistratoDAOImpl{
     }
 
     @Override
-    public void doUpdate(UtenteRegistratoBean utente) {
+    public boolean doUpdate(UtenteRegistratoBean utente) {
         try(Connection con=ConPool.getConnection()){
             if(!(utente instanceof ScolarescaBean)){ //controllata anche nelle service ma contorllo in più qui
                 throw new RuntimeException();//myexception
@@ -122,6 +121,7 @@ public class ScolarescaDAOImpl extends UtenteRegistratoDAOImpl{
             }
             con.close();
             ps.close();
+            return  true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

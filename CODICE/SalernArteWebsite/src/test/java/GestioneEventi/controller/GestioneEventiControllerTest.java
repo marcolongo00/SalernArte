@@ -3,19 +3,13 @@ package GestioneEventi.controller;
 import gestioneEventi.controller.GestioneEventiController;
 import model.dao.EventoDAO;
 import model.dao.EventoDAOImpl;
-import model.dao.OrganizzatoreDAO;
 import model.dao.OrganizzatoreDAOImpl;
 import model.entity.EventoBean;
 import model.entity.OrganizzatoreBean;
 import model.entity.UtenteRegistratoBean;
 import org.junit.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import javax.servlet.RequestDispatcher;
@@ -103,6 +97,7 @@ public class GestioneEventiControllerTest {
 
         Mockito.when(mockedRequest.getSession()).thenReturn(session);
         Mockito.when(mockedRequest.getServletContext()).thenReturn(mockedServletContext);
+        Mockito.when(mockedRequest.getRequestDispatcher(Mockito.anyString())).thenReturn(mockedDispatcher);
         //inizializzazione date da usate per test eventi
         DATA_ATTUALE= new Date(Calendar.getInstance().getTimeInMillis());
         Calendar c= Calendar.getInstance();
@@ -111,7 +106,7 @@ public class GestioneEventiControllerTest {
 
         DATA_INIZIO_EVENTO=new Date(c.getTimeInMillis());
         //dataI= "2023-05-05";
-       dataI= df.format(DATA_INIZIO_EVENTO);
+        dataI= df.format(DATA_INIZIO_EVENTO);
         c.add(Calendar.DATE,10);
         DATA_FINE_EVENTO= new Date(c.getTimeInMillis());
         //dataF="2023-06-01";
@@ -135,7 +130,6 @@ public class GestioneEventiControllerTest {
      */
     @Test
     public void TC_2p1_8(){
-        cleanRequest(mockedRequest);
         //salviamo l'utente che compie l'azione
         UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
         OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
@@ -167,7 +161,7 @@ public class GestioneEventiControllerTest {
         exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
         daoOrg.doDelete(ut.getId());
         String message="la Data Inizio non rispetta il formato";
-        mockedRequest.removeAttribute("inviaRichiestaEvento");
+        Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn(null);
         assertEquals(message,exception.getMessage());
 
     }
@@ -177,7 +171,6 @@ public class GestioneEventiControllerTest {
      */
      @Test
     public void TC_2p1_10(){
-         cleanRequest(mockedRequest);
         //salviamo l'utente che compie l'azione
         UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
         OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
@@ -209,6 +202,8 @@ public class GestioneEventiControllerTest {
         exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
         daoOrg.doDelete(ut.getId());
         String message="la Data Fine non rispetta il formato";
+        Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn(null);
+
         assertEquals(message,exception.getMessage());
 
     }
@@ -219,7 +214,6 @@ public class GestioneEventiControllerTest {
 
     @Test
     public void TC_2p2_8(){
-        cleanRequest(mockedRequest);
         //salviamo l'utente che compie l'azione
         UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
         OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
@@ -257,6 +251,7 @@ public class GestioneEventiControllerTest {
         exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
         daoOrg.doDelete(ut.getId());
         String message="la Data Inizio non rispetta il formato";
+        Mockito.when(mockedRequest.getParameter("richiestaModEventoOrg")).thenReturn(null);
         assertEquals(message,exception.getMessage());
     }
 
@@ -265,7 +260,6 @@ public class GestioneEventiControllerTest {
      */
     @Test
     public void TC_2p2_9(){
-        cleanRequest(mockedRequest);
         //salviamo l'utente che compie l'azione
         UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
         OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
@@ -302,6 +296,8 @@ public class GestioneEventiControllerTest {
         exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
         daoOrg.doDelete(ut.getId());
         String message="la Data Fine non rispetta il formato";
+        Mockito.when(mockedRequest.getParameter("richiestaModEventoOrg")).thenReturn(null);
+
         assertEquals(message,exception.getMessage());
     }
     /** Operazione di riferimento nel Test Plan: Richiesta Inserimento Evento
@@ -309,8 +305,7 @@ public class GestioneEventiControllerTest {
      */
     @Test
     public void richiestaInserimentoEventoTestIntegrazione(){
-        cleanRequest(mockedRequest);
-        //salviamo l'utente che compie l'azione
+         //salviamo l'utente che compie l'azione
         UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
         OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
         daoOrg.doSave(ut);
@@ -344,18 +339,92 @@ public class GestioneEventiControllerTest {
             throw new RuntimeException(e);
         }
         daoOrg.doDelete(ut.getId());
+        Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn(null);
         //??
          Mockito.verify(mockedRequest).setAttribute("messaggio","esecuzione andata a buon fine");
       // String result= mockedRequest.getParameter("messaggio");
        // mockedRequest.setAttribute("messaggio",null);
         //assertEquals("esecuzione andata a buon fine", result);
     }
+    /** Operazione di riferimento nel Test Plan: Richiesta Modifica Evento
+     * Caso: corretto
+     */
+    @Test
+    public  void richiestaModificaEventoTestIntegrazione(){
+        //salviamo l'utente che compie l'azione
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        daoOrg.doSave(ut);
+        //salva evento che verrà modificato
+        EventoDAO daoEv= new EventoDAOImpl();
+        EventoBean evento=new EventoBean(ut.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nomeNuovo","pathNuovo","descrizione Test","indirizzo Test","sede Test",2,true);
+        daoEv.doSave(evento);
+        //simuliamo con mockito i parametro passati alla classe controller attraverso la request
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(ut);
+        Mockito.when(mockedRequest.getParameter("richiestaModEventoOrg")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("idEventoPreChange")).thenReturn(""+evento.getId());
+        Mockito.when(mockedRequest.getParameter("titoloEvMod")).thenReturn("nomeEvento");
+        Mockito.when(mockedRequest.getParameter("tipoEvMod")).thenReturn("teatro");
+        Mockito.when(mockedRequest.getParameter("descrizioneMod")).thenReturn("descrizione evento");
+        try {
+            Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        }
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
 
+        Mockito.when(mockedRequest.getParameter("dataInizioEvMod")).thenReturn(dataI);
+        Mockito.when(mockedRequest.getParameter("dataFineEvMod")).thenReturn(dataF);
+        Mockito.when(mockedRequest.getParameter("numBigliettiEvMod")).thenReturn("4");
+        Mockito.when(mockedRequest.getParameter("prezzoBigliettoEvMod")).thenReturn("4");
+        Mockito.when(mockedRequest.getParameter("indirizzoEvMod")).thenReturn("indirizzo evento");
+        Mockito.when(mockedRequest.getParameter("sedeEvMod")).thenReturn("sede evento");
 
-    private void cleanRequest(HttpServletRequest mocked){
-        Mockito.when(mockedRequest.getParameter("inviaRichiestaEvento")).thenReturn(null);
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        daoOrg.doDelete(ut.getId());
         Mockito.when(mockedRequest.getParameter("richiestaModEventoOrg")).thenReturn(null);
+        //??
+        Mockito.verify(mockedRequest).setAttribute("messaggio","esecuzione richeistaModifcia andata a buon fine");
     }
+    /** Operazione di riferimento nel Test Plan: Ricerca Eventi
+     * Caso: corretto
+     */
+    @Test
+    public  void ricercaEventiTestIntegrazione(){
+        //salviamo l'utente che compie l'azione
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        daoOrg.doSave(ut);
+        //salva evento che verrà modificato
+        EventoDAO daoEv= new EventoDAOImpl();
+        EventoBean evento=new EventoBean(ut.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nomeNuovo","pathNuovo","descrizione Test","indirizzo Test","sede Test",2,true);
+        daoEv.doSave(evento);
+        //simuliamo con mockito i parametro passati alla classe controller attraverso la request
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(null);
+        Mockito.when(mockedRequest.getParameter("ricercaEventi")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("query")).thenReturn("nomeNuovo");
+
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        daoOrg.doDelete(ut.getId());
+        Mockito.when(mockedRequest.getParameter("ricercaEventi")).thenReturn(null);
+        //??
+        Mockito.verify(mockedRequest).setAttribute("messaggio","esecuzione ricerca andata a buon fine");
+    }
+
     /**
      * Cleanup the environment.
      */

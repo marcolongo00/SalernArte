@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AmministratoreDAOImpl extends UtenteRegistratoDAOImpl{
+public class AmministratoreDAOImpl extends UtenteRegistratoDAOImpl {
     @Override
     public List<UtenteRegistratoBean> doRetrieveAll() {
         List<UtenteRegistratoBean> lista=new ArrayList<>();
@@ -107,7 +107,7 @@ public class AmministratoreDAOImpl extends UtenteRegistratoDAOImpl{
     }
 
     @Override
-    public void doUpdate(UtenteRegistratoBean utente) {
+    public boolean doUpdate(UtenteRegistratoBean utente) {
         try(Connection con=ConPool.getConnection()){
             if(!(utente instanceof AmministratoreBean))
                 throw  new RuntimeException();//myexception
@@ -124,6 +124,7 @@ public class AmministratoreDAOImpl extends UtenteRegistratoDAOImpl{
             }
             con.close();
             ps.close();
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

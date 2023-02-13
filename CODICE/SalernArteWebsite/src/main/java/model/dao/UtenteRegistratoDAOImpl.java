@@ -1,8 +1,5 @@
 package model.dao;
 
-import model.entity.AmministratoreBean;
-import model.entity.ScolarescaBean;
-import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 import singleton.ConPool;
 
@@ -97,7 +94,7 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
         }
     }
 
-    public void doDelete(int idUtente) {
+    public boolean doDelete(int idUtente) {
         try(Connection con=ConPool.getConnection()){
             PreparedStatement ps=con.prepareStatement("DELETE FROM UtenteRegistrato WHERE id=?");
             ps.setInt(1,idUtente);
@@ -106,6 +103,7 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
             }
             con.close();
             ps.close();
+            return  true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

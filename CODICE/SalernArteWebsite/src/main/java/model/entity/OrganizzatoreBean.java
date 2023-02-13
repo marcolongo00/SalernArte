@@ -8,7 +8,6 @@ public class OrganizzatoreBean extends UtenteRegistratoBean{
     private Date dataDiNascita;
 
     public OrganizzatoreBean() {
-        super("prova@gmail.com", "LuciaMartino98", "1");
     }
 
     public OrganizzatoreBean(int id, int sesso, String iban, String nome, String cognome, String email, String passwordHash, String biografia, Date dataDiNascita, boolean hash) {
