@@ -156,7 +156,8 @@ public class CarrelloDaoImplTest {
     @After
     public void insertCarrello()
     {
-        if(carrelloDAO.doRetrieveByIdUtente(user.getId()) == null)
+        CarrelloBean bean = carrelloDAO.doRetrieveByIdUtente(user.getId());
+        if(!bean.contains(bigliettoQuantita))
             carrelloDAO.doSave(user.getId(), bigliettoQuantita);
     }
 
@@ -193,7 +194,7 @@ public class CarrelloDaoImplTest {
      */
     @Test
     public void doSaveTest(){
-        //if(deleteCarrello())
+        if(deleteCarrello())
             assertTrue(carrelloDAO.doSave(user.getId(), bigliettoQuantita));
     }
 
@@ -259,7 +260,7 @@ public class CarrelloDaoImplTest {
          */
     @Test
     public void doDeleteTest(){
-        assertTrue(carrelloDAO.doDelete(user.getId(), evento.getId()));
+        assertTrue(carrelloDAO.doDelete(carrello.getIdUtente(), evento.getId()));
     }
 
     /*

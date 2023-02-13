@@ -4,10 +4,7 @@ import gestioneAcquisti.service.GestioneAcquistiService;
 import gestioneAcquisti.service.GestioneAcquistiServiceImpl;
 
 import model.dao.*;
-import model.entity.CarrelloBean;
-import model.entity.EventoBean;
-import model.entity.UtenteBean;
-import model.entity.UtenteRegistratoBean;
+import model.entity.*;
 import org.junit.*;
 import org.mockito.Mockito;
 import singleton.ConPool;
@@ -42,9 +39,7 @@ public class GestioneAcquistiServiceImplTest {
         c.add(Calendar.DATE,10);
         DATA_FINE_EVENTO= new Date(c.getTimeInMillis());
 
-        evento= new EventoBean(1,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome vecchio","./immaginiEventi/photo_2022-06-11_16-53-57.jpg","descrizione vecchia", "indirizzo vecchio","sede vecchia",5,false);
-        Mockito.when(mockedeventoDAO.doRetrieveById(1)).thenReturn(evento);
-
+        evento= new EventoBean(1,1,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome vecchio","./immaginiEventi/photo_2022-06-11_16-53-57.jpg","descrizione vecchia", "indirizzo vecchio","sede vecchia",5,false);
         user = new UtenteBean(1, "Marco", "Longo", "emailtest@gmail.com", "passTest", Date.valueOf("1978-08-10"), false);
 
         try(Connection con = ConPool.getConnection())
@@ -77,8 +72,6 @@ public class GestioneAcquistiServiceImplTest {
 
         carrelloBean = new CarrelloBean(user.getId());
         carrelloBean.put(evento,QUANTITA,PREZZO_BIG);
-        Mockito.when(mockedcarrelloDAO.doRetrieveByIdUtente(user.getId())).thenReturn(carrelloBean);
-
         serviceA = new GestioneAcquistiServiceImpl(mockedcarrelloDAO,mockedeventoDAO,mockedbigliettoDAO);
     }
 
@@ -101,8 +94,11 @@ public class GestioneAcquistiServiceImplTest {
     @Test
     public void TC_3p1_2()
     {
-        CarrelloBean bean = mockedcarrelloDAO.doRetrieveByIdUtente(user.getId());
-        assertEquals(user.getId(), bean.getIdUtente());
+        Mockito.when(mockedeventoDAO.doRetrieveById(1)).thenReturn(evento);
+        double prezzo = carrelloBean.get(evento.getId()).getPrezzoBigl();
+        Mockito.when(mockedbigliettoDAO.doRetrievePrezzoBigliettoByEvento(1)).thenReturn(prezzo);
+        CarrelloBean bean = serviceA.aggiungiAlCarrello(1,1,carrelloBean,user);
+        assertNotNull(bean);
     }
 
     /* Operazione di riferimento nel Test Plan: Modifica al Carrello
@@ -111,9 +107,10 @@ public class GestioneAcquistiServiceImplTest {
      * */
     @Test
     public void TC_3p2_1(){
-        Mockito.when(mockedcarrelloDAO.doUpdateQuantita(user.getId(), carrelloBean.get(evento.getId()))).thenReturn(true);
-        RuntimeException exception;
-        exception = assertThrows(RuntimeException.class,() -> serviceA.updateQuantitaCarrello(evento.getId(),-1,carrelloBean,user));
+        Mockito.when(mockedeventoDAO.doRetrieveById(1)).thenReturn(evento);
+        double prezzo = carrelloBean.get(evento.getId()).getPrezzoBigl();
+        NumberFormatException exception;
+        exception = assertThrows(NumberFormatException.class,() -> serviceA.updateQuantitaCarrello(evento.getId(),-1,carrelloBean,user));
         String message = "quantità non valida";
         assertEquals(message, exception.getMessage());
     }
@@ -124,11 +121,18 @@ public class GestioneAcquistiServiceImplTest {
      * */
     @Test
     public void TC_3p2_2(){
+        Mockito.when(mockedeventoDAO.doRetrieveById(1)).thenReturn(evento);
+        Mockito.when(mockedcarrelloDAO.doUpdateQuantita(user.getId(), carrelloBean.get(evento.getId()))).thenReturn(true);
         assertTrue(serviceA.updateQuantitaCarrello(evento.getId(),QUANTITA,carrelloBean,user));
     }
 
     @AfterClass
     public static void cleanUp(){
+        mockedeventoDAO = null;
+        mockedcarrelloDAO = null;
+        mockedbigliettoDAO = null;
+        serviceA=null;
+
         try(Connection con = ConPool.getConnection())
         {
             PreparedStatement ps = con.prepareStatement("DELETE FROM UtenteRegistrato WHERE id=?");
@@ -137,14 +141,9 @@ public class GestioneAcquistiServiceImplTest {
             if(ps.executeUpdate() != 1)
                 throw new RuntimeException("DELETE USER FAILED");
 
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        mockedeventoDAO = null;
-        mockedcarrelloDAO = null;
-        mockedbigliettoDAO = null;
-        serviceA=null;
     }
-
 }

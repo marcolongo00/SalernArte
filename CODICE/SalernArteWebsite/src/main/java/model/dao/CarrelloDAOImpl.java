@@ -42,7 +42,6 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
                 int quantita=rs.getInt("quantita");
                 carrello.put(temp,quantita,new BigliettoDAOImpl().doRetrievePrezzoBigliettoByEvento(idE));
             }
-
             conn.close();
             ps.close();
             rs.close();
@@ -68,7 +67,7 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
             ps.close();
             return true;
         }catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("INSERT in Carrello error");
         }
     }
 
@@ -93,7 +92,7 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps= conn.prepareStatement("DELETE FROM Carrello WHERE idUtente=?");
             ps.setInt(1,idUtente);
-            if(ps.executeUpdate()<1)
+            if(ps.executeUpdate() != 1)
                 throw new RuntimeException("svuota carrello error");
             conn.close();
             ps.close();
