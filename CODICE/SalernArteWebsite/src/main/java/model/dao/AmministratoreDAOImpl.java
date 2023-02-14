@@ -118,7 +118,7 @@ public class AmministratoreDAOImpl extends UtenteRegistratoDAOImpl {
             ps.setString(3,utente.getEmail());
             ps.setString(4,utente.getPasswordHash());
             ps.setInt(5,utente.getId());
-            if(ps.executeUpdate() !=1)
+            if(ps.executeUpdate() <1)
             {
                 throw new RuntimeException("UPDATE Amministratore error.");
             }

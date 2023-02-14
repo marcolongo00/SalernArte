@@ -119,7 +119,7 @@ public class GestioneEventiController extends HttpServlet {
                 List<EventoBean> eventi=serviceE.ricercaEventiByNomeOrDescrizione(query);
                 request.setAttribute("eventi",eventi);
             }
-
+            request.setAttribute("messaggio","esecuzione ricerca andata a buon fine");
             String address="WEB-INF/Ricerca.jsp";
             callDispatcher(request,response,address);
         }
@@ -223,7 +223,7 @@ public class GestioneEventiController extends HttpServlet {
 
                     //operazioni con service
                     serviceE.richiediModificaEvento(idEventoPreChange,utenteLoggato,titolo,tipo,descrizione,pathSave,filePhoto,numBiglietti,prezzo,dataInizio,dataFine,indirizzo,sede);
-
+                    request.setAttribute("messaggio","esecuzione richeistaModifcia andata a buon fine");
                     callReferer(request,response);
                     //oppure alla pagina dell'evento quindi chiamerei l'altra oeprazione
                 }
