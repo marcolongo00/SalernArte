@@ -1,5 +1,6 @@
 package model.dao;
 
+import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 
 import java.util.List;
@@ -11,6 +12,5 @@ public interface UtenteRegistratoDAO {
     boolean doUpdate(UtenteRegistratoBean utente);//implementato poi sovrascritto dai figli
     UtenteRegistratoBean doRetrieveByEmail(String email);
     boolean doDelete(int idUtente);//implementato
-
     UtenteRegistratoBean doRetrieveById(int id);
 }

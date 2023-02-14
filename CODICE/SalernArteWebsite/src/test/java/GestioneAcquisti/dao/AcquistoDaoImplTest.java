@@ -5,15 +5,10 @@ import model.dao.AcquistoDAOImpl;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import model.dao.UtenteDAO;
-import model.dao.UtenteRegistratoDAO;
+
 import model.entity.AcquistoBean;
 import model.entity.UtenteBean;
 import org.junit.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import singleton.ConPool;
 import java.sql.*;
 import java.util.ArrayList;

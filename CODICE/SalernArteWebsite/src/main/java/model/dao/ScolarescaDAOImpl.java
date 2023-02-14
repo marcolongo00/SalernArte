@@ -1,6 +1,7 @@
 package model.dao;
 
 import model.entity.ScolarescaBean;
+import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
 import singleton.ConPool;
 
@@ -34,7 +35,6 @@ public class ScolarescaDAOImpl extends UtenteRegistratoDAOImpl{
     @Override
     public boolean doSave(UtenteRegistratoBean utente) {
         super.doSave(utente);
-
         try(Connection con=ConPool.getConnection()){
            if(!(utente instanceof ScolarescaBean))
                throw new RuntimeException(); //myException
@@ -103,6 +103,7 @@ public class ScolarescaDAOImpl extends UtenteRegistratoDAOImpl{
         }
     }
 
+
     @Override
     public boolean doUpdate(UtenteRegistratoBean utente) {
         try(Connection con=ConPool.getConnection()){
@@ -115,15 +116,17 @@ public class ScolarescaDAOImpl extends UtenteRegistratoDAOImpl{
             ps.setString(2,utente.getPasswordHash());
             ps.setString(3,((ScolarescaBean)utente).getIstituto());
             ps.setInt(4,utente.getId());
-            if(ps.executeUpdate() !=1)
+            if(ps.executeUpdate() < 1)
             {
                 throw new RuntimeException("UPDATE Scolaresca error.");
             }
             con.close();
             ps.close();
-            return  true;
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
     }
+
+
 }

@@ -174,7 +174,7 @@ public class OrganizzatoreDAOImpl extends UtenteRegistratoDAOImpl{
             }
             con.close();
             ps.close();
-            return  true;
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }

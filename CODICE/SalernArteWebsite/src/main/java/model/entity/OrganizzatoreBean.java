@@ -7,8 +7,7 @@ public class OrganizzatoreBean extends UtenteRegistratoBean{
     private String nome,cognome,biografia,iban;
     private Date dataDiNascita;
 
-    public OrganizzatoreBean() {
-    }
+    public OrganizzatoreBean() {}
 
     public OrganizzatoreBean(int id, int sesso, String iban, String nome, String cognome, String email, String passwordHash, String biografia, Date dataDiNascita, boolean hash) {
         super(id,email,passwordHash,"organizzatore",hash);

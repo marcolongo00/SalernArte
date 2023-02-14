@@ -74,7 +74,7 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
             PreparedStatement ps=con.prepareStatement("insert into UtenteRegistrato(email,passwordHash,tipoUtente)VALUES(?,?,?)",Statement.RETURN_GENERATED_KEYS);
             ps.setString(1,utente.getEmail());
             ps.setString(2,utente.getPasswordHash());
-            ps.setString(3,"Utente");
+            ps.setString(3,"utente");
 
             if(ps.executeUpdate() !=1)
             {
@@ -103,7 +103,7 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
             }
             con.close();
             ps.close();
-            return  true;
+            return true;
         }catch(SQLException e){
             throw new RuntimeException(e);
         }
