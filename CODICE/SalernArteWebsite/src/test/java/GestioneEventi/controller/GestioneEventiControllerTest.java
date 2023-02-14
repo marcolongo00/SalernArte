@@ -46,16 +46,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *          TestCaseID: TC_2.1_1
  *          firma del metodo: TC_2p1_1
  *
- *  i restanti metodi di test faranno riferimento all'operazione all'interno della classe da testare.
+ *  i restanti metodi di test faranno riferimento all'operazione da testare.
  *  si seguirà la seguente regola:
  *
- *  preso in considerazione un metodo della classe GestioneEventiServiceImpl che abbia firma:
- *              ReturnValue nomeMetodo( Type value, ...)
- *
+ *  - nome operazione da testare
  *  il metodo all'interno di questa classe di test avrà come firma:
- *              void nomeMetodoTestIntegrazione()
+ *              void nomeOperazioneTestIntegrazione()
  *  nel caso di test di funzionalità di errore:
- *              void nomeMetodoTestIntegrazioneError()
+ *              void nomeOperazioneTestIntegrazioneError()
  *
  * @author Alessia Della Pepa
  */

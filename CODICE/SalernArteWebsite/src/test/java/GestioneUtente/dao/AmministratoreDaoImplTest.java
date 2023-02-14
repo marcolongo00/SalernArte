@@ -3,16 +3,16 @@ package GestioneUtente.dao;
 import model.dao.AmministratoreDAOImpl;
 import model.dao.UtenteRegistratoDAO;
 import model.entity.AmministratoreBean;
-
 import model.entity.UtenteRegistratoBean;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import singleton.ConPool;
 
 import java.sql.*;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Implementa il testing di unità per la classe

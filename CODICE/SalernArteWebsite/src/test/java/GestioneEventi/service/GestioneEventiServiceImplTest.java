@@ -8,17 +8,13 @@ import model.dao.EventoDAO;
 import model.dao.EventoDAOImpl;
 import model.entity.EventoBean;
 import model.entity.OrganizzatoreBean;
-import model.entity.UtenteRegistratoBean;
 
 import org.junit.*;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockPart;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.Part;
-import javax.validation.constraints.AssertTrue;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
