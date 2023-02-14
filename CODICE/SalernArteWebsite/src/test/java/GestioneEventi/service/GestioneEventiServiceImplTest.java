@@ -66,8 +66,11 @@ public class GestioneEventiServiceImplTest {
     private static String query="nome evento*";
 
     private static final long  MEGABYTE = 1024L * 1024L;
+
+    private static final String pathReal= ".\\src\\main\\webapp\\immaginiEventi\\";
     @BeforeClass
     public static void startUp(){
+
         mockedEventoDao= Mockito.mock(EventoDAOImpl.class);
         mockedBigliettoDao=Mockito.mock(BigliettoDAOImpl.class);
         eventoDaModificare= new EventoBean(1,1,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome vecchio","./immaginiEventi/photo_2022-06-11_16-53-57.jpg","descrizione vecchia", "indirizzo vecchio","sede vecchia",5,false);
@@ -78,10 +81,11 @@ public class GestioneEventiServiceImplTest {
         serviceE=new GestioneEventiServiceImpl(mockedEventoDao,mockedBigliettoDao);
         //creazione file foto da utilizzare per i test
         BufferedImage bi= new BufferedImage(500,500,BufferedImage.TYPE_INT_RGB);
-        image= new File(PATHCONTEXT);
+        //image= new File(PATHCONTEXT);
+        image= new File(pathReal+"fotoSample.jpg");
         try {
             ImageIO.write(bi,"jpg",image);
-            Path path= Paths.get(PATHCONTEXT);
+            Path path= Paths.get(pathReal+"fotoSample.jpg");
             FILE_PHOTO= new MockPart("fotoSample.jpg","fotoSample.jpg", Files.readAllBytes(path));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -166,11 +170,11 @@ public class GestioneEventiServiceImplTest {
     public void TC_2p1_5() {
         //creazione file foto da utilizzare per i test
         BufferedImage bi= new BufferedImage(1080,1080,BufferedImage.TYPE_INT_RGB);
-        File immagineGrande= new File("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\test\\java\\GestioneEventi\\fotoSampleGrande.jpg");
+        File immagineGrande= new File(pathReal+"fotoSampleGrande.jpg");
         Part mockPart;
         try {
             ImageIO.write(bi,"jpg",immagineGrande);
-            Path path= Paths.get("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\test\\java\\GestioneEventi\\fotoSampleGrande.jpg");
+            Path path= Paths.get(pathReal+"fotoSampleGrande.jpg");
             mockPart= new MockPart("fotoSampleGrande.jpg","fotoSampleGrande.jpg", Files.readAllBytes(path));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -364,11 +368,11 @@ public class GestioneEventiServiceImplTest {
     public void TC_2p2_5(){
         //creazione file foto da utilizzare per i test
         BufferedImage bi= new BufferedImage(1080,1080,BufferedImage.TYPE_INT_RGB);
-        File immagineGrande= new File("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\test\\java\\GestioneEventi\\fotoSampleGrande.jpg");
+        File immagineGrande= new File(pathReal+"fotoSampleGrande.jpg");
         Part mockPart;
         try {
             ImageIO.write(bi,"jpg",immagineGrande);
-            Path path= Paths.get("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\test\\java\\GestioneEventi\\fotoSampleGrande.jpg");
+            Path path= Paths.get(pathReal+"fotoSampleGrande.jpg");
             mockPart= new MockPart("fotoSampleGrande.jpg","fotoSampleGrande.jpg", Files.readAllBytes(path));
         } catch (IOException e) {
             throw new RuntimeException(e);
