@@ -23,25 +23,31 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
         daoAmm = new AmministratoreDAOImpl();
         daoAcq=new AcquistoDAOImpl();
     }
+
+    public AutenticazioneServiceImpl(ScolarescaDAOImpl daoScol, OrganizzatoreDAOImpl daoOrg, UtenteDAOImpl daoUtente, AmministratoreDAOImpl daoAmm)
+    {
+        this.daoScol = daoScol;
+        this.daoOrg = daoOrg;
+        this.daoUtente = daoUtente;
+        this.daoAmm = daoAmm;
+        daoAcq=new AcquistoDAOImpl();
+    }
+
     @Override
     public UtenteRegistratoBean loginUtente(String email, String passwordNotHash, String tipoUtente) {
         //if null throw exception per tutti
         if(tipoUtente.compareToIgnoreCase("utente")==0){
-            daoU=new UtenteDAOImpl();
-            return daoU.doRetrieveByEmailPassword(email,passwordNotHash);
+            return daoUtente.doRetrieveByEmailPassword(email,passwordNotHash);
         }else
         if(tipoUtente.compareToIgnoreCase("scolaresca")==0){
-            daoU=new ScolarescaDAOImpl();
-            return daoU.doRetrieveByEmailPassword(email,passwordNotHash);
+            return daoScol.doRetrieveByEmailPassword(email,passwordNotHash);
         }
         else
         if(tipoUtente.compareToIgnoreCase("organizzatore")==0){
-            daoU=new OrganizzatoreDAOImpl();
-            return daoU.doRetrieveByEmailPassword(email,passwordNotHash);
+            return daoOrg.doRetrieveByEmailPassword(email,passwordNotHash);
         }else
         if(tipoUtente.compareToIgnoreCase("amministratore")==0){
-            daoU=new AmministratoreDAOImpl();
-            return  daoU.doRetrieveByEmailPassword(email,passwordNotHash);
+            return daoAmm.doRetrieveByEmailPassword(email,passwordNotHash);
         }
         return null;
     }
@@ -82,7 +88,7 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
             passwordNoHash = utenteLoggato.getPasswordHash();
         }else {
             //altrimenti controllare il formato password inserito
-            if(!passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$")){
+            if(!passwordNoHash.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$")){
                 throw new RuntimeException("Password non valida.");
             }
         }
@@ -97,7 +103,7 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
         }
         Date dataAttuale = new Date(Calendar.getInstance().getTimeInMillis());
         //se il formato data non è corretto sarà il parse nell'areaUtentecontroller a dare errore
-        if (dataDiNascita.after(dataAttuale)) {
+        if (dataDiNascita.after(dataAttuale) || dataDiNascita.toLocalDate().isEqual(dataAttuale.toLocalDate())) {
             throw new RuntimeException("impostazioni data di nascita inserite non valide");
         }
         if (gender != 0 && gender != 1 && gender != 2) {
@@ -119,7 +125,7 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
             passwordNoHash = utenteLoggato.getPasswordHash();
         }else {
             //altrimenti controllare il formato password inserito
-            if(!passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$")){
+            if(!passwordNoHash.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$")){
                 throw new RuntimeException("Password non valida.");
             }
         }
@@ -149,9 +155,10 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
             passwordNoHash = utenteLoggato.getPasswordHash();
         }else {
             //altrimenti controllare il formato password inserito
-            if(!passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$")){
+            if(!passwordNoHash.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$")){
                 throw new RuntimeException("Password non valida.");
             }
+
         }
         if (istituto == null || istituto.isEmpty() || !istituto.matches("^[ a-zA-Z\u00C0-\u00ff]{1,100}$")) {
             throw new RuntimeException("Istituto non valido.");
@@ -173,7 +180,7 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
             passwordNoHash = utenteLoggato.getPasswordHash();
         }else {
             //altrimenti controllare il formato password inserito
-            if(!passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$")){
+            if(!passwordNoHash.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$")){
                 throw new RuntimeException("Password non valida.");
             }
         }
@@ -187,7 +194,7 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
             throw new RuntimeException("Cognome non valido.");
         }
         Date dataAttuale = new Date(Calendar.getInstance().getTimeInMillis());
-        if (dataDiNascita.after(dataAttuale)) {
+        if (dataDiNascita.after(dataAttuale) || dataDiNascita.toLocalDate().isEqual(dataAttuale.toLocalDate())) {
             throw new RuntimeException("impostazioni data di nascita inserite non valide");
         }
         if (gender != 0 && gender != 1 && gender != 2) {
@@ -201,8 +208,8 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
             //regEx per iban italia
             throw new RuntimeException("Iban non valido.");
         }
-        UtenteBean utenteAggiornato = new UtenteBean(utenteLoggato.getId(), gender, nome, cognome, email, passwordNoHash, dataDiNascita, isHash);
-        daoUtente.doUpdate(utenteAggiornato);
+        OrganizzatoreBean utenteAggiornato = new OrganizzatoreBean(utenteLoggato.getId(), gender, iban, nome, cognome, email, passwordNoHash, biografia,dataDiNascita,isHash);
+        daoOrg.doUpdate(utenteAggiornato);
         return utenteAggiornato;
     }
 

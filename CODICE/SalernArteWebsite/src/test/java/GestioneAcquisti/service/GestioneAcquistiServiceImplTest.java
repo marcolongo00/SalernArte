@@ -73,6 +73,9 @@ public class GestioneAcquistiServiceImplTest {
         carrelloBean = new CarrelloBean(user.getId());
         carrelloBean.put(evento,QUANTITA,PREZZO_BIG);
         serviceA = new GestioneAcquistiServiceImpl(mockedcarrelloDAO,mockedeventoDAO,mockedbigliettoDAO);
+        Mockito.when(mockedeventoDAO.doRetrieveById(1)).thenReturn(evento);
+
+        Mockito.when(mockedcarrelloDAO.doUpdateQuantita(user.getId(), carrelloBean.get(evento.getId()))).thenReturn(true);
     }
 
     /* Operazione di riferimento nel Test Plan: Aggiungi al Carrello
@@ -94,7 +97,6 @@ public class GestioneAcquistiServiceImplTest {
     @Test
     public void TC_3p1_2()
     {
-        Mockito.when(mockedeventoDAO.doRetrieveById(1)).thenReturn(evento);
         double prezzo = carrelloBean.get(evento.getId()).getPrezzoBigl();
         Mockito.when(mockedbigliettoDAO.doRetrievePrezzoBigliettoByEvento(1)).thenReturn(prezzo);
         CarrelloBean bean = serviceA.aggiungiAlCarrello(1,1,carrelloBean,user);
@@ -107,8 +109,8 @@ public class GestioneAcquistiServiceImplTest {
      * */
     @Test
     public void TC_3p2_1(){
-        Mockito.when(mockedeventoDAO.doRetrieveById(1)).thenReturn(evento);
         double prezzo = carrelloBean.get(evento.getId()).getPrezzoBigl();
+        Mockito.when(mockedbigliettoDAO.doRetrievePrezzoBigliettoByEvento(1)).thenReturn(prezzo);
         NumberFormatException exception;
         exception = assertThrows(NumberFormatException.class,() -> serviceA.updateQuantitaCarrello(evento.getId(),-1,carrelloBean,user));
         String message = "quantità non valida";
@@ -121,8 +123,6 @@ public class GestioneAcquistiServiceImplTest {
      * */
     @Test
     public void TC_3p2_2(){
-        Mockito.when(mockedeventoDAO.doRetrieveById(1)).thenReturn(evento);
-        Mockito.when(mockedcarrelloDAO.doUpdateQuantita(user.getId(), carrelloBean.get(evento.getId()))).thenReturn(true);
         assertTrue(serviceA.updateQuantitaCarrello(evento.getId(),QUANTITA,carrelloBean,user));
     }
 
