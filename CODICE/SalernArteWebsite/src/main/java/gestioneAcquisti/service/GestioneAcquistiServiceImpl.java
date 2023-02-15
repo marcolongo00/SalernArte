@@ -26,11 +26,11 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         acquistoDAO= new AcquistoDAOImpl();
     }
 
-    public GestioneAcquistiServiceImpl(CarrelloDAO carrelloDAO, EventoDAO eventoDao, BigliettoDAO bigliettoDAO){
+    public GestioneAcquistiServiceImpl(CarrelloDAO carrelloDAO, EventoDAO eventoDao, BigliettoDAO bigliettoDAO, AcquistoDAO acquistoDAO){
         this.daoCarr = carrelloDAO;
         this.eventoDao= eventoDao;
         this.bigliettoDAO= bigliettoDAO;
-        acquistoDAO= new AcquistoDAOImpl();
+        this.acquistoDAO = acquistoDAO;
     }
 
     @Override
@@ -45,7 +45,8 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         boolean alertCarrello=false; //serve per allertare della presenza di prodotti non più disponibili nel
         // carrello senza automaticamente toglierli dal carrello
 
-        List<Integer> eventiToRemove= new ArrayList<>(); //eventi passati
+        if(carrelloSessione == null)
+            throw new RuntimeException("Errore nel carrello");
         Collection<BigliettoQuantita> prodotti= carrelloSessione.getProdotti();
         if(!prodotti.isEmpty()){
             Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());
@@ -91,6 +92,8 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         checkAutorizzazioniUtente(utente);
         if(utente!=null)
             daoCarr.doDelete(utente.getId(),idE);
+        else
+            throw new RuntimeException("Utente inesistente o errato");
         carrello.remove(idE);
         return true;
     }

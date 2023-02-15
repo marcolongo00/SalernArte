@@ -12,13 +12,19 @@ import singleton.ConPool;
 import java.sql.*;
 import java.util.Calendar;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class GestioneAcquistiServiceImplTest {
     private static GestioneAcquistiService serviceA;
     private static CarrelloDAO mockedcarrelloDAO;
+    private static AcquistoDAO mockedacquistoDAO;
     private static EventoDAO mockedeventoDAO;
     private static BigliettoDAO mockedbigliettoDAO;
+    private static UtenteDAOImpl daoUser;
     private static CarrelloBean carrelloBean;
     private static UtenteBean user;
     private static EventoBean evento;
@@ -28,9 +34,11 @@ public class GestioneAcquistiServiceImplTest {
 
     @BeforeClass
     public static void startUp(){
-        mockedbigliettoDAO = Mockito.mock(BigliettoDAO.class);
-        mockedeventoDAO = Mockito.mock(EventoDAO.class);
-        mockedcarrelloDAO = Mockito.mock(CarrelloDAO.class);
+        mockedbigliettoDAO = mock(BigliettoDAO.class);
+        mockedeventoDAO = mock(EventoDAO.class);
+        mockedcarrelloDAO = mock(CarrelloDAO.class);
+        daoUser = mock(UtenteDAOImpl.class);
+        mockedacquistoDAO = mock(AcquistoDAO.class);
 
         Calendar c= Calendar.getInstance();
         c.setTime(DATA_ATTUALE);
@@ -40,42 +48,24 @@ public class GestioneAcquistiServiceImplTest {
         DATA_FINE_EVENTO= new Date(c.getTimeInMillis());
 
         evento= new EventoBean(1,1,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome vecchio","./immaginiEventi/photo_2022-06-11_16-53-57.jpg","descrizione vecchia", "indirizzo vecchio","sede vecchia",5,false);
-        user = new UtenteBean(1, "Marco", "Longo", "emailtest@gmail.com", "passTest", Date.valueOf("1978-08-10"), false);
-
-        try(Connection con = ConPool.getConnection())
-        {
-            PreparedStatement ps4 = con.prepareStatement("INSERT INTO UtenteRegistrato(email,passwordHash,tipoUtente)VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            ps4.setString(1,user.getEmail());
-            ps4.setString(2,user.getPasswordHash());
-            ps4.setString(3,"utente");
-
-            if(ps4.executeUpdate() !=1)
-                throw new RuntimeException("INSERT Utente error.");
-
-            ResultSet rs3=ps4.getGeneratedKeys();
-            rs3.next();
-            user.setId(rs3.getInt(1));
-
-            PreparedStatement ps5 = con.prepareStatement("INSERT INTO Utente(id,nome,cognome,dataDiNascita,sesso) VALUES (?,?,?,?,?)");
-            ps5.setInt(1,user.getId());
-            ps5.setString(2,user.getNome());
-            ps5.setString(3,user.getCognome());
-            ps5.setDate(4,user.getDataDiNascita());
-            ps5.setInt(5,user.getSesso());
-
-            if(ps5.executeUpdate()!= 1)
-                throw new RuntimeException("INSERT Utente error");
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        user = new UtenteBean(1,1, "Marco", "Longo", "emailtest@gmail.com", "passTest", Date.valueOf("1978-08-10"), false);
+        evento.setAttivo(true);
+        when(daoUser.doRetrieveById(Mockito.anyInt())).thenReturn(user);
         carrelloBean = new CarrelloBean(user.getId());
         carrelloBean.put(evento,QUANTITA,PREZZO_BIG);
-        serviceA = new GestioneAcquistiServiceImpl(mockedcarrelloDAO,mockedeventoDAO,mockedbigliettoDAO);
-        Mockito.when(mockedeventoDAO.doRetrieveById(1)).thenReturn(evento);
+        serviceA = new GestioneAcquistiServiceImpl(mockedcarrelloDAO,mockedeventoDAO,mockedbigliettoDAO,mockedacquistoDAO);
+        when(mockedeventoDAO.doRetrieveById(Mockito.anyInt())).thenReturn(evento);
+        when(mockedcarrelloDAO.doRetrieveByIdUtente(user.getId())).thenReturn(carrelloBean);
+    }
 
-        Mockito.when(mockedcarrelloDAO.doUpdateQuantita(user.getId(), carrelloBean.get(evento.getId()))).thenReturn(true);
+    @Before
+    public void check()
+    {
+        CarrelloBean bean = new CarrelloBean(user.getId());
+        CarrelloBean.BigliettoQuantita big = carrelloBean.get(evento.getId());
+        if(big == null)
+            carrelloBean.put(evento,QUANTITA,PREZZO_BIG);
+
     }
 
     /* Operazione di riferimento nel Test Plan: Aggiungi al Carrello
@@ -98,7 +88,7 @@ public class GestioneAcquistiServiceImplTest {
     public void TC_3p1_2()
     {
         double prezzo = carrelloBean.get(evento.getId()).getPrezzoBigl();
-        Mockito.when(mockedbigliettoDAO.doRetrievePrezzoBigliettoByEvento(1)).thenReturn(prezzo);
+        when(mockedbigliettoDAO.doRetrievePrezzoBigliettoByEvento(1)).thenReturn(prezzo);
         CarrelloBean bean = serviceA.aggiungiAlCarrello(1,1,carrelloBean,user);
         assertNotNull(bean);
     }
@@ -110,7 +100,7 @@ public class GestioneAcquistiServiceImplTest {
     @Test
     public void TC_3p2_1(){
         double prezzo = carrelloBean.get(evento.getId()).getPrezzoBigl();
-        Mockito.when(mockedbigliettoDAO.doRetrievePrezzoBigliettoByEvento(1)).thenReturn(prezzo);
+        when(mockedbigliettoDAO.doRetrievePrezzoBigliettoByEvento(1)).thenReturn(prezzo);
         NumberFormatException exception;
         exception = assertThrows(NumberFormatException.class,() -> serviceA.updateQuantitaCarrello(evento.getId(),-1,carrelloBean,user));
         String message = "quantità non valida";
@@ -126,6 +116,105 @@ public class GestioneAcquistiServiceImplTest {
         assertTrue(serviceA.updateQuantitaCarrello(evento.getId(),QUANTITA,carrelloBean,user));
     }
 
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Carrello non corretto
+     * Metodo della classe service di riferimento: controlloElementiCarrello(...)
+     * */
+    @Test
+    public void controlloElementiCarrelloTestError1(){
+        RuntimeException exception;
+        exception = assertThrows(RuntimeException.class,() -> serviceA.controlloElementiCarrello(null, user));
+        String message = "Errore nel carrello";
+        assertEquals(message, exception.getMessage());
+    }
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Carrello non corretto
+     * Metodo della classe service di riferimento: controlloElementiCarrello(...)
+     * */
+    @Test
+    public void controlloElementiCarrelloTest(){
+        assertFalse(serviceA.controlloElementiCarrello(carrelloBean, user));
+    }
+
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Idevento errato
+     * Metodo della classe service di riferimento: removeEventoFromCarrello(...)
+     * */
+    @Test
+    public void removeEventoFromCarrelloError1(){
+        RuntimeException exception;
+        exception = assertThrows(RuntimeException.class,() -> serviceA.removeEventoFromCarrello(-1, carrelloBean,user));
+        String message = "qualcosa è andato storto riprovare";
+        assertEquals(message, exception.getMessage());
+    }
+
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Carrello errato o inesistente
+     * Metodo della classe service di riferimento: removeEventoFromCarrello(...)
+     * */
+    @Test
+    public void removeEventoFromCarrelloError2(){
+        CarrelloBean bean = new CarrelloBean();
+        RuntimeException exception;
+        exception = assertThrows(RuntimeException.class,() -> serviceA.removeEventoFromCarrello(evento.getId(), bean,user));
+        String message = "qualcosa è andato storto riprovare";
+        assertEquals(message, exception.getMessage());
+    }
+
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Carrello errato o inesistente
+     * Metodo della classe service di riferimento: removeEventoFromCarrello(...)
+     * */
+    @Test
+    public void removeEventoFromCarrelloError3(){
+        RuntimeException exception;
+        exception = assertThrows(RuntimeException.class,() -> serviceA.removeEventoFromCarrello(evento.getId(), carrelloBean,null));
+        String message = "Utente inesistente o errato";
+        assertEquals(message, exception.getMessage());
+    }
+
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Corretto
+     * Metodo della classe service di riferimento: removeEventoFromCarrello(...)
+     * */
+    @Test
+    public void removeEventoFromCarrello(){
+        assertTrue(serviceA.removeEventoFromCarrello(evento.getId(), carrelloBean, user));
+    }
+
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Carrello errato o inesistente
+     * Metodo della classe service di riferimento: acquistaProdotti(...)
+     * */
+    @Test
+    public void acquistaProdottiTestError1(){
+        RuntimeException exception;
+        exception = assertThrows(RuntimeException.class,() -> serviceA.acquistaProdotti(null, user));
+        String message = "operazione non autorizzata";
+        assertEquals(message, exception.getMessage());
+    }
+
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Utente errato o inesistente
+     * Metodo della classe service di riferimento: acquistaProdotti(...)
+     * */
+    @Test
+    public void acquistaProdottiTestError2(){
+        RuntimeException exception;
+        exception = assertThrows(RuntimeException.class,() -> serviceA.acquistaProdotti(carrelloBean, null));
+        String message = "operazione non autorizzata";
+        assertEquals(message, exception.getMessage());
+    }
+
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Corretto
+     * Metodo della classe service di riferimento: acquistaProdotti(...)
+     * */
+    @Test
+    public void acquistaProdottiTest(){
+        assertTrue(serviceA.acquistaProdotti(carrelloBean, user));
+    }
+
     @AfterClass
     public static void cleanUp(){
         mockedeventoDAO = null;
@@ -133,17 +222,5 @@ public class GestioneAcquistiServiceImplTest {
         mockedbigliettoDAO = null;
         serviceA=null;
 
-        try(Connection con = ConPool.getConnection())
-        {
-            PreparedStatement ps = con.prepareStatement("DELETE FROM UtenteRegistrato WHERE id=?");
-            ps.setInt(1,user.getId());
-
-            if(ps.executeUpdate() != 1)
-                throw new RuntimeException("DELETE USER FAILED");
-
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

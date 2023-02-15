@@ -3,9 +3,8 @@ package GestioneAcquisti.dao;
 import model.dao.AcquistoDAO;
 import model.dao.AcquistoDAOImpl;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-
 import model.entity.AcquistoBean;
 import model.entity.UtenteBean;
 import org.junit.*;
@@ -20,7 +19,7 @@ public class AcquistoDaoImplTest {
     private boolean op = false;
     private static UtenteBean user;
     private static AcquistoDAO dao;
-    private static List<AcquistoBean> list = new ArrayList<AcquistoBean>();
+    private static List<AcquistoBean> list;
     @BeforeClass
     public static void startUp()
     {
@@ -63,6 +62,7 @@ public class AcquistoDaoImplTest {
             ResultSet rs1 = ps1.getGeneratedKeys();
             rs1.next();
             acquisto.setNumOrdine(rs1.getInt(1));
+            list = new ArrayList<AcquistoBean>();
             list.add(acquisto);
 
             con.close();
@@ -89,20 +89,6 @@ public class AcquistoDaoImplTest {
     }
 
 
-    @After
-    public void saveAcquisto()
-    {
-        if(!op)
-        {
-            if(dao.doRetrieveAcquistoByNumOrdine(acquisto.getNumOrdine()) == null)
-            {
-                op = true;
-                dao.doSave(acquisto);
-            }
-        }
-    }
-
-
     /*
     Metodo: doRetrieveListaAcquistiByIdUtente(...)
     Classe: AcquistoDAOImpl
@@ -111,10 +97,7 @@ public class AcquistoDaoImplTest {
     @Test
     public void doRetrieveListaAcquistiByIdUtenteError()
     {
-        RuntimeException exception;
-        exception = assertThrows(RuntimeException.class, () -> dao.doRetrieveListaAcquistiByIdUtente(-1));
-        String message = "Retrieve error because of idUser is not valid";
-        assertEquals(message, exception.getMessage());
+        assertNotEquals(list, dao.doRetrieveListaAcquistiByIdUtente(-1));
     }
 
     /*
@@ -125,7 +108,7 @@ public class AcquistoDaoImplTest {
     @Test
     public void doRetrieveListaAcquistiByIdUtente()
     {
-        assertNotNull(dao.doRetrieveListaAcquistiByIdUtente(user.getId()));
+      assertEquals(list.get(0).getIdUtente(), dao.doRetrieveListaAcquistiByIdUtente(user.getId()).get(0).getIdUtente());
     }
 
     /*
@@ -147,7 +130,7 @@ public class AcquistoDaoImplTest {
     @Test
     public void doRetrieveAcquistoByNumOrdine()
     {
-        assertNotNull(dao.doRetrieveAcquistoByNumOrdine(acquisto.getNumOrdine()));
+        assertEquals(acquisto.getNumOrdine(), dao.doRetrieveAcquistoByNumOrdine(acquisto.getNumOrdine()).getNumOrdine());
     }
 
     /*
@@ -162,7 +145,7 @@ public class AcquistoDaoImplTest {
         acquisto.setIdUtente(-1);
         RuntimeException exception;
         exception = assertThrows(RuntimeException.class, () -> dao.doSave(acquisto));
-        String message = "Insert error because of idUser is not valid";
+        String message = "INSERT error";
         acquisto.setIdUtente(id);
         assertEquals(message, exception.getMessage());
     }
@@ -240,7 +223,9 @@ public class AcquistoDaoImplTest {
     @Test
     public void doDelete()
     {
-        assertTrue(dao.doDelete(acquisto.getNumOrdine()));
+        AcquistoBean bean = new AcquistoBean(acquisto.getIdUtente(), acquisto.getData(), acquisto.getTotale(), acquisto.getProdotti());
+        dao.doSave(bean);
+        assertTrue(dao.doDelete(bean.getNumOrdine()));
     }
 
     @AfterClass

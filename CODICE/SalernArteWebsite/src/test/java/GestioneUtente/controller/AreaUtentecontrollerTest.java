@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import static org.mockito.Mockito.*;
 
 
@@ -54,6 +57,7 @@ public class AreaUtentecontrollerTest {
     private static UtenteRegistratoDAO dao;
     private static ServletConfig servletConfig = mock(ServletConfig.class);
     private static AreaUtenteController servlet = new AreaUtenteController();
+    private static DateFormat df;
     private static final String NOME = "Marco", COGNOME = "Longo", EMAIL = "emailprova@gmail.com", PASSWORD = "Passworddiprova.10",
                                 BIOGRAFIA = "Biografia", IBAN = "IT51Y0300203280575326347619", ISTITUTO = "ISS Gian Camillo Glorioso";
     private static final int GENDER = 0;
@@ -61,6 +65,7 @@ public class AreaUtentecontrollerTest {
 
     @BeforeClass
     public static void setUp() throws ServletException {
+        df = new SimpleDateFormat("yyyy-MM-dd");
         //Servlet, mockedRequest, mockedResponse and Session instantiation.
         servlet.init(servletConfig);
         mockedRequest = mock(HttpServletRequest.class);
@@ -68,7 +73,6 @@ public class AreaUtentecontrollerTest {
         mockedServletContext = mock(ServletContext.class);
         mockedDispatcher = mock(RequestDispatcher.class);
         session = mock(HttpSession.class);
-        servlet = mock(AreaUtenteController.class);
 
         when(mockedRequest.getSession()).thenReturn(session);
         when(mockedRequest.getServletContext()).thenReturn(mockedServletContext);
@@ -81,16 +85,18 @@ public class AreaUtentecontrollerTest {
     @Test
     public void updateProfiloTest(){
         UtenteBean user = new UtenteBean(GENDER,NOME,COGNOME,EMAIL,PASSWORD,DATADINASCITA,false);
+        dao = new UtenteDAOImpl();
+        dao.doSave(user);
+
+        when(session.getAttribute("selezionato")).thenReturn(user);
         when(mockedRequest.getParameter("password")).thenReturn(PASSWORD);
         when(mockedRequest.getParameter("passwordConferma")).thenReturn(PASSWORD);
         when(mockedRequest.getParameter("email")).thenReturn(EMAIL);
         when(mockedRequest.getParameter("nome")).thenReturn(NOME);
         when(mockedRequest.getParameter("cognome")).thenReturn(COGNOME);
-        when(mockedRequest.getParameter("dataDiNascita")).thenReturn(String.valueOf(DATADINASCITA));
-        when(mockedRequest.getParameter("gender")).thenReturn(String.valueOf(GENDER));
+        when(mockedRequest.getParameter("dataDiNascita")).thenReturn(df.format(DATADINASCITA));
+        when(mockedRequest.getParameter("gender")).thenReturn(GENDER+"");
 
-        dao = new UtenteDAOImpl();
-        dao.doSave(user);
         try {
             servlet.doPost(mockedRequest,mockedResponse);
         } catch (ServletException e) {
@@ -99,6 +105,7 @@ public class AreaUtentecontrollerTest {
             throw new RuntimeException(e);
         }
         dao.doDelete(user.getId());
+        verify(session).setAttribute("messaggio","Update utente avvenuto con successo");
     }
     /** Operazione di riferimento nel Test Plan: Modifica Profilo scolaresca
      * Caso: Corretto
@@ -106,13 +113,15 @@ public class AreaUtentecontrollerTest {
     @Test
     public void updateScolarescaTest(){
         ScolarescaBean user = new ScolarescaBean(EMAIL,PASSWORD,ISTITUTO,false);
+        dao = new ScolarescaDAOImpl();
+        dao.doSave(user);
+
+        when(session.getAttribute("selezionato")).thenReturn(user);
         when(mockedRequest.getParameter("password")).thenReturn(PASSWORD);
         when(mockedRequest.getParameter("passwordConferma")).thenReturn(PASSWORD);
         when(mockedRequest.getParameter("email")).thenReturn(EMAIL);
         when(mockedRequest.getParameter("istituto")).thenReturn(ISTITUTO);
 
-        dao = new ScolarescaDAOImpl();
-        dao.doSave(user);
         try {
             servlet.doPost(mockedRequest,mockedResponse);
         } catch (ServletException e) {
@@ -121,6 +130,7 @@ public class AreaUtentecontrollerTest {
             throw new RuntimeException(e);
         }
         dao.doDelete(user.getId());
+        verify(session).setAttribute("messaggio","Update scolaresca avvenuto con successo");
     }
 
     /** Operazione di riferimento nel Test Plan: Modifica Profilo Organizzatore
@@ -129,18 +139,20 @@ public class AreaUtentecontrollerTest {
     @Test
     public void updateOrganizzatoreTest(){
         OrganizzatoreBean user = new OrganizzatoreBean(GENDER,IBAN,NOME,COGNOME,EMAIL,PASSWORD,BIOGRAFIA,DATADINASCITA,false);
+        dao = new OrganizzatoreDAOImpl();
+        dao.doSave(user);
+
+        when(session.getAttribute("selezionato")).thenReturn(user);
         when(mockedRequest.getParameter("password")).thenReturn(PASSWORD);
         when(mockedRequest.getParameter("passwordConferma")).thenReturn(PASSWORD);
         when(mockedRequest.getParameter("email")).thenReturn(EMAIL);
         when(mockedRequest.getParameter("nome")).thenReturn(NOME);
         when(mockedRequest.getParameter("cognome")).thenReturn(COGNOME);
-        when(mockedRequest.getParameter("dataDiNascita")).thenReturn(String.valueOf(DATADINASCITA));
-        when(mockedRequest.getParameter("gender")).thenReturn(String.valueOf(GENDER));
+        when(mockedRequest.getParameter("dataDiNascita")).thenReturn(df.format(DATADINASCITA));
+        when(mockedRequest.getParameter("gender")).thenReturn(GENDER+"");
         when(mockedRequest.getParameter("iban")).thenReturn(IBAN);
         when(mockedRequest.getParameter("biografia")).thenReturn(BIOGRAFIA);
 
-        dao = new OrganizzatoreDAOImpl();
-        dao.doSave(user);
         try {
             servlet.doPost(mockedRequest,mockedResponse);
         } catch (ServletException e) {
@@ -149,6 +161,7 @@ public class AreaUtentecontrollerTest {
             throw new RuntimeException(e);
         }
         dao.doDelete(user.getId());
+        verify(session).setAttribute("messaggio","Update organizzatore avvenuto con successo");
     }
 
     /** Operazione di riferimento nel Test Plan: Modifica Profilo Amministratore
@@ -157,14 +170,16 @@ public class AreaUtentecontrollerTest {
     @Test
     public void updateAmministratoreTest(){
         AmministratoreBean user = new AmministratoreBean(NOME,COGNOME,EMAIL,PASSWORD,false);
+        dao = new AmministratoreDAOImpl();
+        dao.doSave(user);
+
+        when(session.getAttribute("selezionato")).thenReturn(user);
         when(mockedRequest.getParameter("password")).thenReturn(PASSWORD);
         when(mockedRequest.getParameter("passwordConferma")).thenReturn(PASSWORD);
         when(mockedRequest.getParameter("email")).thenReturn(EMAIL);
         when(mockedRequest.getParameter("nome")).thenReturn(NOME);
         when(mockedRequest.getParameter("cognome")).thenReturn(COGNOME);
 
-        dao = new AmministratoreDAOImpl();
-        dao.doSave(user);
         try {
             servlet.doPost(mockedRequest,mockedResponse);
         } catch (ServletException e) {
@@ -173,6 +188,7 @@ public class AreaUtentecontrollerTest {
             throw new RuntimeException(e);
         }
         dao.doDelete(user.getId());
+        verify(session).setAttribute("messaggio","Update amministratore avvenuto con successo");
     }
 
     /**

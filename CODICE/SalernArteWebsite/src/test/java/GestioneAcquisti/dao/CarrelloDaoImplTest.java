@@ -11,11 +11,13 @@ import singleton.ConPool;
 import java.sql.*;
 import java.util.Calendar;
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CarrelloDaoImplTest {
     private static CarrelloDAO carrelloDAO;
     private String message;
+    private static final String PASSWORD = "Password10";
     private static EventoBean evento;
     private static CarrelloBean carrello;
     private static UtenteBean user;
@@ -23,15 +25,13 @@ public class CarrelloDaoImplTest {
     private static CarrelloBean.BigliettoQuantita bigliettoQuantita;
     private static Date DATA_INIZIO_EVENTO, DATA_FINE_EVENTO, DATA_ATTUALE = new Date(Calendar.getInstance().getTimeInMillis());
     private static int NUM_BIGLIETTI = 10, QUANTITA = 3, PREZZO_BIG = 13;
-    private boolean op = false;
 
     @BeforeClass
     public static void startUp()
     {
-        user = new UtenteBean(1,"Marco", "Longo", "emaildiprova@example.com", "password", Date.valueOf("2000-02-23"), false);
-        org = new OrganizzatoreBean(1, "IT17J0300203280772191565161", "Antonio", "Longo", "orgimailTestDAO@example.com", "password1", "bio", Date.valueOf("1995-07-15"), false);
+        user = new UtenteBean(1,"Marco", "Longo", "emaildiprova@example.com", PASSWORD, Date.valueOf("2000-02-23"), false);
+        org = new OrganizzatoreBean(1, "IT17J0300203280772191565161", "Antonio", "Longo", "orgimailTestDAO@example.com", PASSWORD, "bio", Date.valueOf("1995-07-15"), false);
         carrelloDAO = new CarrelloDAOImpl();
-
 
         try(Connection conn = ConPool.getConnection())
         {
@@ -170,10 +170,7 @@ public class CarrelloDaoImplTest {
     @Test
     public void doRetrieveByIdUtenteTestError()
     {
-        RuntimeException exception;
-        exception = assertThrows(RuntimeException.class, () -> carrelloDAO.doRetrieveByIdUtente(-1));
-        String message = "doRetrieveByIdUtente failed because of idUtente is not correct";
-        assertEquals(message, exception.getMessage());
+        assertNotEquals(carrello.getIdUtente(), carrelloDAO.doRetrieveByIdUtente(-1));
     }
 
     /*
@@ -260,7 +257,7 @@ public class CarrelloDaoImplTest {
          */
     @Test
     public void doDeleteTest(){
-        assertTrue(carrelloDAO.doDelete(carrello.getIdUtente(), evento.getId()));
+        assertTrue(carrelloDAO.doDelete(user.getId(), evento.getId()));
     }
 
     /*

@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @WebServlet(name = "GestioneAcquistiController",urlPatterns = "/gestione-acquisti")
 public class GestioneAcquistiController extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request,response);
     }
 
@@ -24,6 +24,7 @@ public class GestioneAcquistiController extends HttpServlet {
         HttpSession session = request.getSession();
         UtenteRegistratoBean utente= (UtenteRegistratoBean) session.getAttribute("selezionato");
         CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
+        session.removeAttribute("messaggio");
 
         if(request.getParameter("goToCarrello")!=null){
             boolean alertCarrello=false; //in teoria gestito, testare
@@ -60,7 +61,7 @@ public class GestioneAcquistiController extends HttpServlet {
             int idE= Integer.parseInt(request.getParameter("idE"));
             service.removeEventoFromCarrello(idE,carrello,utente);
             session.setAttribute("carrello", carrello);
-
+            session.setAttribute("messaggio", "Rimozione evento dal carrello avvenuta con successo");
             String address="WEB-INF/gestioneAcquisti/Carrello.jsp";
             callDispatcher(request,response,address);
         }
@@ -82,7 +83,7 @@ public class GestioneAcquistiController extends HttpServlet {
             //session.setAttribute("notificaAll", "Acquisto completato");
             session.setAttribute("carrello", new CarrelloBean(utente.getId()));
             //se utente fosse null non si sarebbe potuto fare l'acquisto
-
+            session.setAttribute("messaggio", "Acquisto avvenuto con successo");
             String address="WEB-INF/gestioneAcquisti/Acquistato.jsp";
             callDispatcher(request,response,address);
         }

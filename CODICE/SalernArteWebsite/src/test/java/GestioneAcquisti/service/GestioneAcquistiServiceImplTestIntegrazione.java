@@ -18,6 +18,7 @@ public class GestioneAcquistiServiceImplTestIntegrazione {
     private static GestioneAcquistiService serviceA;
     private static CarrelloDAO carrelloDAO;
     private static BigliettoDAO bigliettoDAO;
+    private static AcquistoDAO acquistoDAO;
     private static EventoDAO eventoDAO;
     private static UtenteRegistratoDAO dao;
     private static Date DATA_INIZIO_EVENTO;
@@ -36,7 +37,8 @@ public class GestioneAcquistiServiceImplTestIntegrazione {
         carrelloDAO = new CarrelloDAOImpl();
         bigliettoDAO = new BigliettoDAOImpl();
         eventoDAO = new EventoDAOImpl();
-        serviceA = new GestioneAcquistiServiceImpl(carrelloDAO,eventoDAO,bigliettoDAO);
+        acquistoDAO = new AcquistoDAOImpl();
+        serviceA = new GestioneAcquistiServiceImpl();
 
         Calendar c= Calendar.getInstance();
         c.setTime(DATA_ATTUALE);
@@ -124,6 +126,7 @@ public class GestioneAcquistiServiceImplTestIntegrazione {
     {
         assertTrue(serviceA.acquistaProdotti(carrelloBean, user));
     }
+
 
     @AfterClass
     public static void cleanUp()

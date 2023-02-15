@@ -10,8 +10,7 @@ import java.util.List;
 public class AcquistoDAOImpl implements AcquistoDAO {
     @Override
     public List<AcquistoBean> doRetrieveListaAcquistiByIdUtente(int idUtente) {
-        if(idUtente < 0)
-            throw new RuntimeException("Retrieve error because of idUser is not valid");
+
         try(Connection conn= ConPool.getConnection()){
             List<AcquistoBean> acquisti= new ArrayList<>();
             PreparedStatement ps=conn.prepareStatement("SELECT * FROM Acquisto WHERE idUtente=?");
@@ -63,8 +62,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
 
     @Override
     public boolean doSave(AcquistoBean acquisto) {
-        if(acquisto.getIdUtente() < 0)
-            throw new RuntimeException("Insert error because of idUser is not valid");
+
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("INSERT INTO Acquisto(data,totale,idUtente) VALUES(?,?,?)",
                     Statement.RETURN_GENERATED_KEYS);
@@ -83,7 +81,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
             rs.close();
             return true;
         }catch(SQLException e){
-            throw new RuntimeException(e);
+            throw new RuntimeException("INSERT error");
         }
     }
 

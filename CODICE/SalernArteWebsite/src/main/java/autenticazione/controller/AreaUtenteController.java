@@ -23,6 +23,7 @@ public class AreaUtenteController extends HttpServlet {
         HttpSession session = request.getSession();
         AutenticazioneService service=new AutenticazioneServiceImpl();
         UtenteRegistratoBean utenteLoggato= (UtenteRegistratoBean) session.getAttribute("selezionato");
+        session.removeAttribute("messaggio");
 
         if(request.getParameter("goToListaAcquisti") != null){
             int idUtente;
@@ -73,19 +74,22 @@ public class AreaUtenteController extends HttpServlet {
                 int gender= Integer.parseInt(request.getParameter("gender"));
 
                 utenteAggiornato=service.updateUtente(utenteLoggato,email,password,nome,cognome,dataDiNascita,gender);
-
+                session.setAttribute("messaggio", "Update utente avvenuto con successo");
             }else
                 if(tipo.compareToIgnoreCase("organizzatore") == 0){
                     Date dataDiNascita= Date.valueOf(request.getParameter("dataDiNascita"));
                     int gender= Integer.parseInt(request.getParameter("gender"));
 
                     utenteAggiornato=service.updateOrganizzatore(utenteLoggato,email,password,nome,cognome,dataDiNascita,gender,biografia,iban);
+                    session.setAttribute("messaggio", "Update organizzatore avvenuto con successo");
                 }
                 else if(tipo.compareToIgnoreCase("scolaresca") == 0) {
                     utenteAggiornato=service.updateScolaresca(utenteLoggato,email,password,istituto);
+                    session.setAttribute("messaggio", "Update scolaresca avvenuto con successo");
                 }
                 else{
                     utenteAggiornato=service.updateAmministratore(utenteLoggato,email,password,nome,cognome);
+                    session.setAttribute("messaggio", "Update amministratore avvenuto con successo");
                 }
             session.setAttribute("selezionato",utenteAggiornato);
             String address = "/WEB-INF/gestioneUtente/ProfiloUtente.jsp";

@@ -16,8 +16,6 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
 
     @Override
     public CarrelloBean doRetrieveByIdUtente(int idUtente) {
-        if(idUtente < 0)
-            throw new RuntimeException("doRetrieveByIdUtente failed because of idUtente is not correct");
         try(Connection conn= ConPool.getConnection()){
             CarrelloBean carrello= new CarrelloBean(idUtente);
             PreparedStatement ps= conn.prepareStatement("SELECT * FROM Evento as e JOIN Carrello as c on e.id=c.idevento WHERE c.idUtente=?");
