@@ -299,7 +299,7 @@ public class GestioneEventiServiceImplTest {
     @Test
     public void TC_2p1_14(){
         //forniamo i dati dell'evento
-        assertTrue(serviceE.richiediInserimentoEvento(organizzatore.getId(),NOME_EVENTO,TIPO_EVENTO,DESCRIZIONE_EVENTO,PATHCONTEXT,FILE_PHOTO,NUM_BIGLIETTI,PREZZO_BIGLIETTO,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,INDIRIZZO,SEDE));
+        assertTrue(serviceE.richiediInserimentoEvento(organizzatore.getId(),NOME_EVENTO,TIPO_EVENTO,DESCRIZIONE_EVENTO,pathReal + "fotoSample.jpg",FILE_PHOTO,NUM_BIGLIETTI,PREZZO_BIGLIETTO,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,INDIRIZZO,SEDE));
     }
 
     /** Operazione di riferimento nel Test Plan: Richiesta Modifica Evento
@@ -487,7 +487,7 @@ public class GestioneEventiServiceImplTest {
     @Test
     public void TC_2p2_13(){
         //forniamo i dati dell'evento
-        assertTrue(serviceE.richiediModificaEvento(1,organizzatore,NOME_EVENTO,TIPO_EVENTO,DESCRIZIONE_EVENTO,PATHCONTEXT,FILE_PHOTO,NUM_BIGLIETTI,PREZZO_BIGLIETTO,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,INDIRIZZO,SEDE));
+        assertTrue(serviceE.richiediModificaEvento(1,organizzatore,NOME_EVENTO,TIPO_EVENTO,DESCRIZIONE_EVENTO,pathReal + "fotoSample.jpg",FILE_PHOTO,NUM_BIGLIETTI,PREZZO_BIGLIETTO,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,INDIRIZZO,SEDE));
     }
 
     /** Operazione di riferimento nel Test Plan: Ricerca Evento

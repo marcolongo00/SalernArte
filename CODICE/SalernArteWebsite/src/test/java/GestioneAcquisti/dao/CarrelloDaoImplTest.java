@@ -161,7 +161,7 @@ public class CarrelloDaoImplTest {
             carrelloDAO.doSave(user.getId(), bigliettoQuantita);
     }
 
-
+ 
     /*
     Metodo: doRetrieveByIdUtente(...)
     Classe: CarrelloDAOImpl
