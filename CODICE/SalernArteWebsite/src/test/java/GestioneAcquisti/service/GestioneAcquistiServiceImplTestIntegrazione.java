@@ -7,9 +7,7 @@ import model.entity.CarrelloBean;
 import model.entity.EventoBean;
 import model.entity.OrganizzatoreBean;
 import model.entity.UtenteBean;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import singleton.ConPool;
 import java.sql.*;
 import java.util.Calendar;
@@ -21,6 +19,7 @@ public class GestioneAcquistiServiceImplTestIntegrazione {
     private static CarrelloDAO carrelloDAO;
     private static BigliettoDAO bigliettoDAO;
     private static EventoDAO eventoDAO;
+    private static UtenteRegistratoDAO dao;
     private static Date DATA_INIZIO_EVENTO;
     private static Date DATA_FINE_EVENTO;
     private static UtenteBean user;
@@ -49,64 +48,29 @@ public class GestioneAcquistiServiceImplTestIntegrazione {
         user = new UtenteBean(1, "Marco", "Longo", "emailtest@gmail.com", "passTest", Date.valueOf("1978-08-10"), false);
         org = new OrganizzatoreBean(1, "IT17J0300203280772191565161", "Antonio", "Longo", "orgimailTestDAO@example.com", "password1", "bio", Date.valueOf("1995-07-15"), false);
 
+        dao = new UtenteDAOImpl();
+        dao.doSave(user);
+        dao = new OrganizzatoreDAOImpl();
+        dao.doSave(org);
 
-        try(Connection con = ConPool.getConnection())
-        {
-            PreparedStatement ps1 = con.prepareStatement("INSERT INTO UtenteRegistrato(email,passwordHash,tipoUtente)VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            ps1.setString(1,org.getEmail());
-            ps1.setString(2,org.getPasswordHash());
-            ps1.setString(3,"organizzatore");
-
-            if(ps1.executeUpdate() !=1)
-                throw new RuntimeException("INSERT Utente ORG error.");
-
-            ResultSet rs=ps1.getGeneratedKeys();
-            rs.next();
-            org.setId(rs.getInt(1));
-
-            PreparedStatement ps2=con.prepareStatement("INSERT INTO Organizzatore(id,nome,cognome,biografia,dataDiNascita,sesso,iban) VALUES(?,?,?,?,?,?,?)");
-            ps2.setInt(1,org.getId());
-            ps2.setString(2,org.getNome());
-            ps2.setString(3,org.getCognome());
-            ps2.setString(4,org.getBiografia());
-            ps2.setDate(5,org.getDataDiNascita());
-            ps2.setInt(6,org.getSesso());
-            ps2.setString(7,org.getIban());
-
-            if(ps2.executeUpdate()!= 1)
-                throw new RuntimeException("INSERT Organizzatore error");
-
-            PreparedStatement ps3 = con.prepareStatement("INSERT INTO UtenteRegistrato(email,passwordHash,tipoUtente)VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            ps3.setString(1,user.getEmail());
-            ps3.setString(2,user.getPasswordHash());
-            ps3.setString(3,"utente");
-
-            if(ps3.executeUpdate() !=1)
-                throw new RuntimeException("INSERT UtenteReg error.");
-
-            ResultSet rs2=ps3.getGeneratedKeys();
-            rs2.next();
-            user.setId(rs2.getInt(1));
-
-            PreparedStatement ps4 = con.prepareStatement("INSERT INTO Utente(id,nome,cognome,dataDiNascita,sesso) VALUES (?,?,?,?,?)");
-            ps4.setInt(1,user.getId());
-            ps4.setString(2,user.getNome());
-            ps4.setString(3,user.getCognome());
-            ps4.setDate(4,user.getDataDiNascita());
-            ps4.setInt(5,user.getSesso());
-
-            if(ps4.executeUpdate()!= 1)
-                throw new RuntimeException("INSERT Utente error");
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
         evento= new EventoBean(org.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome vecchio","./immaginiEventi/photo_2022-06-11_16-53-57.jpg","descrizione vecchia", "indirizzo vecchio","sede vecchia",5,false);
         eventoDAO.doSave(evento);
-
+        eventoDAO.doUpdateAttivazioneEvento(evento.getId(), true);
+        evento.setAttivo(true);
         carrelloBean = new CarrelloBean(user.getId());
         carrelloBean.put(evento,QUANTITA,PREZZO_BIG);
         carrelloDAO.doSave(user.getId(), carrelloBean.get(evento.getId()));
+    }
+
+    @Before
+    public void check()
+    {
+        CarrelloBean.BigliettoQuantita big = carrelloBean.get(evento.getId());
+        if(big == null)
+            carrelloBean.put(evento,QUANTITA,PREZZO_BIG);
+        CarrelloBean bean = carrelloDAO.doRetrieveByIdUtente(user.getId());
+        if(!(bean.contains(carrelloBean.get(evento.getId()))))
+            carrelloDAO.doSave(user.getId(), carrelloBean.get(evento.getId()));
     }
 
     /* Operazione di riferimento nel Test Plan: Aggiungi al Carrello
@@ -130,6 +94,37 @@ public class GestioneAcquistiServiceImplTestIntegrazione {
         assertTrue(serviceA.updateQuantitaCarrello(evento.getId(),QUANTITA,carrelloBean,user));
     }
 
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Corretto
+     * Metodo della classe service di riferimento: CarrelloBean controlloElementiCarrello(...)
+     * */
+    @Test
+    public void controlloElementiCarrelloIntegrazione()
+    {
+        assertFalse(serviceA.controlloElementiCarrello(carrelloBean, user));
+    }
+
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Corretto
+     * Metodo della classe service di riferimento: CarrelloBean removeEventoFromCarrello(...)
+     * */
+    @Test
+    public void removeEventoFromCarrelloIntegrazione()
+    {
+        assertTrue(serviceA.removeEventoFromCarrello(evento.getId(), carrelloBean, user));
+
+    }
+
+    /* Operazione di riferimento nel Test Plan:
+     * Caso: Corretto
+     * Metodo della classe service di riferimento: CarrelloBean acquistaProdotti(...)
+    * */
+    @Test
+    public void acquistaProdottiIntegrazione()
+    {
+        assertTrue(serviceA.acquistaProdotti(carrelloBean, user));
+    }
+
     @AfterClass
     public static void cleanUp()
     {
@@ -138,22 +133,11 @@ public class GestioneAcquistiServiceImplTestIntegrazione {
         bigliettoDAO = null;
         carrelloDAO = null;
 
-        try(Connection con = ConPool.getConnection())
-        {
-            PreparedStatement ps = con.prepareStatement("DELETE FROM UtenteRegistrato WHERE id=?");
-            ps.setInt(1,user.getId());
-
-            if(ps.executeUpdate() != 1)
-                throw new RuntimeException("DELETE USER FAILED");
-            PreparedStatement ps1 = con.prepareStatement("DELETE FROM UtenteRegistrato WHERE id = ?");
-            ps1.setInt(1,org.getId());
-
-            if(ps1.executeUpdate() != 1)
-                throw new RuntimeException("DELETE ORG FAILED");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        dao = new UtenteDAOImpl();
+        if(!(dao.doDelete(user.getId())))
+            throw new RuntimeException("DELETE USER FAILED");
+        dao = new OrganizzatoreDAOImpl();
+        if(!(dao.doDelete(org.getId())))
+            throw new RuntimeException("DELETE ORG FAILED");
     }
-
-
 }

@@ -53,8 +53,6 @@ public class CarrelloDAOImpl implements  CarrelloDAO{
 
     @Override
     public boolean doSave(int idUtente, BigliettoQuantita carr) {
-        /*if(idUtente < 0 || carr.getProdotto().getId() < 0)
-            throw new RuntimeException("Error because of idUtente or idEvento is not valid");*/
         try(Connection conn=ConPool.getConnection()){
             PreparedStatement ps=conn.prepareStatement("INSERT INTO Carrello(idUtente,idEvento,quantita) VALUES(?,?,?)");
             ps.setInt(1,idUtente);

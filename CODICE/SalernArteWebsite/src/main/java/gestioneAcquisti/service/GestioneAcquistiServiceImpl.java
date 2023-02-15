@@ -84,7 +84,7 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
     }
 
     @Override
-    public void removeEventoFromCarrello(int idE, CarrelloBean carrello, UtenteRegistratoBean utente) {
+    public boolean removeEventoFromCarrello(int idE, CarrelloBean carrello, UtenteRegistratoBean utente) {
         // controllo che l'id sia corretto e che nel carrello sia presente il prodotto
         if(idE<= 0 || eventoDao.doRetrieveById(idE)==null || carrello.get(idE)==null)
             throw new RuntimeException("qualcosa è andato storto riprovare");
@@ -92,6 +92,7 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         if(utente!=null)
             daoCarr.doDelete(utente.getId(),idE);
         carrello.remove(idE);
+        return true;
     }
 
     @Override
@@ -151,7 +152,7 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
     }
 
     @Override
-    public void acquistaProdotti(CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
+    public boolean acquistaProdotti(CarrelloBean carrelloSessione, UtenteRegistratoBean utente) {
         //controlla se i prodotti esistono ancora al momento dell'acquisto o se sono scaduti
         //fai con carrello nella sessione così puoi controllare se al momento
         // dell'acquisto ci sono prodotti già venduti
@@ -197,7 +198,7 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
 
         acquistoDAO.setProdotti(acquisto.getNumOrdine(),prodotti);
         daoCarr.svuotaCarrello(utente.getId());
-
+        return true;
     }
 
     private void checkAutorizzazioniUtente(UtenteRegistratoBean utente){

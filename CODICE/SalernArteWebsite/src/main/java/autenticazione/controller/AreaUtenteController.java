@@ -16,7 +16,7 @@ import java.util.List;
 
 @WebServlet(name = "AreaUtenteController",urlPatterns = "/area-utente")
 public class AreaUtenteController extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request,response);
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
