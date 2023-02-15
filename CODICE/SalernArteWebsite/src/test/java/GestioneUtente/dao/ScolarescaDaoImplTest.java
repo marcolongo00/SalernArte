@@ -4,10 +4,12 @@ import model.dao.ScolarescaDAOImpl;
 import model.dao.UtenteRegistratoDAO;
 import model.entity.AmministratoreBean;
 import model.entity.ScolarescaBean;
+import model.entity.UtenteRegistratoBean;
 import org.junit.*;
 import singleton.ConPool;
 
 import java.sql.*;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -54,8 +56,8 @@ public class ScolarescaDaoImplTest {
      */
     @Test
     public void doRetrieveAllTest()
-    {
-        assertNotNull(dao.doRetrieveAll());
+    { List<UtenteRegistratoBean> result=dao.doRetrieveAll();
+        assertFalse(result.isEmpty());
     }
 
 

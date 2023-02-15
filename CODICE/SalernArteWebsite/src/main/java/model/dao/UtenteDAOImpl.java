@@ -134,7 +134,7 @@ public class UtenteDAOImpl extends UtenteRegistratoDAOImpl {//prova extends e no
             ps.setInt(7,utente.getId());
             if(ps.executeUpdate() <1)
             {
-                throw new RuntimeException("UPDATE UTENTE error.");
+                throw new RuntimeException("UPDATE Utente error.");
             }
             con.close();
             ps.close();

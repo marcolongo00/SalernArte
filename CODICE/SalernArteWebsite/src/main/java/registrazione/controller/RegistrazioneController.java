@@ -17,21 +17,17 @@ import java.sql.Date;
 
 @WebServlet(name = "RegistrazioneController",urlPatterns = "/registrazione-controller")
 public class RegistrazioneController extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         RegistrazioneService serviceA= new RegistrazioneServiceimpl();
-        /*
-        if(request.getParameter("goToRegistrazione")!=null){ //sposta in registrazione service
-            String address="WEB-INF/autenticazione/registrazione.jsp";
-            RequestDispatcher dispatcher=request.getRequestDispatcher(address);
-            dispatcher.forward(request,response);
-        }
-         */
         if(request.getParameter("registrazione")!= null){ //controllo sui dati e su password conferma
 
             String password=request.getParameter("password");
             String passConferma=request.getParameter("passwordConferma");
-            if(password.compareTo(passConferma)!=0){
+            if(!passConferma.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )){
+                throw new RuntimeException("La password conferma non rispetta il formato");
+            }
+            if( password.compareTo(passConferma)!=0){
                 throw new RuntimeException("Le due password inserite non corrispondono, riprovare");
             }
             //tutti altri controlli
@@ -42,36 +38,50 @@ public class RegistrazioneController extends HttpServlet {
                 if(tipoUtente.compareToIgnoreCase("utente")==0){
                     String nome=request.getParameter("nome");
                     String cognome=request.getParameter("cognome");
-                    Date datadiNascita=Date.valueOf(request.getParameter("dataDiNascita"));
+                    Date datadiNascita;
+                    try{
+                        datadiNascita=Date.valueOf(request.getParameter("dataDiNascita"));
+                    }catch (IllegalArgumentException e){
+                        throw new RuntimeException("la Data di Nascita non rispetta il formato");
+                    }
                     int gender= Integer.parseInt(request.getParameter("gender"));
                     utenteResult=serviceA.registrazioneUtente(gender,nome,cognome,email,password,datadiNascita);
                     CarrelloBean carrelloSessione= (CarrelloBean) session.getAttribute("carrello");
                     serviceA.salvaCarrelloSessione(utenteResult,carrelloSessione);
+                    request.setAttribute("messaggio","registrazione utente andata a buon fine");
                 }else
                 if(tipoUtente.compareToIgnoreCase("scolaresca")==0){
                     String istituto=request.getParameter("istituto");
                     utenteResult= serviceA.registrazioneScolaresca(email,password,istituto);
                     CarrelloBean carrelloSessione= (CarrelloBean) session.getAttribute("carrello");
                     serviceA.salvaCarrelloSessione(utenteResult,carrelloSessione);
-                    serviceA.applicaScontoScuola(carrelloSessione);
-                    session.setAttribute("carrello",carrelloSessione);
+                    if(carrelloSessione!=null){
+                        serviceA.applicaScontoScuola(carrelloSessione);
+                        session.setAttribute("carrello",carrelloSessione);
+                    }
+                    request.setAttribute("messaggio","registrazione scolaresca andata a buon fine");
                 }
                 else
                 if(tipoUtente.compareToIgnoreCase("organizzatore")==0){
                     String nome=request.getParameter("nome");
                     String cognome=request.getParameter("cognome");
-                    Date datadiNascita=Date.valueOf(request.getParameter("dataDiNascita"));
+                    Date datadiNascita;
+                    try{
+                        datadiNascita=Date.valueOf(request.getParameter("dataDiNascita"));
+                    }catch (IllegalArgumentException e){
+                        throw new RuntimeException("la Data di Nascita non rispetta il formato");
+                    }
                     int gender= Integer.parseInt(request.getParameter("gender"));
                     String biografia=request.getParameter("biografia");
-                    String azienda=request.getParameter("azienda");
                     String iban=request.getParameter("iban");
-                    utenteResult=serviceA.registrazioneOrganizzatore(gender,iban,nome,cognome,email,password,biografia,azienda,datadiNascita);
+                    utenteResult=serviceA.registrazioneOrganizzatore(gender,iban,nome,cognome,email,password,biografia,datadiNascita);
                     session.removeAttribute("carrello");
-
+                    request.setAttribute("messaggio","registrazione organizzatore andata a buon fine");
                 }else{ //admin?????
                     //errore
                 }
                 session.setAttribute("selezionato",utenteResult);
+
                 callReferer(request,response);
 
         }

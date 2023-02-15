@@ -3,11 +3,9 @@ package GestioneUtente.dao;
 
 import model.dao.OrganizzatoreDAOImpl;
 import model.dao.UtenteRegistratoDAO;
-import model.entity.AmministratoreBean;
 import model.entity.OrganizzatoreBean;
 
 import model.entity.UtenteRegistratoBean;
-import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,7 +30,7 @@ public class OrganizzatoreDaoImplTest {
     public static void startUp(){
         daoOrg =new OrganizzatoreDAOImpl();
         passwordNotHash="plutoOrganizzatore";
-        utente=new OrganizzatoreBean(1, "IT56W0300203280959939195461", "Lucia", "Martino", "luciamartino@gmail.com", passwordNotHash, "Ciao sono un organizzatore", new Date(1998, 10,10), false);
+        utente=new OrganizzatoreBean(1, "IT56W0300203280959939195461", "Lucia", "Martino", "luciamartino@gmail.com", passwordNotHash, "Ciao sono un organizzatore",Date.valueOf("1998-10-10"), false);
 
         try(Connection con= ConPool.getConnection()){
             PreparedStatement ps=con.prepareStatement("insert into UtenteRegistrato(email,passwordHash,tipoUtente)VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -48,10 +46,14 @@ public class OrganizzatoreDaoImplTest {
             rs.next();
             int id=rs.getInt(1);
             utente.setId(id);
-            PreparedStatement ps2=con.prepareStatement("INSERT INTO Organizzatore (id,nome,cognome) VALUES(?,?,?)");
+            PreparedStatement ps2=con.prepareStatement("INSERT INTO Organizzatore (id,nome,cognome,biografia,dataDiNascita,sesso,iban) VALUES(?,?,?,?,?,?,?)");
             ps2.setInt(1,utente.getId());
             ps2.setString(2,utente.getNome());
             ps2.setString(3,utente.getCognome());
+            ps2.setString(4,utente.getBiografia());
+            ps2.setDate(5,utente.getDataDiNascita());
+            ps2.setInt(6,utente.getSesso());
+            ps2.setString(7,utente.getIban());
             if(ps2.executeUpdate() !=1)
             {
                 throw new RuntimeException("INSERT Organizzatore error.");
@@ -72,7 +74,10 @@ public class OrganizzatoreDaoImplTest {
     Caso: Corretto
      */
     @Test
-    public void doRetrieveAllTest(){ assertNotNull(daoOrg.doRetrieveAll());}
+    public void doRetrieveAllTest(){
+        List<UtenteRegistratoBean> result=daoOrg.doRetrieveAll();
+        assertFalse(result.isEmpty());
+    }
 
     @Test
     /*
@@ -81,7 +86,7 @@ public class OrganizzatoreDaoImplTest {
     Caso: Corretto
      */
     public void doSaveTest(){
-        OrganizzatoreBean bean1 = new OrganizzatoreBean(1, "IT56W0300203280959939195461", "Lucia", "Martino", "luciamartino@gmail.com", passwordNotHash, "Ciao sono un organizzatore", new Date(1998, 10,10), false);
+        OrganizzatoreBean bean1 = new OrganizzatoreBean(1, "IT56W0300203280959939195461", "Lucia", "Martino", "luciamartino3@gmail.com", passwordNotHash, "Ciao sono un organizzatore",Date.valueOf("1998-10-10"), false);
         boolean result = daoOrg.doSave(bean1);
         daoOrg.doDelete(bean1.getId());
         assertTrue(result);
@@ -106,7 +111,7 @@ public class OrganizzatoreDaoImplTest {
      */
     @Test
     public void doRetrieveByEmailPassword(){
-        assertEquals(utente.getId(), daoOrg.doRetrieveByEmailPassword(utente.getEmail(), passwordNotHash));
+        assertEquals(utente.getId(), daoOrg.doRetrieveByEmailPassword(utente.getEmail(), passwordNotHash).getId());
     }
 
     /*
@@ -150,9 +155,11 @@ public class OrganizzatoreDaoImplTest {
     @Test
     public void doUpdateError()
     {
+        OrganizzatoreBean bean1 = new OrganizzatoreBean(-1,1, "IT56W0300203280959939195461", "Lucia", "Martino", "luciamartino3@gmail.com", passwordNotHash, "Ciao sono un organizzatore",Date.valueOf("1998-10-10"), false);
+
         RuntimeException exception;
-        exception = assertThrows(RuntimeException.class, ()-> daoOrg.doUpdate(utente));
-        String message = "UPDATE Scolaresca error.";
+        exception = assertThrows(RuntimeException.class, ()-> daoOrg.doUpdate(bean1));
+        String message = "UPDATE Organizzatore error.";
         assertEquals(message,exception.getMessage());
     }
     /*

@@ -19,8 +19,6 @@ import javax.servlet.http.HttpSession;
 public class GestioneUtenteControllerTest {
 
     public RegistrazioneController servlet;
-    public AreaUtenteController servlet;
-    public AutenticazioneController servlet;
 
     private HttpServletRequest mockedRequest;
     private HttpServletResponse mockedResponse;

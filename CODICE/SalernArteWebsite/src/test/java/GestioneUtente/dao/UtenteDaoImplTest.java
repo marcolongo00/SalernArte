@@ -4,6 +4,7 @@ import model.dao.UtenteDAOImpl;
 import model.dao.UtenteRegistratoDAO;
 import model.entity.UtenteBean;
 
+import model.entity.UtenteRegistratoBean;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class UtenteDaoImplTest {
     public static void startUp(){
         daoUsr =new UtenteDAOImpl();
         passwordNotHash="plutoUtente";
-        utente = new UtenteBean(0, "Lucia", "Martino","luciamartino@gmail.com", passwordNotHash, new Date(1996, 10, 16),false);
+        utente = new UtenteBean(0, "Lucia", "Martino","luciamartino@gmail.com", passwordNotHash, Date.valueOf("1996-12-05"),false);
 
         try(Connection con= ConPool.getConnection()){
             PreparedStatement ps=con.prepareStatement("insert into UtenteRegistrato(email,passwordHash,tipoUtente)VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -43,10 +44,12 @@ public class UtenteDaoImplTest {
             rs.next();
             int id=rs.getInt(1);
             utente.setId(id);
-            PreparedStatement ps2=con.prepareStatement("INSERT INTO Utente (id,nome,cognome) VALUES(?,?,?)");
+            PreparedStatement ps2=con.prepareStatement("insert into Utente(id,nome,cognome,dataDiNascita,sesso) values(?,?,?,?,?)");
             ps2.setInt(1,utente.getId());
             ps2.setString(2,utente.getNome());
             ps2.setString(3,utente.getCognome());
+            ps2.setDate(4,utente.getDataDiNascita());
+            ps2.setInt(5,utente.getSesso());
             if(ps2.executeUpdate() !=1)
             {
                 throw new RuntimeException("INSERT utente error.");
@@ -67,7 +70,10 @@ public class UtenteDaoImplTest {
     Caso: Corretto
      */
     @Test
-    public void doRetrieveAllTest(){ assertNotNull(daoUsr.doRetrieveAll());}
+    public void doRetrieveAllTest(){
+        List<UtenteRegistratoBean> result=daoUsr.doRetrieveAll();
+        assertFalse(result.isEmpty());
+    }
 
     @Test
     /*
@@ -76,7 +82,7 @@ public class UtenteDaoImplTest {
     Caso: Corretto
      */
     public void doSaveTest(){
-        UtenteBean bean1 = new UtenteBean(0, "Lucia", "Martino","luciamartino@gmail.com", passwordNotHash, new Date(1996, 10, 16),false);
+        UtenteBean bean1 = new UtenteBean(0, "Lucia", "Martino","luciamartino3@gmail.com", passwordNotHash, Date.valueOf("1998-10-15"),false);
         boolean result = daoUsr.doSave(bean1);
         daoUsr.doDelete(bean1.getId());
         assertTrue(result);
@@ -101,7 +107,7 @@ public class UtenteDaoImplTest {
      */
     @Test
     public void doRetrieveByEmailPassword(){
-        assertEquals(utente.getId(), daoUsr.doRetrieveByEmailPassword(utente.getEmail(), passwordNotHash));
+        assertEquals(utente.getId(), daoUsr.doRetrieveByEmailPassword(utente.getEmail(), passwordNotHash).getId());
     }
 
     /*
@@ -145,8 +151,10 @@ public class UtenteDaoImplTest {
     @Test
     public void doUpdateError()
     {
+        UtenteBean bean1 = new UtenteBean(-3, "Lucia", "Martino","luciamartino3@gmail.com", passwordNotHash, Date.valueOf("1998-10-15"),false);
+
         RuntimeException exception;
-        exception = assertThrows(RuntimeException.class, ()-> daoUsr.doUpdate(utente));
+        exception = assertThrows(RuntimeException.class, ()-> daoUsr.doUpdate(bean1));
         String message = "UPDATE Utente error.";
         assertEquals(message,exception.getMessage());
     }

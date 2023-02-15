@@ -168,7 +168,7 @@ public class OrganizzatoreDAOImpl extends UtenteRegistratoDAOImpl{
             ps.setInt(7,((OrganizzatoreBean)utente).getSesso());
             ps.setString(8,((OrganizzatoreBean)utente).getIban());
             ps.setInt(9,utente.getId());
-            if(ps.executeUpdate() !=1)
+            if(ps.executeUpdate() < 1)
             {
                 throw new RuntimeException("UPDATE Organizzatore error.");
             }

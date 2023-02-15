@@ -4,23 +4,34 @@ import model.dao.*;
 import model.entity.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Collection;
 
 public class RegistrazioneServiceimpl implements RegistrazioneService{
-    private UtenteRegistratoDAO daoU;
+    private OrganizzatoreDAOImpl daoOrg;
+    private UtenteDAOImpl daoUtente;
+    private ScolarescaDAOImpl daoScol;
 
     public RegistrazioneServiceimpl() {
+        daoOrg=new OrganizzatoreDAOImpl();
+        daoUtente= new UtenteDAOImpl();
+        daoScol= new ScolarescaDAOImpl();
+    }
+
+    public RegistrazioneServiceimpl(OrganizzatoreDAOImpl daoOrg, UtenteDAOImpl daoUtente, ScolarescaDAOImpl daoScol) {
+        this.daoOrg = daoOrg;
+        this.daoUtente = daoUtente;
+        this.daoScol = daoScol;
     }
 
     @Override
     public UtenteRegistratoBean registrazioneUtente(int gender, String nome, String cognome, String email, String passwordNoHash, Date dataDiNascita) {
         //controlli sui dati
-        daoU=new UtenteDAOImpl();
-        if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
+         if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
-        if (passwordNoHash==null || !passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$" )) {
+        if (passwordNoHash==null || !passwordNoHash.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )) {
             throw new RuntimeException("Password non valida.");
         }
         if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
@@ -33,42 +44,40 @@ public class RegistrazioneServiceimpl implements RegistrazioneService{
             throw new RuntimeException("Cognome non valido.");
         }
         Date dataAttuale = new Date(Calendar.getInstance().getTimeInMillis());
-        if (dataDiNascita.after(dataAttuale)) {
+        if (dataDiNascita.after(dataAttuale) || dataDiNascita.toLocalDate().isEqual(dataAttuale.toLocalDate())) {
             throw new RuntimeException("impostazioni data di nascita inserite non valide");
         }
         if (gender != 0 && gender != 1 && gender != 2) {
             throw new RuntimeException("dati per genere non corretti");
         }
         UtenteRegistratoBean result= new UtenteBean(gender,nome,cognome,email,passwordNoHash,dataDiNascita,false);
-        daoU.doSave(result);
+        daoUtente.doSave(result);
 
         return result;
     }
 
     @Override
     public UtenteRegistratoBean registrazioneScolaresca(String email, String passwordNoHash, String istituto) {
-        daoU=new ScolarescaDAOImpl();
         if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
-        if (passwordNoHash==null || !passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$" )) {
+        if (passwordNoHash==null || !passwordNoHash.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )) {
             throw new RuntimeException("Password non valida.");
         }
         if (istituto == null || istituto.isEmpty()  || !istituto.matches("^[ a-zA-Z\u00C0-\u00ff]{1,100}$")) {
             throw new RuntimeException("Istituto non valido.");
         }
         UtenteRegistratoBean result= new ScolarescaBean(email,passwordNoHash,istituto,false);
-        daoU.doSave(result);
+        daoScol.doSave(result);
         return result;
     }
 
     @Override
-    public UtenteRegistratoBean registrazioneOrganizzatore(int gender, String iban, String nome, String cognome, String email, String passwordNoHash, String biografia, String azienda, Date dataDiNascita) {
-        daoU=new OrganizzatoreDAOImpl();
+    public UtenteRegistratoBean registrazioneOrganizzatore(int gender, String iban, String nome, String cognome, String email, String passwordNoHash, String biografia, Date dataDiNascita) {
         if (email == null || !email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$")) {
             throw new RuntimeException("Email non valida.");
         }
-        if (passwordNoHash==null || !passwordNoHash.matches("^(?=.*[az])(?=.*[AZ])(?=.*\\d)[a-zA-Z\\d]{6,30}$" )) {
+        if (passwordNoHash==null || !passwordNoHash.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )) {
             throw new RuntimeException("Password non valida.");
         }
         if (nome == null || nome.isEmpty() || !nome.matches("^[ a-zA-Z\u00C0-\u00ff]{1,50}$")) {
@@ -81,7 +90,7 @@ public class RegistrazioneServiceimpl implements RegistrazioneService{
             throw new RuntimeException("Cognome non valido.");
         }
         Date dataAttuale = new Date(Calendar.getInstance().getTimeInMillis());
-        if (dataDiNascita.after(dataAttuale)) {
+        if (dataDiNascita.after(dataAttuale) || dataDiNascita.toLocalDate().isEqual(dataAttuale.toLocalDate())) {
             throw new RuntimeException("impostazioni data di nascita inserite non valide");
         }
         if (gender != 0 && gender != 1 && gender != 2) {
@@ -96,7 +105,7 @@ public class RegistrazioneServiceimpl implements RegistrazioneService{
             throw new RuntimeException("Iban non valido.");
         }
         UtenteRegistratoBean result= new OrganizzatoreBean(gender,iban,nome,cognome,email,passwordNoHash,biografia,dataDiNascita,false);
-        daoU.doSave(result);
+        daoOrg.doSave(result);
         return result;
     }
     public void salvaCarrelloSessione(UtenteRegistratoBean utenteRegistrato, CarrelloBean carrelloSessione){
