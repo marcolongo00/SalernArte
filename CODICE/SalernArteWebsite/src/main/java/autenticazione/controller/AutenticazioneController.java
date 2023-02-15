@@ -17,20 +17,14 @@ import java.io.IOException;
 @WebServlet(name = "AutenticazioneController",urlPatterns = "/autenticazione-controller")
 public class AutenticazioneController extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request,response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         AutenticazioneService serviceA= new AutenticazioneServiceImpl();
-        /*
-        if(request.getParameter("goToLogin")!=null){
-            //credo non venga mia usata. contorllare
-            String address="WEB-INF/autenticazione/login.jsp";
-            callDispatcher(request,response,address);
-        }
-         */
+        session.removeAttribute("messaggio");
 
         if(request.getParameter("Accedi")!=null){
             String email=request.getParameter("email");
@@ -40,7 +34,7 @@ public class AutenticazioneController extends HttpServlet {
             UtenteRegistratoBean utente=serviceA.loginUtente(email,password,tipoUtente);
             if(utente!=null){
                 CarrelloBean carrello= (CarrelloBean) session.getAttribute("carrello");
-                if(utente.getTipoUtente().compareTo("utente")!=0 && utente.getTipoUtente().compareTo("scolaresca")!=0 ) {
+                if(utente.getTipoUtente().compareToIgnoreCase("utente")!=0 && utente.getTipoUtente().compareToIgnoreCase("scolaresca")!=0 ) {
                     if(carrello!=null)
                         session.removeAttribute("carrello");
                 }else{
@@ -50,8 +44,22 @@ public class AutenticazioneController extends HttpServlet {
                     }
                     session.setAttribute("carrello",carrello);
                 }
+
+                if(utente.getTipoUtente().compareToIgnoreCase("utente")==0){
+                    session.setAttribute("messaggio","login utente andato a buon fine");
+
+                }else if(utente.getTipoUtente().compareToIgnoreCase("organizzatore")==0){
+                    session.setAttribute("messaggio","login organizzatore andato a buon fine");
+
+                }else if(utente.getTipoUtente().compareToIgnoreCase("scolaresca")==0){
+                    session.setAttribute("messaggio","login scolaresca andato a buon fine");
+
+                }else if(utente.getTipoUtente().compareToIgnoreCase("amministratore")==0){
+                    session.setAttribute("messaggio","login amministratore andato a buon fine");
+                }
+
             }else{
-                new RuntimeException("errore Login");
+                session.setAttribute("messaggio", "dati login inseriti errati, riprovare");
             }
 
             session.setAttribute("selezionato",utente);

@@ -36,17 +36,17 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
     @Override
     public UtenteRegistratoBean loginUtente(String email, String passwordNotHash, String tipoUtente) {
         //if null throw exception per tutti
-        if(tipoUtente.compareToIgnoreCase("utente")==0){
+        if(tipoUtente!=null && tipoUtente.compareToIgnoreCase("utente")==0){
             return daoUtente.doRetrieveByEmailPassword(email,passwordNotHash);
         }else
-        if(tipoUtente.compareToIgnoreCase("scolaresca")==0){
+        if(tipoUtente!=null && tipoUtente.compareToIgnoreCase("scolaresca")==0){
             return daoScol.doRetrieveByEmailPassword(email,passwordNotHash);
         }
         else
-        if(tipoUtente.compareToIgnoreCase("organizzatore")==0){
+        if(tipoUtente!=null && tipoUtente.compareToIgnoreCase("organizzatore")==0){
             return daoOrg.doRetrieveByEmailPassword(email,passwordNotHash);
         }else
-        if(tipoUtente.compareToIgnoreCase("amministratore")==0){
+        if(tipoUtente!=null && tipoUtente.compareToIgnoreCase("amministratore")==0){
             return daoAmm.doRetrieveByEmailPassword(email,passwordNotHash);
         }
         return null;

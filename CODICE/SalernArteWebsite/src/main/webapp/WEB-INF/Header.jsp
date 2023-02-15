@@ -23,6 +23,7 @@
 <body>
 <div class="container">
     <a class="header" href="index.html">SalernArte</a>
+    <div id="messaggioNotif">${sessionScope.messaggio}</div>
     <div class="items2">
         <!-- responsive menu column-->
         <div class="items2Responsive">

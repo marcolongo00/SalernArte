@@ -32,8 +32,6 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
             String tipoUtente=null;
             if(rs.next()){
                 tipoUtente=rs.getString(1);
-            }else{
-                throw new RuntimeException("Questa email non è associata a nessun account, ricarica e riprova");
             }
 
             con.close();
@@ -74,7 +72,7 @@ public abstract class UtenteRegistratoDAOImpl implements UtenteRegistratoDAO{ //
             PreparedStatement ps=con.prepareStatement("insert into UtenteRegistrato(email,passwordHash,tipoUtente)VALUES(?,?,?)",Statement.RETURN_GENERATED_KEYS);
             ps.setString(1,utente.getEmail());
             ps.setString(2,utente.getPasswordHash());
-            ps.setString(3,"utente");
+            ps.setString(3,utente.getTipoUtente());
 
             if(ps.executeUpdate() !=1)
             {
