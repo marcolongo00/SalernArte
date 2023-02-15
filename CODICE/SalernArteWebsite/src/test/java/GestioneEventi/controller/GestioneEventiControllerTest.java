@@ -1,9 +1,8 @@
 package GestioneEventi.controller;
 
 import gestioneEventi.controller.GestioneEventiController;
-import model.dao.EventoDAO;
-import model.dao.EventoDAOImpl;
-import model.dao.OrganizzatoreDAOImpl;
+import model.dao.*;
+import model.entity.AmministratoreBean;
 import model.entity.EventoBean;
 import model.entity.OrganizzatoreBean;
 import model.entity.UtenteRegistratoBean;
@@ -32,7 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Implementa il testing di Integrazione per la classe
@@ -70,10 +69,9 @@ public class GestioneEventiControllerTest {
     private static Date DATA_INIZIO_EVENTO;
     private static  Date DATA_FINE_EVENTO;
     private static Date DATA_ATTUALE;
-    private static final String PATHCONTEXT="C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\fotoSample.jpg"; //AAA
+    private static final String pathReal= ".\\src\\main\\webapp\\immaginiEventi\\";
     private static  String pathInEvento;
     private static HttpSession session;
-    private static final String NOME = "EventoTennis"; //etc
     private static DateFormat df;
     private static final ServletConfig servletConfig = Mockito.mock(ServletConfig.class);
     private static final  GestioneEventiController servlet = new GestioneEventiController();
@@ -111,10 +109,10 @@ public class GestioneEventiControllerTest {
         dataF=df.format(DATA_FINE_EVENTO);
         //creazione immagine che verrà passata nelle request
         BufferedImage bi= new BufferedImage(500,500,BufferedImage.TYPE_INT_RGB);
-        image= new File(PATHCONTEXT);
+        image=new File(pathReal+"fotoSample.jpg");
         try {
             ImageIO.write(bi,"jpg",image);
-            Path path= Paths.get(PATHCONTEXT);
+            Path path= Paths.get(pathReal+"fotoSample.jpg");
             FILE_PHOTO= new MockPart("fotoSample.jpg","fotoSample.jpg", Files.readAllBytes(path));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -149,7 +147,7 @@ public class GestioneEventiControllerTest {
             throw new RuntimeException(e);
         }
 
-        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn(pathReal);
         Mockito.when(mockedRequest.getParameter("desc")).thenReturn("descrizione evento");
         Mockito.when(mockedRequest.getParameter("indirizzo")).thenReturn("indirizzo evento");
         Mockito.when(mockedRequest.getParameter("sede")).thenReturn("sede evento");
@@ -190,7 +188,7 @@ public class GestioneEventiControllerTest {
             throw new RuntimeException(e);
         }
 
-        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn(pathReal);
         Mockito.when(mockedRequest.getParameter("desc")).thenReturn("descrizione evento");
         Mockito.when(mockedRequest.getParameter("indirizzo")).thenReturn("indirizzo evento");
         Mockito.when(mockedRequest.getParameter("sede")).thenReturn("sede evento");
@@ -227,7 +225,7 @@ public class GestioneEventiControllerTest {
         Mockito.when(mockedRequest.getParameter("titoloEvMod")).thenReturn("nomeEvento");
         Mockito.when(mockedRequest.getParameter("tipoEvMod")).thenReturn("teatro");
         Mockito.when(mockedRequest.getParameter("descrizioneMod")).thenReturn("descrizione evento");
-        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn(pathReal);
 
         try {
             Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(null);
@@ -280,7 +278,7 @@ public class GestioneEventiControllerTest {
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
-        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn(pathReal);
 
         Mockito.when(mockedRequest.getParameter("dataInizioEvMod")).thenReturn(dataI);
         Mockito.when(mockedRequest.getParameter("dataFineEvMod")).thenReturn("");
@@ -324,7 +322,7 @@ public class GestioneEventiControllerTest {
             throw new RuntimeException(e);
         }
 
-        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn(pathReal);
         Mockito.when(mockedRequest.getParameter("desc")).thenReturn("descrizione evento");
         Mockito.when(mockedRequest.getParameter("indirizzo")).thenReturn("indirizzo evento");
         Mockito.when(mockedRequest.getParameter("sede")).thenReturn("sede evento");
@@ -371,7 +369,7 @@ public class GestioneEventiControllerTest {
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
-        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn("C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\");
+        Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn(pathReal);
 
         Mockito.when(mockedRequest.getParameter("dataInizioEvMod")).thenReturn(dataI);
         Mockito.when(mockedRequest.getParameter("dataFineEvMod")).thenReturn(dataF);
@@ -422,7 +420,208 @@ public class GestioneEventiControllerTest {
         //??
         Mockito.verify(mockedRequest).setAttribute("messaggio","esecuzione ricerca andata a buon fine");
     }
+    /** Operazione di riferimento nei Requisiti Funzionali: visualizza Evento
+     * Caso: Corretto
+     */
+    @Test
+    public void visualizzaEventoTestIntegrazione(){
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        EventoDAO daoEv= new EventoDAOImpl();
+        BigliettoDAO daoBigl= new BigliettoDAOImpl();
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        daoOrg.doSave(ut);
+        EventoBean bean= new EventoBean(ut.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome",pathReal+"fotoSample.jpg","descrizione","indirizzo","sede",3,true);
+        daoEv.doSave(bean);
+        daoEv.doUpdateAttivazioneEvento(bean.getId(), true);
+        for (int i=0; i<3;i++){
+            daoBigl.doSave(bean.getId(),5.5);
+        }
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(ut);
+        Mockito.when(mockedRequest.getParameter("detailsE")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("idE")).thenReturn(bean.getId()+"");
 
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        daoOrg.doDelete(ut.getId());
+        Mockito.when(mockedRequest.getParameter("detailsE")).thenReturn(null);
+        Mockito.verify(mockedRequest).setAttribute("prezzoBigl",5.5);
+    }
+    /** Operazione di riferimento nei Requisiti Funzionali: Admin accetta richiesta inserimento
+     * Caso: Corretto
+     */
+    @Test
+    public void accettaRichiestaInserimentoTestIntegrazione(){
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        AmministratoreDAOImpl daoAmm= new AmministratoreDAOImpl();
+        EventoDAO daoEv= new EventoDAOImpl();
+        BigliettoDAO daoBigl= new BigliettoDAOImpl();
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        daoOrg.doSave(ut);
+        EventoBean bean= new EventoBean(ut.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome",pathReal+"fotoSample.jpg","descrizione","indirizzo","sede",3,true);
+        daoEv.doSave(bean);
+        for (int i=0; i<3;i++){
+            daoBigl.doSave(bean.getId(),5.5);
+        }
+
+        AmministratoreBean beanAmm= new AmministratoreBean("nome","cognome","provaEmail@email.com","Password.1",false);
+        daoAmm.doSave(beanAmm);
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(beanAmm);
+        Mockito.when(mockedRequest.getParameter("accettaIns")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("idEvento")).thenReturn(bean.getId()+"");
+
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        daoOrg.doDelete(ut.getId());
+        daoAmm.doDelete(beanAmm.getId());
+        Mockito.when(mockedRequest.getParameter("accettaIns")).thenReturn(null);
+        Mockito.verify(session).setAttribute("messaggio","attivazione evento avvenuta con successo");
+
+    }
+    /** Operazione di riferimento nei Requisiti Funzionali: Admin rifiuta richiesta inserimento
+     * Caso: Corretto
+     */
+    @Test
+    public void rifiutaInserimentoTestIntegrazione(){
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        AmministratoreDAOImpl daoAmm= new AmministratoreDAOImpl();
+        EventoDAO daoEv= new EventoDAOImpl();
+        BigliettoDAO daoBigl= new BigliettoDAOImpl();
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        daoOrg.doSave(ut);
+
+        BufferedImage bi= new BufferedImage(500,500,BufferedImage.TYPE_INT_RGB);
+        image= new File(pathReal+"fotoSampleRimuovi.jpg");
+        try {
+            ImageIO.write(bi,"jpg",image);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        EventoBean bean= new EventoBean(ut.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome",pathReal+"fotoSampleRimuovi.jpg","descrizione","indirizzo","sede",3,true);
+        daoEv.doSave(bean);
+        for (int i=0; i<3;i++){
+            daoBigl.doSave(bean.getId(),5.5);
+        }
+
+        AmministratoreBean beanAmm= new AmministratoreBean("nome","cognome","provaEmail@email.com","Password.1",false);
+        daoAmm.doSave(beanAmm);
+
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(beanAmm);
+        Mockito.when(mockedRequest.getParameter("rifiutaIns")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("idEvento")).thenReturn(bean.getId()+"");
+
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        daoOrg.doDelete(ut.getId());
+        daoAmm.doDelete(beanAmm.getId());
+
+        Mockito.when(mockedRequest.getParameter("rifiutaIns")).thenReturn(null);
+        Mockito.verify(session).setAttribute("messaggio","rimozione evento avvenuta con successo");
+    }
+    /** Operazione di riferimento nei Requisiti Funzionali: Admin accetta richiesta modifica
+     * Caso: Corretto
+     */
+    @Test
+    public void accettaModificaTestIntegrazione(){
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        AmministratoreDAOImpl daoAmm= new AmministratoreDAOImpl();
+        EventoDAO daoEv= new EventoDAOImpl();
+        BigliettoDAO daoBigl= new BigliettoDAOImpl();
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        daoOrg.doSave(ut);
+        EventoBean bean=  new EventoBean(ut.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome",pathReal+"fotoSample.jpg","descrizione","indirizzo","sede",3,true);
+        daoEv.doSave(bean);
+        for (int i=0; i<3;i++){
+            daoBigl.doSave(bean.getId(),5.5);
+        }
+        daoEv.doUpdateAttivazioneEvento(bean.getId(), true);
+        int idPre= bean.getId();
+        bean.setDescrizione("nuova desc");
+        daoEv.doSave(bean);
+        daoEv.doSaveRichiestaModificaEv(idPre,bean.getId(),5.5);
+
+        AmministratoreBean beanAmm= new AmministratoreBean("nome","cognome","provaEmail@email.com","Password.1",false);
+        daoAmm.doSave(beanAmm);
+
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(beanAmm);
+        Mockito.when(mockedRequest.getParameter("accettaMod")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("idEvento")).thenReturn(bean.getId()+"");
+
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        daoOrg.doDelete(ut.getId());
+        daoAmm.doDelete(beanAmm.getId());
+
+        Mockito.when(mockedRequest.getParameter("accettaMod")).thenReturn(null);
+        Mockito.verify(session).setAttribute("messaggio","modifica evento accettata con successo");
+    }
+
+    /** Operazione di riferimento nei Requisiti Funzionali: Admin rifiuta richiesta modifica
+     * Caso: Corretto
+     * Metodo della classe service di riferimento:
+     *       boolean rifiutaModifica(int idEvento, String tipoUtente) )
+     */
+    @Test
+    public void rifiutaModificaTestIntegrazione(){
+        OrganizzatoreDAOImpl daoOrg= new OrganizzatoreDAOImpl();
+        AmministratoreDAOImpl daoAmm= new AmministratoreDAOImpl();
+        EventoDAO daoEv= new EventoDAOImpl();
+        BigliettoDAO daoBigl= new BigliettoDAOImpl();
+        UtenteRegistratoBean ut=new OrganizzatoreBean(2,"IT32A0300203280389688236277","pippo","cognome","pippoOrganizzatore@example.com","pippoPassword01","biografia",Date.valueOf("1995-03-03"),false);
+        daoOrg.doSave(ut);
+        EventoBean bean=  new EventoBean(ut.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,"nome",pathReal+"fotoSample.jpg","descrizione","indirizzo","sede",3,true);
+        daoEv.doSave(bean);
+        for (int i=0; i<3;i++){
+            daoBigl.doSave(bean.getId(),5.5);
+        }
+        daoEv.doUpdateAttivazioneEvento(bean.getId(), true);
+        int idPre= bean.getId();
+        bean.setDescrizione("nuova desc");
+        daoEv.doSave(bean);
+        daoEv.doSaveRichiestaModificaEv(idPre,bean.getId(),5.5);
+
+        AmministratoreBean beanAmm= new AmministratoreBean("nome","cognome","provaEmail@email.com","Password.1",false);
+        daoAmm.doSave(beanAmm);
+
+        Mockito.when(mockedRequest.getSession().getAttribute("selezionato")).thenReturn(beanAmm);
+        Mockito.when(mockedRequest.getParameter("rifiutaMod")).thenReturn("true");
+        Mockito.when(mockedRequest.getParameter("idEvento")).thenReturn(bean.getId()+"");
+
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        daoOrg.doDelete(ut.getId());
+        daoAmm.doDelete(beanAmm.getId());
+        Mockito.when(mockedRequest.getParameter("rifiutaMod")).thenReturn("true");
+        Mockito.verify(session).setAttribute("messaggio","modifica evento rifiutata con successo");
+    }
     /**
      * Cleanup the environment.
      */

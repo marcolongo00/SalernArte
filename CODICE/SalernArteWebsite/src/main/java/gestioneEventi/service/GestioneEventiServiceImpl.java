@@ -135,14 +135,15 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
     }
 
     @Override
-    public void attivaEvento(int idEvento, String tipoUtente) {
+    public boolean attivaEvento(int idEvento, String tipoUtente) {
         if(tipoUtente.compareToIgnoreCase("amministratore")!=0){
             throw new RuntimeException("operazione non autorizzata"); //myexception
         }
         daoEvento.doUpdateAttivazioneEvento(idEvento,true);
+        return true;
     }
 
-    public void rimuoviEvento(int idEvento, UtenteRegistratoBean utente){
+    public boolean rimuoviEvento(int idEvento, UtenteRegistratoBean utente){
         if(utente.getTipoUtente().compareToIgnoreCase("amministratore")!=0 && utente.getTipoUtente().compareToIgnoreCase("organizzatore")!=0){
             throw new RuntimeException("operazione non autorizzata"); //myexception
         }
@@ -152,10 +153,11 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
         EventoBean evDaEliminare= daoEvento.doRetrieveById(idEvento);
         deleteImage(evDaEliminare.getPath());
         daoEvento.doDelete(idEvento);
+        return true;
     }
 
     @Override
-    public void accettaModifica(int idEvento, String tipoUtente) {
+    public boolean accettaModifica(int idEvento, String tipoUtente) {
         if(tipoUtente.compareTo("amministratore")!=0){
             throw new RuntimeException("operazione non autorizzata"); //myexception
         }
@@ -174,11 +176,11 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             deleteImage(eventoPre.getPath());
         }
         daoEvento.doDelete(idEventoPreModifica);
-
+        return true;
     }
 
     @Override
-    public void rifiutaModifica(int idEvento, String tipoUtente) {
+    public boolean rifiutaModifica(int idEvento, String tipoUtente) {
         if(tipoUtente.compareTo("amministratore")!=0){
             throw new RuntimeException("operazione non autorizzata"); //myexception
         }
@@ -193,6 +195,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             deleteImage(eventoPost.getPath());
         }
         daoEvento.doDelete(idEvento);
+        return true;
     }
 
     @Override

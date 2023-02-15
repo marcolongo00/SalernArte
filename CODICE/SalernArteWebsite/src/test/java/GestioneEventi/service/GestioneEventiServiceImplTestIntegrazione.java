@@ -8,9 +8,11 @@ import model.dao.EventoDAO;
 import model.dao.EventoDAOImpl;
 import model.entity.EventoBean;
 import model.entity.OrganizzatoreBean;
+import model.entity.ScolarescaBean;
 import model.entity.UtenteRegistratoBean;
 
 import org.junit.*;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockPart;
 import singleton.ConPool;
 
@@ -23,9 +25,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Implementa il testing di Integrazione per la classe
@@ -63,11 +68,9 @@ public class GestioneEventiServiceImplTestIntegrazione {
     private static final String DESCRIZIONE_EVENTO="descrizione evento di Test";
     private static final String INDIRIZZO= "indirizzo di Test";
     private static final String SEDE="sede di Test";
-    private static final String PATHCONTEXT="C:\\Users\\aless\\Desktop\\SalernArte\\CODICE\\SalernArteWebsite\\src\\main\\webapp\\immaginiEventi\\fotoSample.jpg"; //AAA
+    private static final String pathReal= ".\\src\\main\\webapp\\immaginiEventi\\";
     private static  String pathInEvento;
-    private static String query="nome evento*";
 
-    private static final long  MEGABYTE = 1024L * 1024L;
 
     /**  Arrivati a questo livello di Test, le classi DAO da cui la classe GestioneEventiService
      *   dipende sono già state testate. Di conseguenza verranno usate le classi DAO testate per
@@ -91,10 +94,10 @@ public class GestioneEventiServiceImplTestIntegrazione {
 
         //creazione file foto da utilizzare per i test
         BufferedImage bi= new BufferedImage(500,500,BufferedImage.TYPE_INT_RGB);
-        image= new File(PATHCONTEXT);
+        image= new File(pathReal+"fotoSample.jpg");
         try {
             ImageIO.write(bi,"jpg",image);
-            Path path= Paths.get(PATHCONTEXT);
+            Path path= Paths.get(pathReal+"fotoSample.jpg");
             FILE_PHOTO= new MockPart("fotoSample.jpg","fotoSample.jpg", Files.readAllBytes(path));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -155,7 +158,7 @@ public class GestioneEventiServiceImplTestIntegrazione {
      */
     @Test
     public void richiediInserimentoEventoTestIntegrazione(){
-         assertTrue(serviceE.richiediInserimentoEvento(organizzatore.getId(),NOME_EVENTO,TIPO_EVENTO,DESCRIZIONE_EVENTO,PATHCONTEXT,FILE_PHOTO,NUM_BIGLIETTI,PREZZO_BIGLIETTO,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,INDIRIZZO,SEDE));
+         assertTrue(serviceE.richiediInserimentoEvento(organizzatore.getId(),NOME_EVENTO,TIPO_EVENTO,DESCRIZIONE_EVENTO,pathReal+"fotoSample.jpg",FILE_PHOTO,NUM_BIGLIETTI,PREZZO_BIGLIETTO,DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,INDIRIZZO,SEDE));
     }
     /** Operazione di riferimento nel Test Plan: Richiesta Modifica Evento
      * Caso: corretto
@@ -178,6 +181,86 @@ public class GestioneEventiServiceImplTestIntegrazione {
         assertFalse(result.isEmpty());
     }
 
+    /** Operazione di riferimento nei Requisiti Funzionali: visualizza Evento
+     * Caso: Corretto
+     * Metodo della classe service di riferimento:
+     *       EventoBean retrieveEventoById(int idEvento);
+     */
+    @Test
+    public void retrieveEventoByIdTestIntegrazione(){
+        assertNotNull(serviceE.retrieveEventoById(eventoTest.getId()));
+    }
+
+    /** Operazione di riferimento nei Requisiti Funzionali: Admin accetta richiesta inserimento
+     * Caso: Corretto
+     * Metodo della classe service di riferimento:
+     *       void attivaEvento(int idEvento, String tipoUtente)
+     */
+    @Test
+    public void attivaEventoTestIntegrazione(){
+        EventoBean bean= new EventoBean(organizzatore.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,NOME_EVENTO,pathInEvento,DESCRIZIONE_EVENTO,INDIRIZZO,SEDE,NUM_BIGLIETTI,true);
+        eventoDao.doSave(bean);
+        boolean result= serviceE.attivaEvento(bean.getId(),"amministratore");
+        assertTrue(result);
+    }
+    /** Operazione di riferimento nei Requisiti Funzionali: Admin rifiuta richiesta inserimento
+     * Caso: Corretto
+     * Metodo della classe service di riferimento:
+     *       boolean rimuoviEvento(int idEvento, UtenteRegistratoBean utente)
+     */
+    @Test
+    public void rimuoviEventoTestIntegrazione(){
+        BufferedImage bi= new BufferedImage(500,500,BufferedImage.TYPE_INT_RGB);
+        image= new File(pathReal+"fotoSampleRimuovi.jpg");
+        try {
+            ImageIO.write(bi,"jpg",image);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        EventoBean bean= new EventoBean(organizzatore.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,NOME_EVENTO,pathReal+"fotoSampleRimuovi.jpg",DESCRIZIONE_EVENTO,INDIRIZZO,SEDE,NUM_BIGLIETTI,true);
+        eventoDao.doSave(bean);
+        boolean result=serviceE.rimuoviEvento(bean.getId(), organizzatore);
+        assertTrue(result);
+    }
+    /** Operazione di riferimento nei Requisiti Funzionali: Admin accetta richiesta modifica
+     * Caso: Corretto
+     * Metodo della classe service di riferimento:
+     *       boolean accettaModifica(int idEvento, String tipoUtente)
+     */
+    @Test
+    public void accettaModificaTestIntegrazione(){
+       EventoBean bean= new EventoBean(organizzatore.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,NOME_EVENTO,pathReal+"fotoSample.jpg",DESCRIZIONE_EVENTO,INDIRIZZO,SEDE,NUM_BIGLIETTI,true);
+        eventoDao.doSave(bean);
+        for (int i=0;i<NUM_BIGLIETTI; i++){
+            bigliettoDao.doSave(bean.getId(),PREZZO_BIGLIETTO);
+        }
+        eventoDao.doUpdateAttivazioneEvento(bean.getId(),true);
+        int idPre= bean.getId();
+        bean.setDescrizione("nuova desc");
+        eventoDao.doSave(bean);
+        eventoDao.doSaveRichiestaModificaEv(idPre,bean.getId(),5.5);
+        assertTrue(serviceE.accettaModifica(bean.getId(),"amministratore"));
+    }
+    /** Operazione di riferimento nei Requisiti Funzionali: Admin rifiuta richiesta modifica
+     * Caso: Corretto
+     * Metodo della classe service di riferimento:
+     *       boolean rifiutaModifica(int idEvento, String tipoUtente) )
+     */
+    @Test
+    public void rifiutaModificaTestIntegrazione(){
+        EventoBean bean= new EventoBean(organizzatore.getId(),DATA_INIZIO_EVENTO,DATA_FINE_EVENTO,NOME_EVENTO,pathReal+"fotoSample.jpg",DESCRIZIONE_EVENTO,INDIRIZZO,SEDE,NUM_BIGLIETTI,true);
+        eventoDao.doSave(bean);
+        for (int i=0;i<NUM_BIGLIETTI; i++){
+            bigliettoDao.doSave(bean.getId(),PREZZO_BIGLIETTO);
+        }
+        eventoDao.doUpdateAttivazioneEvento(bean.getId(),true);
+        int idPre= bean.getId();
+        bean.setDescrizione("nuova desc");
+        eventoDao.doSave(bean);
+        eventoDao.doSaveRichiestaModificaEv(idPre,bean.getId(),5.5);
+
+        assertTrue(serviceE.rifiutaModifica(bean.getId(),"amministratore"));
+    }
 
     @AfterClass
     public static void cleanUp(){

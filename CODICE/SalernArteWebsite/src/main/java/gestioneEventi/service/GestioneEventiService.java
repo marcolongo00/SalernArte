@@ -14,8 +14,8 @@ public interface GestioneEventiService {
 
     boolean richiediModificaEvento(int idEvDaModificare, UtenteRegistratoBean utenteLoggato, String nome, String tipoEvento, String descrizione, String pathContext, Part filePhoto, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede);
 
-    void attivaEvento(int idEvento,String tipoUtente);
-    void rimuoviEvento(int idEvento,UtenteRegistratoBean utente);
+    boolean attivaEvento(int idEvento, String tipoUtente);
+    boolean rimuoviEvento(int idEvento, UtenteRegistratoBean utente);
     EventoBean retrieveEventoById(int idEvento);
     OrganizzatoreBean retriveBioOrganizzatore(int idOrg);
     void checkQuantitaCarrello(EventoBean evento, CarrelloBean carrelloSessione);
@@ -23,8 +23,8 @@ public interface GestioneEventiService {
     double getPrezzoEvento(int idEvento);
     List<EventoBean> retrieveRichiesteInserimento(String tipoUtente);
     List<EventoBean> retrieveRichiesteModifica(String tipoUtente);
-    void accettaModifica(int idEvento,String tipoUtente);
-    void rifiutaModifica(int idEvento,String tipoUtente);
+    boolean accettaModifica(int idEvento, String tipoUtente);
+    boolean rifiutaModifica(int idEvento, String tipoUtente);
     List<EventoBean> retrieveEventiOrganizzatore(UtenteRegistratoBean utente);
     List<EventoBean> ricercaEventiByNomeOrDescrizione(String query);
     List<EventoBean> retrieveEventiByTipo(String tipoEvento);

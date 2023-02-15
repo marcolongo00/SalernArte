@@ -28,6 +28,7 @@ public class GestioneEventiController extends HttpServlet {
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        session.removeAttribute("messaggio");
         UtenteRegistratoBean utenteLoggato= (UtenteRegistratoBean) session.getAttribute("selezionato");
         GestioneEventiService serviceE=new GestioneEventiServiceImpl();
         if ( request.getParameter("detailsE")!=null) {
@@ -165,18 +166,21 @@ public class GestioneEventiController extends HttpServlet {
             int idEvento= Integer.parseInt(request.getParameter("idEvento"));
             if(utenteLoggato==null) throw new RemoteException("operazione non autorizzata");
             serviceE.attivaEvento(idEvento,utenteLoggato.getTipoUtente()); // modifca nome operazione
+                session.setAttribute("messaggio","attivazione evento avvenuta con successo");
                 callReferer(request, response);
             }else
                 if(request.getParameter("rifiutaIns")!=null){
             int idEvento= Integer.parseInt(request.getParameter("idEvento"));
 
             serviceE.rimuoviEvento(idEvento,utenteLoggato);
+                    session.setAttribute("messaggio","rimozione evento avvenuta con successo");
                     callReferer(request, response);
                 }else if(request.getParameter("accettaMod")!=null){
                     int idEvento= Integer.parseInt(request.getParameter("idEvento"));
                     if(utenteLoggato==null) throw new RemoteException("operazione non autorizzata");
 
                     serviceE.accettaModifica(idEvento, utenteLoggato.getTipoUtente());
+                    session.setAttribute("messaggio","modifica evento accettata con successo");
                     callReferer(request, response);
                 }else
                 if(request.getParameter("rifiutaMod")!=null){
@@ -184,6 +188,7 @@ public class GestioneEventiController extends HttpServlet {
                     if(utenteLoggato==null) throw new RemoteException("operazione non autorizzata");
 
                     serviceE.rifiutaModifica(idEvento, utenteLoggato.getTipoUtente());
+                    session.setAttribute("messaggio","modifica evento rifiutata con successo");
                     callReferer(request, response);
                 }
 
