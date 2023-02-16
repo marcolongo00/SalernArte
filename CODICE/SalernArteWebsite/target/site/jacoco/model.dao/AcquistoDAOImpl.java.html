@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AcquistoDAOImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SalernArteWebsite</a> &gt; <a href="index.source.html" class="el_package">model.dao</a> &gt; <span class="el_source">AcquistoDAOImpl.java</span></div><h1>AcquistoDAOImpl.java</h1><pre class="source lang-java linenums">package model.dao;
+
+import model.entity.AcquistoBean;
+import singleton.ConPool;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L10">public class AcquistoDAOImpl implements AcquistoDAO {</span>
+    @Override
+    public List&lt;AcquistoBean&gt; doRetrieveListaAcquistiByIdUtente(int idUtente) {
+
+<span class="fc" id="L14">        try(Connection conn= ConPool.getConnection()){</span>
+<span class="fc" id="L15">            List&lt;AcquistoBean&gt; acquisti= new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L16">            PreparedStatement ps=conn.prepareStatement(&quot;SELECT * FROM Acquisto WHERE idUtente=?&quot;);</span>
+<span class="fc" id="L17">            ps.setInt(1,idUtente);</span>
+<span class="fc" id="L18">            ResultSet rs= ps.executeQuery();</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">            while(rs.next()){</span>
+<span class="fc" id="L20">                AcquistoBean temp= new AcquistoBean();</span>
+<span class="fc" id="L21">                temp.setNumOrdine(rs.getInt(&quot;numOrdine&quot;));</span>
+<span class="fc" id="L22">                temp.setTotale(rs.getDouble(&quot;totale&quot;));</span>
+<span class="fc" id="L23">                temp.setData(rs.getDate(&quot;data&quot;));</span>
+<span class="fc" id="L24">                temp.setIdUtente(idUtente);</span>
+<span class="fc" id="L25">                temp.setProdotti(rs.getString(&quot;prodotti&quot;));</span>
+<span class="fc" id="L26">                acquisti.add(temp);</span>
+<span class="fc" id="L27">            }</span>
+<span class="fc" id="L28">            conn.close();</span>
+<span class="fc" id="L29">            ps.close();</span>
+<span class="fc" id="L30">            rs.close();</span>
+<span class="fc" id="L31">            return acquisti;</span>
+<span class="nc" id="L32">        }catch(SQLException e){</span>
+<span class="nc" id="L33">            throw  new RuntimeException(e);</span>
+        }
+    }
+
+
+
+    @Override
+    public AcquistoBean doRetrieveAcquistoByNumOrdine(int numOrdine) {
+<span class="fc" id="L41">        try(Connection con=ConPool.getConnection()){</span>
+<span class="fc" id="L42">            PreparedStatement ps=con.prepareStatement(&quot;SELECT * FROM Acquisto WHERE numOrdine=?&quot;);</span>
+<span class="fc" id="L43">            ps.setInt(1,numOrdine);</span>
+<span class="fc" id="L44">            ResultSet rs=ps.executeQuery();</span>
+<span class="fc" id="L45">            AcquistoBean temp=null;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">            if(rs.next()){</span>
+<span class="fc" id="L47">                temp=new AcquistoBean();</span>
+<span class="fc" id="L48">                temp.setNumOrdine(numOrdine);</span>
+<span class="fc" id="L49">                temp.setProdotti(rs.getString(&quot;prodotti&quot;));</span>
+<span class="fc" id="L50">                temp.setData(rs.getDate(&quot;data&quot;));</span>
+<span class="fc" id="L51">                temp.setTotale(rs.getDouble(&quot;totale&quot;));</span>
+<span class="fc" id="L52">                temp.setIdUtente(rs.getInt(&quot;idUtente&quot;));</span>
+            }
+<span class="fc" id="L54">            con.close();</span>
+<span class="fc" id="L55">            ps.close();</span>
+<span class="fc" id="L56">            rs.close();</span>
+<span class="fc" id="L57">            return temp;</span>
+<span class="nc" id="L58">        }catch(SQLException e){</span>
+<span class="nc" id="L59">            throw  new RuntimeException(e);</span>
+        }
+    }
+
+    @Override
+    public boolean doSave(AcquistoBean acquisto) {
+
+<span class="fc" id="L66">        try(Connection conn=ConPool.getConnection()){</span>
+<span class="fc" id="L67">            PreparedStatement ps=conn.prepareStatement(&quot;INSERT INTO Acquisto(data,totale,idUtente) VALUES(?,?,?)&quot;,</span>
+                    Statement.RETURN_GENERATED_KEYS);
+
+<span class="fc" id="L70">            ps.setDate(1,acquisto.getData());</span>
+<span class="fc" id="L71">            ps.setDouble(2,acquisto.getTotale());</span>
+<span class="fc" id="L72">            ps.setInt(3,acquisto.getIdUtente());</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">            if(ps.executeUpdate()!=1)</span>
+<span class="nc" id="L74">                throw new RuntimeException(&quot;INSERT error&quot;);</span>
+<span class="fc" id="L75">            ResultSet rs=ps.getGeneratedKeys();</span>
+<span class="fc" id="L76">            rs.next();</span>
+<span class="fc" id="L77">            int numOrdine=rs.getInt(1);</span>
+<span class="fc" id="L78">            acquisto.setNumOrdine(numOrdine);</span>
+<span class="fc" id="L79">            conn.close();</span>
+<span class="fc" id="L80">            ps.close();</span>
+<span class="fc" id="L81">            rs.close();</span>
+<span class="fc" id="L82">            return true;</span>
+<span class="fc" id="L83">        }catch(SQLException e){</span>
+<span class="fc" id="L84">            throw new RuntimeException(&quot;INSERT error&quot;);</span>
+        }
+    }
+
+    @Override
+    public boolean doUpdateProdottiByNumOrdine(int numOrdine, String prodotti) {
+<span class="nc" id="L90">        try(Connection conn= ConPool.getConnection()){</span>
+<span class="nc" id="L91">            PreparedStatement ps=conn.prepareStatement(&quot;UPDATE Acquisto SET prodotti=? WHERE numOrdine=?&quot;);</span>
+<span class="nc" id="L92">            ps.setString(1,prodotti);</span>
+<span class="nc" id="L93">            ps.setInt(2,numOrdine);</span>
+
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            if(ps.executeUpdate()!=1){</span>
+<span class="nc" id="L96">                throw new RuntimeException(&quot;SET Prodotti fattura error&quot;);</span>
+            }
+<span class="nc" id="L98">            conn.close();</span>
+<span class="nc" id="L99">            ps.close();</span>
+<span class="nc" id="L100">            return true;</span>
+<span class="nc" id="L101">        }catch (SQLException e){</span>
+<span class="nc" id="L102">            throw new RuntimeException(e);</span>
+        }
+
+    }
+
+    @Override
+    public boolean setProdotti(int numAcquisto, String prodotti) {
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if(prodotti == null)</span>
+<span class="fc" id="L110">            throw new RuntimeException(&quot;SET Prodotti fattura error&quot;);</span>
+<span class="fc" id="L111">        try(Connection conn= ConPool.getConnection()){</span>
+<span class="fc" id="L112">            PreparedStatement ps=conn.prepareStatement(&quot;UPDATE Acquisto SET prodotti=? WHERE numOrdine=?&quot;);</span>
+<span class="fc" id="L113">            ps.setString(1,prodotti);</span>
+<span class="fc" id="L114">            ps.setInt(2,numAcquisto);</span>
+
+<span class="fc bfc" id="L116" title="All 2 branches covered.">            if(ps.executeUpdate()!=1){</span>
+<span class="fc" id="L117">                throw new RuntimeException(&quot;SET Prodotti fattura error&quot;);</span>
+            }
+<span class="fc" id="L119">            conn.close();</span>
+<span class="fc" id="L120">            ps.close();</span>
+<span class="fc" id="L121">            return true;</span>
+<span class="nc" id="L122">        }catch (SQLException e){</span>
+<span class="nc" id="L123">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    @Override
+    public boolean doDelete(int numOrdine) {
+<span class="fc" id="L129">        try(Connection conn=ConPool.getConnection()){</span>
+<span class="fc" id="L130">            PreparedStatement ps= conn.prepareStatement(&quot;DELETE FROM Acquisto WHERE numOrdine=?&quot;);</span>
+<span class="fc" id="L131">            ps.setInt(1,numOrdine);</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">            if(ps.executeUpdate()!=1)</span>
+<span class="fc" id="L133">                throw new RuntimeException(&quot;DELETE error&quot;);</span>
+<span class="fc" id="L134">            conn.close();</span>
+<span class="fc" id="L135">            ps.close();</span>
+<span class="fc" id="L136">            return true;</span>
+<span class="nc" id="L137">        }catch (SQLException e){</span>
+<span class="nc" id="L138">            throw new RuntimeException(e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -15,6 +15,7 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.json:json:20200518" />
+          <element id="library" level="project" name="Maven: jstl:jstl:1.2" />
           <element id="library" level="project" name="Maven: com.mysql:mysql-connector-j:8.0.32" />
           <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:3.21.9" />
           <element id="library" level="project" name="Maven: org.apache.tomcat:tomcat-jdbc:10.1.0-M17" />

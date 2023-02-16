@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ScolarescaDAOImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SalernArteWebsite</a> &gt; <a href="index.source.html" class="el_package">model.dao</a> &gt; <span class="el_source">ScolarescaDAOImpl.java</span></div><h1>ScolarescaDAOImpl.java</h1><pre class="source lang-java linenums">package model.dao;
+
+import model.entity.ScolarescaBean;
+import model.entity.UtenteBean;
+import model.entity.UtenteRegistratoBean;
+import singleton.ConPool;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L12">public class ScolarescaDAOImpl extends UtenteRegistratoDAOImpl{</span>
+    @Override
+    public List&lt;UtenteRegistratoBean&gt; doRetrieveAll() {
+<span class="fc" id="L15">        List&lt;UtenteRegistratoBean&gt; lista=new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L16">        try(Connection con= ConPool.getConnection()){</span>
+<span class="fc" id="L17">            Statement stm=con.createStatement();</span>
+<span class="fc" id="L18">            ResultSet rs=stm.executeQuery(&quot;SELECT * FROM UtenteRegistrato JOIN Scolaresca USING(id) &quot;);</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">            while(rs.next()){</span>
+<span class="fc" id="L20">                int id= rs.getInt(&quot;id&quot;);</span>
+<span class="fc" id="L21">                String passwordHash=rs.getString(&quot;passwordHash&quot;);</span>
+<span class="fc" id="L22">                String email=rs.getString(&quot;email&quot;);</span>
+<span class="fc" id="L23">                String istituto= rs.getString(&quot;istituto&quot;);</span>
+<span class="fc" id="L24">                lista.add(new ScolarescaBean(id,email,passwordHash,istituto,true));</span>
+<span class="fc" id="L25">            }</span>
+<span class="fc" id="L26">            con.close();</span>
+<span class="fc" id="L27">            stm.close();</span>
+<span class="fc" id="L28">            rs.close();</span>
+<span class="fc" id="L29">            return lista;</span>
+<span class="nc" id="L30">        }catch(SQLException e){</span>
+<span class="nc" id="L31">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    @Override
+    public boolean doSave(UtenteRegistratoBean utente) {
+<span class="fc" id="L37">        super.doSave(utente);</span>
+<span class="fc" id="L38">        try(Connection con=ConPool.getConnection()){</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">           if(!(utente instanceof ScolarescaBean))</span>
+<span class="nc" id="L40">               throw new RuntimeException(); //myException</span>
+<span class="fc" id="L41">            PreparedStatement ps=con.prepareStatement(&quot;INSERT INTO Scolaresca (id,istituto) VALUES(?,?)&quot;);</span>
+<span class="fc" id="L42">            ps.setInt(1,utente.getId());</span>
+<span class="fc" id="L43">            ps.setString(2,((ScolarescaBean)utente).getIstituto());</span>
+
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">            if(ps.executeUpdate() !=1)</span>
+            {
+<span class="nc" id="L47">                throw new RuntimeException(&quot;INSERT error.&quot;);</span>
+            }
+
+<span class="fc" id="L50">            con.close();</span>
+<span class="fc" id="L51">            ps.close();</span>
+<span class="fc" id="L52">            return true;</span>
+<span class="nc" id="L53">        }catch(SQLException e){</span>
+<span class="nc" id="L54">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    @Override
+    public UtenteRegistratoBean doRetrieveByEmailPassword(String email, String password) {
+<span class="fc" id="L60">        try(Connection con=ConPool.getConnection()){</span>
+<span class="fc" id="L61">            PreparedStatement stm=con.prepareStatement(&quot;SELECT * FROM UtenteRegistrato JOIN Scolaresca USING(id) WHERE email=? AND passwordHash=SHA1(?)&quot;);</span>
+<span class="fc" id="L62">            stm.setString(1,email);</span>
+<span class="fc" id="L63">            stm.setString(2,password);</span>
+<span class="fc" id="L64">            ResultSet rs=stm.executeQuery();</span>
+<span class="fc" id="L65">            ScolarescaBean scelto=null;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            if(rs.next()){</span>
+<span class="fc" id="L67">                int id= rs.getInt(&quot;id&quot;);</span>
+<span class="fc" id="L68">                String passwordHash=rs.getString(&quot;passwordHash&quot;);</span>
+<span class="fc" id="L69">                String istituto= rs.getString(&quot;istituto&quot;);</span>
+<span class="fc" id="L70">                scelto=new ScolarescaBean(id,email,passwordHash,istituto,true);</span>
+<span class="fc" id="L71">            }else{</span>
+<span class="fc" id="L72">                throw new RuntimeException(&quot;Errore Autenticazione utente&quot;);</span>
+            }
+<span class="fc" id="L74">            con.close();</span>
+<span class="fc" id="L75">            stm.close();</span>
+<span class="fc" id="L76">            rs.close();</span>
+<span class="fc" id="L77">            return scelto;</span>
+<span class="nc" id="L78">        }catch(SQLException e){</span>
+<span class="nc" id="L79">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    @Override
+    public UtenteRegistratoBean doRetrieveByEmail(String email) {
+<span class="fc" id="L85">        try(Connection con=ConPool.getConnection()){</span>
+<span class="fc" id="L86">            PreparedStatement stm=con.prepareStatement(&quot;SELECT * FROM UtenteRegistrato JOIN Scolaresca USING(id) WHERE email=? &quot;);</span>
+<span class="fc" id="L87">            stm.setString(1,email);</span>
+<span class="fc" id="L88">            ResultSet rs=stm.executeQuery();</span>
+<span class="fc" id="L89">            ScolarescaBean scelto=null;</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">            if(rs.next()){</span>
+<span class="fc" id="L91">                int id= rs.getInt(&quot;id&quot;);</span>
+<span class="fc" id="L92">                String passwordHash=rs.getString(&quot;passwordHash&quot;);</span>
+<span class="fc" id="L93">                String istituto= rs.getString(&quot;istituto&quot;);</span>
+<span class="fc" id="L94">                scelto=new ScolarescaBean(id,email,passwordHash,istituto,true);</span>
+            }
+
+<span class="fc" id="L97">            con.close();</span>
+<span class="fc" id="L98">            stm.close();</span>
+<span class="fc" id="L99">            rs.close();</span>
+<span class="fc" id="L100">            return scelto;</span>
+<span class="nc" id="L101">        }catch(SQLException e){</span>
+<span class="nc" id="L102">            throw new RuntimeException(e);</span>
+        }
+    }
+
+
+    @Override
+    public boolean doUpdate(UtenteRegistratoBean utente) {
+<span class="fc" id="L109">        try(Connection con=ConPool.getConnection()){</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">            if(!(utente instanceof ScolarescaBean)){ //controllata anche nelle service ma contorllo in più qui</span>
+<span class="nc" id="L111">                throw new RuntimeException();//myexception</span>
+            }
+
+<span class="fc" id="L114">            PreparedStatement ps=con.prepareStatement(&quot;UPDATE UtenteRegistrato JOIN Scolaresca USING(id) SET email=?,passwordHash=?, istituto=? WHERE id=?&quot;);</span>
+<span class="fc" id="L115">            ps.setString(1,utente.getEmail());</span>
+<span class="fc" id="L116">            ps.setString(2,utente.getPasswordHash());</span>
+<span class="fc" id="L117">            ps.setString(3,((ScolarescaBean)utente).getIstituto());</span>
+<span class="fc" id="L118">            ps.setInt(4,utente.getId());</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">            if(ps.executeUpdate() &lt; 1)</span>
+            {
+<span class="fc" id="L121">                throw new RuntimeException(&quot;UPDATE Scolaresca error.&quot;);</span>
+            }
+<span class="fc" id="L123">            con.close();</span>
+<span class="fc" id="L124">            ps.close();</span>
+<span class="fc" id="L125">            return true;</span>
+<span class="nc" id="L126">        }catch(SQLException e){</span>
+<span class="nc" id="L127">            throw new RuntimeException(e);</span>
+        }
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

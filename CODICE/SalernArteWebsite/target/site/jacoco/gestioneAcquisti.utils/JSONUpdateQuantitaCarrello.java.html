@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSONUpdateQuantitaCarrello.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SalernArteWebsite</a> &gt; <a href="index.source.html" class="el_package">gestioneAcquisti.utils</a> &gt; <span class="el_source">JSONUpdateQuantitaCarrello.java</span></div><h1>JSONUpdateQuantitaCarrello.java</h1><pre class="source lang-java linenums">package gestioneAcquisti.utils;
+
+import com.google.gson.Gson;
+import gestioneAcquisti.service.GestioneAcquistiService;
+import gestioneAcquisti.service.GestioneAcquistiServiceImpl;
+import model.entity.CarrelloBean;
+import model.entity.UtenteRegistratoBean;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet(name = &quot;JSONUpdateQuantitaCarrello&quot;,urlPatterns = &quot;/update-carr-qta&quot;)
+<span class="nc" id="L17">public class JSONUpdateQuantitaCarrello extends HttpServlet {</span>
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L19">        doGet(request,response);</span>
+<span class="nc" id="L20">    }</span>
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L23">        response.setContentType(&quot;application/json&quot;);</span>
+<span class="nc" id="L24">        GestioneAcquistiService service= new GestioneAcquistiServiceImpl();</span>
+<span class="nc" id="L25">        boolean result=true;// serviva per la notifica di errore, rivedi poi</span>
+<span class="nc" id="L26">        int idE=Integer.parseInt(request.getParameter(&quot;idE&quot;));</span>
+<span class="nc" id="L27">        int qta=Integer.parseInt(request.getParameter(&quot;qta&quot;));</span>
+        try{
+<span class="nc" id="L29">            CarrelloBean carrelloSessione= (CarrelloBean) request.getSession().getAttribute(&quot;carrello&quot;);</span>
+<span class="nc" id="L30">            UtenteRegistratoBean utente= (UtenteRegistratoBean) request.getSession().getAttribute(&quot;selezionato&quot;);</span>
+<span class="nc" id="L31">            service.updateQuantitaCarrello(idE,qta,carrelloSessione,utente);</span>
+<span class="nc" id="L32">            request.getSession().setAttribute(&quot;carrello&quot;, carrelloSessione);</span>
+<span class="nc" id="L33">        }catch (Exception e){</span>
+<span class="nc" id="L34">            result=false;</span>
+<span class="nc" id="L35">        }</span>
+<span class="nc" id="L36">        String json=new Gson().toJson(result);</span>
+<span class="nc" id="L37">        response.getWriter().append(json);</span>
+<span class="nc" id="L38">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
