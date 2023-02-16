@@ -89,11 +89,8 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
         // controllo che l'id sia corretto e che nel carrello sia presente il prodotto
         if(idE<= 0 || eventoDao.doRetrieveById(idE)==null || carrello.get(idE)==null)
             throw new RuntimeException("qualcosa è andato storto riprovare");
-        checkAutorizzazioniUtente(utente);
-        if(utente!=null)
+         if(utente!=null)
             daoCarr.doDelete(utente.getId(),idE);
-        else
-            throw new RuntimeException("Utente inesistente o errato");
         carrello.remove(idE);
         return true;
     }

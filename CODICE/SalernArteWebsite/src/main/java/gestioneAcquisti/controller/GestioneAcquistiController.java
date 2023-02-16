@@ -25,7 +25,7 @@ public class GestioneAcquistiController extends HttpServlet {
         UtenteRegistratoBean utente= (UtenteRegistratoBean) session.getAttribute("selezionato");
         CarrelloBean carrello=(CarrelloBean) session.getAttribute("carrello");
         session.removeAttribute("messaggio");
-
+        try{
         if(request.getParameter("goToCarrello")!=null){
             boolean alertCarrello=false; //in teoria gestito, testare
             if(carrello==null && utente==null){
@@ -66,6 +66,9 @@ public class GestioneAcquistiController extends HttpServlet {
             callDispatcher(request,response,address);
         }
         if(request.getParameter("datiCartaAcquisto")!=null){
+            /** controllo su dati carta di credito non effettuato
+             * per mancanza di budget
+             * */
             if(utente==null || service.controlloElementiCarrello(carrello,utente)){
                 throw new RuntimeException("operazione non autorizzata");
             } else if (utente.getTipoUtente().compareToIgnoreCase("utente")!=0 && utente.getTipoUtente().compareToIgnoreCase("scolaresca")!=0) {
@@ -84,8 +87,11 @@ public class GestioneAcquistiController extends HttpServlet {
             session.setAttribute("carrello", new CarrelloBean(utente.getId()));
             //se utente fosse null non si sarebbe potuto fare l'acquisto
             session.setAttribute("messaggio", "Acquisto avvenuto con successo");
-            String address="WEB-INF/gestioneAcquisti/Acquistato.jsp";
-            callDispatcher(request,response,address);
+            callDispatcher(request,response,"/index.html");
+        }
+        }catch (RuntimeException e){
+            session.setAttribute("messaggio",e.getMessage());
+            callDispatcher(request,response,"/index.html");
         }
     }
     private void callDispatcher(HttpServletRequest request, HttpServletResponse response,String address) throws ServletException, IOException {

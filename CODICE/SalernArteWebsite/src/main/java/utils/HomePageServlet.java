@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,7 +26,6 @@ public class HomePageServlet extends HttpServlet {
         //questa pagina sfrutterà il service relativo alla gestione eventi in quanto l'operazione
         //che ci serve applicare è un retrive di tutti gli eventi non scaduti ed attivi del sistema
         GestioneEventiService service= new GestioneEventiServiceImpl();
-
         List<EventoBean> eventi= service.retrieveTuttiEventiNonScadutiAttivi();
         request.setAttribute("eventi",eventi);
         String address="/WEB-INF/index.jsp";

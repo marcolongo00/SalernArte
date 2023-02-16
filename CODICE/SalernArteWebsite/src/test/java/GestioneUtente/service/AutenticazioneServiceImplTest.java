@@ -121,8 +121,6 @@ public class AutenticazioneServiceImplTest {
     }
 
 
-    //Il test Case TC_1.8.4 e 1.8.5 vengono testati nel controller
-
     /*
     Metodo: updateScolaresca(...)
     Classe: AutenticazioneServiceImpl
@@ -222,8 +220,6 @@ public class AutenticazioneServiceImplTest {
         assertEquals(message, exception.getMessage());
     }
 
-    // I test case da TC_1.2.8 a TC_1.2.11 vengono testati tramite controller
-
     /*
     Metodo: updateUtente(...)
     Classe: AutenticazioneServiceImpl
@@ -291,8 +287,6 @@ public class AutenticazioneServiceImplTest {
         assertEquals(message, exception.getMessage());
     }
 
-    //I test Case TC_1.6.5 E TC_1.6.6 vengono controllati nel AutenticazioneController
-
     /*
     Metodo: updateAmministratore(...)
     Classe: AutenticazioneServiceImpl
@@ -345,8 +339,6 @@ public class AutenticazioneServiceImplTest {
         String message = "dati per genere non corretti";
         assertEquals(message, exception.getMessage());
     }
-
-    //Il test Case 1.4.4 relativo alla modifica profilo organizzatore viene testato nel controller
 
     /*
     Metodo: updateOrganizzatore(...)
@@ -417,8 +409,6 @@ public class AutenticazioneServiceImplTest {
         String message = "Biografia non valido.";
         assertEquals(message, exception.getMessage());
     }
-
-    //I test case TC_1.4.10 e TC_1.4.11 vengono testati nel controller
 
     /*
     Metodo: updateOrganizzatore(...)

@@ -13,6 +13,10 @@ a{
     padding: 5px;
 
 }
+#messaggioNotif{
+    text-align: center;
+    color: red;
+}
 .regolamento{
     text-align: center;
     padding: 5px;

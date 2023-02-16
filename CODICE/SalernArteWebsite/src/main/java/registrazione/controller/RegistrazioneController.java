@@ -20,6 +20,9 @@ public class RegistrazioneController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         RegistrazioneService serviceA= new RegistrazioneServiceimpl();
+        session.removeAttribute("messaggio");
+        try{
+
         if(request.getParameter("registrazione")!= null){ //controllo sui dati e su password conferma
 
             String password=request.getParameter("password");
@@ -48,7 +51,7 @@ public class RegistrazioneController extends HttpServlet {
                     utenteResult=serviceA.registrazioneUtente(gender,nome,cognome,email,password,datadiNascita);
                     CarrelloBean carrelloSessione= (CarrelloBean) session.getAttribute("carrello");
                     serviceA.salvaCarrelloSessione(utenteResult,carrelloSessione);
-                    request.setAttribute("messaggio","registrazione utente andata a buon fine");
+                    session.setAttribute("messaggio","registrazione utente andata a buon fine");
                 }else
                 if(tipoUtente.compareToIgnoreCase("scolaresca")==0){
                     String istituto=request.getParameter("istituto");
@@ -59,7 +62,7 @@ public class RegistrazioneController extends HttpServlet {
                         serviceA.applicaScontoScuola(carrelloSessione);
                         session.setAttribute("carrello",carrelloSessione);
                     }
-                    request.setAttribute("messaggio","registrazione scolaresca andata a buon fine");
+                    session.setAttribute("messaggio","registrazione scolaresca andata a buon fine");
                 }
                 else
                 if(tipoUtente.compareToIgnoreCase("organizzatore")==0){
@@ -76,14 +79,18 @@ public class RegistrazioneController extends HttpServlet {
                     String iban=request.getParameter("iban");
                     utenteResult=serviceA.registrazioneOrganizzatore(gender,iban,nome,cognome,email,password,biografia,datadiNascita);
                     session.removeAttribute("carrello");
-                    request.setAttribute("messaggio","registrazione organizzatore andata a buon fine");
+                    session.setAttribute("messaggio","registrazione organizzatore andata a buon fine");
                 }else{ //admin?????
                     //errore
                 }
                 session.setAttribute("selezionato",utenteResult);
 
-                callReferer(request,response);
+            callDispatcher(request,response,"/index.html");
 
+        }
+        }catch (RuntimeException e){
+            session.setAttribute("messaggio",e.getMessage());
+            callDispatcher(request,response,"/index.html");
         }
 
     }

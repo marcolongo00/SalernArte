@@ -25,7 +25,7 @@ public class AutenticazioneController extends HttpServlet {
         HttpSession session = request.getSession();
         AutenticazioneService serviceA= new AutenticazioneServiceImpl();
         session.removeAttribute("messaggio");
-
+        try{
         if(request.getParameter("Accedi")!=null){
             String email=request.getParameter("email");
             String password=request.getParameter("password");
@@ -63,7 +63,7 @@ public class AutenticazioneController extends HttpServlet {
             }
 
             session.setAttribute("selezionato",utente);
-            callReferer(request,response);
+            callDispatcher(request,response,"/index.html");
         }
         if(request.getParameter("logout")!=null) {
             session.removeAttribute("selezionato");
@@ -72,13 +72,14 @@ public class AutenticazioneController extends HttpServlet {
             callDispatcher(request,response,"/index.html");
         }
         if(request.getParameter("ConfermaCambioPwd")!=null){
-            //DA FARE
+            /** operazione non implementata
+             * */
             String emailTo=request.getParameter("email");
-            //contorlal formato email e controlla che esista in db
-            //retriene by email
-            //genera stringa per password casuale
-            //cambia la pwd nel db e invia la mail
             callDispatcher(request,response,"/index.html");        }
+        }catch (RuntimeException e){
+            session.setAttribute("messaggio",e.getMessage());
+            callDispatcher(request,response,"/index.html");
+        }
     }
     private void callDispatcher(HttpServletRequest request, HttpServletResponse response,String address) throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher(address);

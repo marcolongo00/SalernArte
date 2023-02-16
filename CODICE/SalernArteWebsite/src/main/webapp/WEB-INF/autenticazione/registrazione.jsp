@@ -26,22 +26,22 @@
                         <label for="Organizzatore"><b>Organizzatore</b></label>
                     </div>
                     <div class="all">
-                        <input type="email" name="email" id="email" oninput="validaEmail('reg','registrami')" placeholder="Email" required>
+                        <input type="email" name="email" id="email"  placeholder="Email" required>
                         <p style="text-align: center">*La password deve contenere minimo 6 caratteri, una lettera maiuscola,minuscola e un numero.</p>
 
-                            <input type="password" id="password" name="password" oninput="validaPassword('reg','registrami')"placeholder="Password" required>
-                            <input type="password" name="passwordConferma" id="passConferma" oninput="validaPassword('reg','registrami')" placeholder="ConfermaPassword" required>
+                            <input type="password" id="password" name="password" placeholder="Password" required>
+                            <input type="password" name="passwordConferma" id="passConferma"  placeholder="ConfermaPassword" required>
 
                     </div>
                     <div class="utenteAndOrganizzatore" >
-                        <input type="text" id="nome" name="nome" oninput="validaNome('reg','registrami')" placeholder="Nome" >
-                        <input type="text" id="cognome" name="cognome" oninput="validaCognome('reg','registrami')" placeholder="Cognome" >
+                        <input type="text" id="nome" name="nome"  placeholder="Nome" >
+                        <input type="text" id="cognome" name="cognome"  placeholder="Cognome" >
                         <div class="dateContainer">
                             <label for="dataDiNascita">Data di nascita</label>
                             <input type="date" id="dataDiNascita"  name="dataDiNascita">
                         </div>
                         <div class="genderContainer">
-                            <input type="radio" id="uomo" name="gender"  value="0" required>
+                            <input type="radio" id="uomo" name="gender"  value="0" checked>
                             <label for="uomo"><b>Uomo</b></label>
 
                             <input type="radio" id="donna" name="gender" value="1">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
             </div>
-            <input type="submit" id="registrami"  name="registrazione" value="Registra">
+            <input type="submit" id="registrami"  name="registrazione" value="Registra" >
             <p class="tipo" id="messaggio"></p>
 
         </form>
@@ -71,6 +71,7 @@
 </div>
 
 <script>
+
     function showDatiCorrettiPerUtente(){
         var checked=document.querySelector('input[name="tipoUtente"]:checked').value;
         $(".utenteAndOrganizzatore").hide();
@@ -93,5 +94,6 @@
     }
     $(document).ready(function () {
         showDatiCorrettiPerUtente();
+        //$("input:submit").prop('disabled', false);
     });
 </script>

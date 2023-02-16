@@ -15,9 +15,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="jQuery/myjQuery.js"></script>
     <script src="JS/ricerca.js"></script>
-    <!-- velidazione input javascript-->
-
-    <script src="JS/ValidazioneInput.js"></script>
 
 </head>
 <body>
@@ -195,7 +192,6 @@
         $("#logon").hide();
         $("#modalRegistrazione").hide();
         $("#recuperaPwd").hide();
-        //validaAll("insertMSubmit"); valida tutti i campi per registrazione
     }
 
 

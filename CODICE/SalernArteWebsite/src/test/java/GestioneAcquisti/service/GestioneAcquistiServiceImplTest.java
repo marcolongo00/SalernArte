@@ -162,18 +162,6 @@ public class GestioneAcquistiServiceImplTest {
     }
 
     /* Operazione di riferimento nel Test Plan:
-     * Caso: Carrello errato o inesistente
-     * Metodo della classe service di riferimento: removeEventoFromCarrello(...)
-     * */
-    @Test
-    public void removeEventoFromCarrelloError3(){
-        RuntimeException exception;
-        exception = assertThrows(RuntimeException.class,() -> serviceA.removeEventoFromCarrello(evento.getId(), carrelloBean,null));
-        String message = "Utente inesistente o errato";
-        assertEquals(message, exception.getMessage());
-    }
-
-    /* Operazione di riferimento nel Test Plan:
      * Caso: Corretto
      * Metodo della classe service di riferimento: removeEventoFromCarrello(...)
      * */

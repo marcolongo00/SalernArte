@@ -31,6 +31,7 @@ public class GestioneEventiController extends HttpServlet {
         session.removeAttribute("messaggio");
         UtenteRegistratoBean utenteLoggato= (UtenteRegistratoBean) session.getAttribute("selezionato");
         GestioneEventiService serviceE=new GestioneEventiServiceImpl();
+        try{
         if ( request.getParameter("detailsE")!=null) {
             int idE = Integer.parseInt(request.getParameter("idE"));
             EventoBean evento = serviceE.retrieveEventoById(idE);
@@ -74,6 +75,7 @@ public class GestioneEventiController extends HttpServlet {
         if(request.getParameter("eliminaEv")!=null){
             int id= Integer.parseInt(request.getParameter("idE"));
             serviceE.rimuoviEvento(id,utenteLoggato);
+            session.setAttribute("messaggio", "evento eliminato con successo");
             callDispatcher(request,response,"/index.html");
         }
         if(request.getParameter("goToRichiesteInserimento")!=null){
@@ -230,8 +232,11 @@ public class GestioneEventiController extends HttpServlet {
                     serviceE.richiediModificaEvento(idEventoPreChange,utenteLoggato,titolo,tipo,descrizione,pathSave,filePhoto,numBiglietti,prezzo,dataInizio,dataFine,indirizzo,sede);
                     request.setAttribute("messaggio","esecuzione richeistaModifcia andata a buon fine");
                     callReferer(request,response);
-                    //oppure alla pagina dell'evento quindi chiamerei l'altra oeprazione
                 }
+        }catch (RuntimeException e){
+            session.setAttribute("messaggio",e.getMessage());
+            callDispatcher(request,response,"/index.html");
+        }
 
     }
     private void callDispatcher(HttpServletRequest request, HttpServletResponse response,String address) throws ServletException, IOException {

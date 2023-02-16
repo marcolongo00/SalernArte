@@ -24,7 +24,7 @@ public class AreaUtenteController extends HttpServlet {
         AutenticazioneService service=new AutenticazioneServiceImpl();
         UtenteRegistratoBean utenteLoggato= (UtenteRegistratoBean) session.getAttribute("selezionato");
         session.removeAttribute("messaggio");
-
+        try{
         if(request.getParameter("goToListaAcquisti") != null){
             int idUtente;
             if(utenteLoggato.getTipoUtente().compareToIgnoreCase("amministratore")==0){
@@ -58,7 +58,12 @@ public class AreaUtenteController extends HttpServlet {
             String tipo = utenteLoggato.getTipoUtente();
             String password= request.getParameter("password");
             String passwordConferma= request.getParameter("passwordConferma");
-
+            if(!password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )){
+                throw new RuntimeException("La password vecchia non è valida");
+            }
+            if(!passwordConferma.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )){
+                throw new RuntimeException("La password conferma non rispetta il formato");
+            }
             if(!password.isEmpty() && !passwordConferma.isEmpty() && password.compareToIgnoreCase(passwordConferma)!=0)
                 throw new RuntimeException("Le password inserite non corrispondono");
             // il null delle string viene controllato nel service
@@ -70,17 +75,27 @@ public class AreaUtenteController extends HttpServlet {
             String iban=request.getParameter("iban");
             UtenteRegistratoBean utenteAggiornato=null;
             if(tipo.compareToIgnoreCase("utente") == 0) {
-                Date dataDiNascita= Date.valueOf(request.getParameter("dataDiNascita"));
+                Date datadiNascita;
+                try{
+                    datadiNascita=Date.valueOf(request.getParameter("dataDiNascita"));
+                }catch (IllegalArgumentException e){
+                    throw new RuntimeException("la Data di Nascita non rispetta il formato");
+                }
                 int gender= Integer.parseInt(request.getParameter("gender"));
 
-                utenteAggiornato=service.updateUtente(utenteLoggato,email,password,nome,cognome,dataDiNascita,gender);
+                utenteAggiornato=service.updateUtente(utenteLoggato,email,password,nome,cognome,datadiNascita,gender);
                 session.setAttribute("messaggio", "Update utente avvenuto con successo");
             }else
                 if(tipo.compareToIgnoreCase("organizzatore") == 0){
-                    Date dataDiNascita= Date.valueOf(request.getParameter("dataDiNascita"));
+                    Date datadiNascita;
+                    try{
+                        datadiNascita=Date.valueOf(request.getParameter("dataDiNascita"));
+                    }catch (IllegalArgumentException e){
+                        throw new RuntimeException("la Data di Nascita non rispetta il formato");
+                    }
                     int gender= Integer.parseInt(request.getParameter("gender"));
 
-                    utenteAggiornato=service.updateOrganizzatore(utenteLoggato,email,password,nome,cognome,dataDiNascita,gender,biografia,iban);
+                    utenteAggiornato=service.updateOrganizzatore(utenteLoggato,email,password,nome,cognome,datadiNascita,gender,biografia,iban);
                     session.setAttribute("messaggio", "Update organizzatore avvenuto con successo");
                 }
                 else if(tipo.compareToIgnoreCase("scolaresca") == 0) {
@@ -98,9 +113,13 @@ public class AreaUtenteController extends HttpServlet {
         if(request.getParameter("eliminaProfilo")!=null){
             service.eliminaProfiloUtente(utenteLoggato);
             session.removeAttribute("selezionato");
+            session.setAttribute("messaggio", "Eliminazione Profilo Utente avvenuta con successo");
             callDispatcher(request,response,"/index.html");
         }
-
+        }catch (RuntimeException e){
+            session.setAttribute("messaggio",e.getMessage());
+            callDispatcher(request,response,"/index.html");
+        }
     }
     private void callDispatcher(HttpServletRequest request, HttpServletResponse response,String address) throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher(address);

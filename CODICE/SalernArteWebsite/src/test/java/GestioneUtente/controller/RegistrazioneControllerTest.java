@@ -5,10 +5,7 @@ import model.dao.UtenteDAOImpl;
 import model.dao.UtenteRegistratoDAO;
 import model.entity.UtenteBean;
 import model.entity.UtenteRegistratoBean;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.mockito.Mockito;
 import registrazione.controller.RegistrazioneController;
 
@@ -74,8 +71,8 @@ public class RegistrazioneControllerTest {
 
     private static  Date DATA_ATTUALE;
 
-    @BeforeClass
-    public static void setUp() throws ServletException {
+    @Before
+    public void setUp() throws ServletException {
         df = new SimpleDateFormat("yyyy-MM-dd");
         DATA_ATTUALE= new Date(Calendar.getInstance().getTimeInMillis());
         //Servlet, mockedRequest, mockedResponse and Session instantiation.
@@ -103,16 +100,20 @@ public class RegistrazioneControllerTest {
         Mockito.when(mockedRequest.getParameter("dataDiNascita")).thenReturn("");
         Mockito.when(mockedRequest.getParameter("gender")).thenReturn(GENDER+"");
         Mockito.when(session.getAttribute("carrello")).thenReturn(null);
-
-        RuntimeException exception;
-        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
-        UtenteRegistratoDAO dao= new UtenteDAOImpl();
+         try {
+             servlet.doPost(mockedRequest,mockedResponse);
+         } catch (ServletException e) {
+             throw new RuntimeException(e);
+         } catch (IOException e) {
+             throw new RuntimeException(e);
+         }
+          UtenteRegistratoDAO dao= new UtenteDAOImpl();
         UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
         if(bean!=null){
             dao.doDelete(bean.getId());
         }
-        String message="la Data di Nascita non rispetta il formato";
-        assertEquals(message,exception.getMessage());
+        Mockito.verify(session).setAttribute("messaggio","la Data di Nascita non rispetta il formato");
+
 
     }
     /** Operazione di riferimento nel Test Plan: Registrazione Utente
@@ -130,15 +131,19 @@ public class RegistrazioneControllerTest {
         Mockito.when(mockedRequest.getParameter("gender")).thenReturn(GENDER+"");
         Mockito.when(session.getAttribute("carrello")).thenReturn(null);
 
-        RuntimeException exception;
-        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
-        UtenteRegistratoDAO dao= new UtenteDAOImpl();
-        UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
-        if(bean!=null){
-            dao.doDelete(bean.getId());
-        }
-        String message="Le due password inserite non corrispondono, riprovare";
-        assertEquals(message,exception.getMessage());
+         try {
+             servlet.doPost(mockedRequest,mockedResponse);
+         } catch (ServletException e) {
+             throw new RuntimeException(e);
+         } catch (IOException e) {
+             throw new RuntimeException(e);
+         }
+         UtenteRegistratoDAO dao= new UtenteDAOImpl();
+         UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
+         if(bean!=null){
+             dao.doDelete(bean.getId());
+         }
+         Mockito.verify(session).setAttribute("messaggio","Le due password inserite non corrispondono, riprovare");
 
     }
 
@@ -157,15 +162,19 @@ public class RegistrazioneControllerTest {
         Mockito.when(mockedRequest.getParameter("gender")).thenReturn(GENDER+"");
         Mockito.when(session.getAttribute("carrello")).thenReturn(null);
 
-        RuntimeException exception;
-        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         UtenteRegistratoDAO dao= new UtenteDAOImpl();
         UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
         if(bean!=null){
             dao.doDelete(bean.getId());
         }
-        String message="La password conferma non rispetta il formato";
-        assertEquals(message,exception.getMessage());
+        Mockito.verify(session).setAttribute("messaggio","La password conferma non rispetta il formato");
 
     }
     /** Operazione di riferimento nel Test Plan: Registrazione Organizzatore
@@ -184,15 +193,19 @@ public class RegistrazioneControllerTest {
         Mockito.when(mockedRequest.getParameter("biografia")).thenReturn(BIOGRAFIA);
         Mockito.when(mockedRequest.getParameter("iban")).thenReturn(IBAN);
 
-        RuntimeException exception;
-        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
-        UtenteRegistratoDAO dao= new OrganizzatoreDAOImpl();
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        UtenteRegistratoDAO dao= new UtenteDAOImpl();
         UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
         if(bean!=null){
             dao.doDelete(bean.getId());
         }
-        String message="la Data di Nascita non rispetta il formato";
-        assertEquals(message,exception.getMessage());
+        Mockito.verify(session).setAttribute("messaggio","la Data di Nascita non rispetta il formato");
 
     }
 
@@ -212,22 +225,25 @@ public class RegistrazioneControllerTest {
         Mockito.when(mockedRequest.getParameter("biografia")).thenReturn(BIOGRAFIA);
         Mockito.when(mockedRequest.getParameter("iban")).thenReturn(IBAN);
 
-        RuntimeException exception;
-        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
-        UtenteRegistratoDAO dao= new OrganizzatoreDAOImpl();
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        UtenteRegistratoDAO dao= new UtenteDAOImpl();
         UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
         if(bean!=null){
             dao.doDelete(bean.getId());
         }
-        String message="Le due password inserite non corrispondono, riprovare";
-        assertEquals(message,exception.getMessage());
+        Mockito.verify(session).setAttribute("messaggio","Le due password inserite non corrispondono, riprovare");
 
     }
 
     /** Operazione di riferimento nel Test Plan: Registrazione Organizzatore
      * Caso: il conferma password non è valido
      */
-    @Ignore
     @Test
     public void TC_1p5_11(){
         Mockito.when(mockedRequest.getParameter("password")).thenReturn(PASSWORD_NOT_HASH);
@@ -241,15 +257,19 @@ public class RegistrazioneControllerTest {
         Mockito.when(mockedRequest.getParameter("biografia")).thenReturn(BIOGRAFIA);
         Mockito.when(mockedRequest.getParameter("iban")).thenReturn(IBAN);
 
-        RuntimeException exception;
-        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
-        UtenteRegistratoDAO dao= new OrganizzatoreDAOImpl();
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        UtenteRegistratoDAO dao= new UtenteDAOImpl();
         UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
         if(bean!=null){
             dao.doDelete(bean.getId());
         }
-        String message="La password conferma non rispetta il formato";
-        assertEquals(message,exception.getMessage());
+        Mockito.verify(session).setAttribute("messaggio","La password conferma non rispetta il formato");
 
     }
     /** Operazione di riferimento nel Test Plan: Registrazione Scolaresca
@@ -264,16 +284,20 @@ public class RegistrazioneControllerTest {
         Mockito.when(mockedRequest.getParameter("istituto")).thenReturn(ISTITUTO);
         Mockito.when(session.getAttribute("carrello")).thenReturn(null);
 
-        RuntimeException exception;
-        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
-        UtenteRegistratoDAO dao= new ScolarescaDAOImpl();
+        try {
+            servlet.doPost(mockedRequest,mockedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        UtenteRegistratoDAO dao= new UtenteDAOImpl();
         UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
         if(bean!=null){
             dao.doDelete(bean.getId());
         }
         String message="Le due password inserite non corrispondono, riprovare";
-        assertEquals(message,exception.getMessage()); Mockito.when(mockedRequest.getParameter("password")).thenReturn(PASSWORD_NOT_HASH);
-
+        Mockito.verify(session).setAttribute("messaggio",message);
     }
 
     /** Operazione di riferimento nel Test Plan: Registrazione Scolaresca
@@ -288,16 +312,20 @@ public class RegistrazioneControllerTest {
         Mockito.when(mockedRequest.getParameter("istituto")).thenReturn(ISTITUTO);
         Mockito.when(session.getAttribute("carrello")).thenReturn(null);
 
-        RuntimeException exception;
-        exception= assertThrows(RuntimeException.class,()-> servlet.doPost(mockedRequest,mockedResponse));
-        UtenteRegistratoDAO dao= new ScolarescaDAOImpl();
-        UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
-        if(bean!=null){
-            dao.doDelete(bean.getId());
-        }
-        String message="La password conferma non rispetta il formato";
-        assertEquals(message,exception.getMessage()); Mockito.when(mockedRequest.getParameter("password")).thenReturn(PASSWORD_NOT_HASH);
-
+         try {
+             servlet.doPost(mockedRequest,mockedResponse);
+         } catch (ServletException e) {
+             throw new RuntimeException(e);
+         } catch (IOException e) {
+             throw new RuntimeException(e);
+         }
+         UtenteRegistratoDAO dao= new UtenteDAOImpl();
+         UtenteRegistratoBean bean= dao.doRetrieveByEmail(EMAIL);
+         if(bean!=null){
+             dao.doDelete(bean.getId());
+         }
+         String message="La password conferma non rispetta il formato";
+         Mockito.verify(session).setAttribute("messaggio",message);
     }
 
     /** Operazione di riferimento nel Test Plan: Registrazione utente
@@ -329,7 +357,7 @@ public class RegistrazioneControllerTest {
         if(bean!=null){
             dao.doDelete(bean.getId());
         }
-        Mockito.verify(mockedRequest).setAttribute("messaggio","registrazione utente andata a buon fine");
+        Mockito.verify(session).setAttribute("messaggio","registrazione utente andata a buon fine");
     }
     /** Operazione di riferimento nel Test Plan: Registrazione Organizzatore
      * Caso: Corretto
@@ -361,7 +389,7 @@ public class RegistrazioneControllerTest {
         if(bean!=null){
             dao.doDelete(bean.getId());
         }
-        Mockito.verify(mockedRequest).setAttribute("messaggio","registrazione organizzatore andata a buon fine");
+        Mockito.verify(session).setAttribute("messaggio","registrazione organizzatore andata a buon fine");
 
     }
     /** Operazione di riferimento nel Test Plan: Registrazione Scolaresca
@@ -390,14 +418,14 @@ public class RegistrazioneControllerTest {
         if(bean!=null){
             dao.doDelete(bean.getId());
         }
-        Mockito.verify(mockedRequest).setAttribute("messaggio","registrazione scolaresca andata a buon fine");
+        Mockito.verify(session).setAttribute("messaggio","registrazione scolaresca andata a buon fine");
 
     }
     /**
      * Cleanup the environment.
      */
-    @AfterClass
-    public static void tearDown(){
+    @After
+    public void tearDown(){
         mockedRequest = null;
         mockedResponse = null;
         mockedServletContext = null;

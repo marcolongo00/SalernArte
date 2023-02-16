@@ -254,21 +254,21 @@
             $("#modMostra").hide();
             $("#modAnnulla,#modConferma").show();
             $("input[type='file']").show();
-            $(".mTitle").html("<input type='text' class='mTitle' name='titoloEvMod' id='validaTitle' oninput='validaNotEmpty(\"modConferma\")' value='"+title+"'> ");
-            $(".indirizzoCont").html("<input type='text' class='indirizzoCont' name='indirizzoEvMod' id='validaIndirizzo' oninput='validaNotEmpty(\"modConferma\")' value='"+indirizzo+"'> ");
-            $(".sedeCont").html("<input type='text' class='sedeCont' id='validaSede' name='sedeEvMod' oninput='validaNotEmpty(\"modConferma\")' value='"+sede+"'> ");
-            $(".numBiglietti").html("<input type='number' min='0' step='1' class='numBigliettiCont' id='validaNumBiglietti' name='numBigliettiEvMod' oninput='validaNotEmpty(\"modConferma\")' value='"+numBiglietti+"'> ");
-            $(".prezzoBiglietto").html("<input type='number'  class='prezzoBiglietto' id='validaPrezzoBiglietti' name='prezzoBigliettoEvMod' oninput='validaNotEmpty(\"modConferma\")' value='"+prezzoBiglietto+"'> ");
+            $(".mTitle").html("<input type='text' class='mTitle' name='titoloEvMod' id='validaTitle'  value='"+title+"'> ");
+            $(".indirizzoCont").html("<input type='text' class='indirizzoCont' name='indirizzoEvMod' id='validaIndirizzo'  value='"+indirizzo+"'> ");
+            $(".sedeCont").html("<input type='text' class='sedeCont' id='validaSede' name='sedeEvMod'  value='"+sede+"'> ");
+            $(".numBiglietti").html("<input type='number' min='0' step='1' class='numBigliettiCont' id='validaNumBiglietti' name='numBigliettiEvMod'  value='"+numBiglietti+"'> ");
+            $(".prezzoBiglietto").html("<input type='number'  class='prezzoBiglietto' id='validaPrezzoBiglietti' name='prezzoBigliettoEvMod'  value='"+prezzoBiglietto+"'> ");
 
             $(".tipoModVal").html(tipoEv);
             $("#barraTipo").show();
             $(".tipoValue").hide();
-            $(".mDescr").html("<textarea  rows='10' class='mDescr' name='descrizioneMod' id='validaDescr' oninput='validaNotEmpty(\"modConferma\")' >"+descr+"</textarea>");
+            $(".mDescr").html("<textarea  rows='10' class='mDescr' name='descrizioneMod' id='validaDescr' >"+descr+"</textarea>");
 
-            $(".dataInizio").html("<input type='date'  class='dataInizio' id='validaDataInizio' name='dataInizioEvMod' oninput='validaNotEmpty(\"modConferma\")' value='${realValueDataInizio}'> ");
-            $(".dataFine").html("<input type='date'  class='dataInizio' id='validaDataInizio' name='dataFineEvMod' oninput='validaNotEmpty(\"modConferma\")' value='${realValueDataFine}'> ");
+            $(".dataInizio").html("<input type='date'  class='dataInizio' id='validaDataInizio' name='dataInizioEvMod'  value='${realValueDataInizio}'> ");
+            $(".dataFine").html("<input type='date'  class='dataInizio' id='validaDataInizio' name='dataFineEvMod'  value='${realValueDataFine}'> ");
 
-            //validaNotEmpty("modConferma");
+
         });
 
         $("#modAnnulla").click(function () {
