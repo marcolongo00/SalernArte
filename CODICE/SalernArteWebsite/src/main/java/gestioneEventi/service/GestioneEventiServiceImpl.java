@@ -42,17 +42,17 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
             if(nome==null || !nome.matches("^[0-9°A-zÀ-ù ‘-]{1,50}$"))
                 throw new RuntimeException("formato nome evento errato");
 
-            if(descrizione==null || !descrizione.matches("^[0-9°A-zÀ-ù ‘-]{1,320}$"))
+            if(descrizione==null || !descrizione.matches("^[\\s\\S]{1,1000}$"))
                 throw new RuntimeException("formato descrizione evento errato");
             if(tipoEvento.compareToIgnoreCase("mostra")!=0 && tipoEvento.compareToIgnoreCase("teatro")!=0){
                 throw new RuntimeException("formato tipo evento errato");
             }
             if(numBiglietti <=0 || prezzoBiglietto<= 0)
                 throw new RuntimeException("formato numero biglietto e/o prezzo biglietti errato");
-            if(sede==null || !sede.matches("^[0-9°A-zÀ-ù ‘-]{1,100}$")){
+            if(sede==null || !sede.matches("^[\\s\\S]{1,100}$")){
                 throw new RuntimeException("formato sede evento errato");
             }
-            if(indirizzo==null || !indirizzo.matches("^[0-9°A-zÀ-ù ‘-]{2,30}$")){
+            if(indirizzo==null || !indirizzo.matches("^[\\s\\S]{1,100}$")){
                 throw new RuntimeException("formato indirizzo errato");
             }
             String path = "./immaginiEventi/" + filePhoto.getSubmittedFileName();
@@ -83,7 +83,7 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
              if(nome==null || !nome.matches("^[0-9°A-zÀ-ù ‘-]{1,50}$"))
                  throw new RuntimeException("formato nome evento errato");
 
-             if(descrizione==null || !descrizione.matches("^[0-9°A-zÀ-ù ‘-]{1,320}$"))
+             if(descrizione==null || !descrizione.matches("^[\\s\\S]{1,1000}$"))
                  throw new RuntimeException("formato descrizione evento errato");
 
              if(tipoEvento.compareToIgnoreCase("mostra")!=0 && tipoEvento.compareToIgnoreCase("teatro")!=0){
@@ -92,10 +92,10 @@ public class GestioneEventiServiceImpl implements GestioneEventiService{
              if(numBiglietti <=0 || prezzoBiglietto<= 0)
                 throw new RuntimeException("formato numero biglietto e/o prezzo biglietti errato");
 
-             if(sede==null || !sede.matches("^[0-9°A-zÀ-ù ‘-]{1,100}$")){
+             if(sede==null || !sede.matches("^[\\s\\S]{1,100}$")){
                  throw new RuntimeException("formato sede evento errato");
              }
-             if(indirizzo==null || !indirizzo.matches("^[0-9°A-zÀ-ù ‘-]{2,30}$")){
+             if(indirizzo==null || !indirizzo.matches("^[\\s\\S]{1,100}$")){
                  throw new RuntimeException("formato indirizzo errato");
              }
             //retrieve evento da modificare per fare alcuni controlli
