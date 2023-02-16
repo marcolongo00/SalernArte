@@ -27,6 +27,9 @@ public class RegistrazioneController extends HttpServlet {
 
             String password=request.getParameter("password");
             String passConferma=request.getParameter("passwordConferma");
+            if(!password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )){
+                throw new RuntimeException("La password vecchia non è valida");
+            }
             if(!passConferma.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )){
                 throw new RuntimeException("La password conferma non rispetta il formato");
             }
