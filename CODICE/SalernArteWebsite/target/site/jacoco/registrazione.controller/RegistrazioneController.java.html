@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RegistrazioneController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SalernArteWebsite</a> &gt; <a href="index.source.html" class="el_package">registrazione.controller</a> &gt; <span class="el_source">RegistrazioneController.java</span></div><h1>RegistrazioneController.java</h1><pre class="source lang-java linenums">package registrazione.controller;
+
+import model.entity.CarrelloBean;
+import model.entity.UtenteRegistratoBean;
+import registrazione.service.RegistrazioneService;
+import registrazione.service.RegistrazioneServiceimpl;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Date;
+
+@WebServlet(name = &quot;RegistrazioneController&quot;,urlPatterns = &quot;/registrazione-controller&quot;)
+<span class="fc" id="L19">public class RegistrazioneController extends HttpServlet {</span>
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="fc" id="L21">        HttpSession session = request.getSession();</span>
+<span class="fc" id="L22">        RegistrazioneService serviceA= new RegistrazioneServiceimpl();</span>
+<span class="fc" id="L23">        session.removeAttribute(&quot;messaggio&quot;);</span>
+        try{
+
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">        if(request.getParameter(&quot;registrazione&quot;)!= null){ //controllo sui dati e su password conferma</span>
+
+<span class="fc" id="L28">            String password=request.getParameter(&quot;password&quot;);</span>
+<span class="fc" id="L29">            String passConferma=request.getParameter(&quot;passwordConferma&quot;);</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">            if(!password.matches(&quot;^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$&quot; )){</span>
+<span class="nc" id="L31">                throw new RuntimeException(&quot;La password vecchia non è valida&quot;);</span>
+            }
+<span class="fc bfc" id="L33" title="All 2 branches covered.">            if(!passConferma.matches(&quot;^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$&quot; )){</span>
+<span class="fc" id="L34">                throw new RuntimeException(&quot;La password conferma non rispetta il formato&quot;);</span>
+            }
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            if( password.compareTo(passConferma)!=0){</span>
+<span class="fc" id="L37">                throw new RuntimeException(&quot;Le due password inserite non corrispondono, riprovare&quot;);</span>
+            }
+            //tutti altri controlli
+<span class="fc" id="L40">                String email=request.getParameter(&quot;email&quot;);</span>
+<span class="fc" id="L41">                String tipoUtente=request.getParameter(&quot;tipoUtente&quot;);</span>
+<span class="fc" id="L42">                UtenteRegistratoBean utenteResult=null;</span>
+
+<span class="fc bfc" id="L44" title="All 2 branches covered.">                if(tipoUtente.compareToIgnoreCase(&quot;utente&quot;)==0){</span>
+<span class="fc" id="L45">                    String nome=request.getParameter(&quot;nome&quot;);</span>
+<span class="fc" id="L46">                    String cognome=request.getParameter(&quot;cognome&quot;);</span>
+                    Date datadiNascita;
+                    try{
+<span class="fc" id="L49">                        datadiNascita=Date.valueOf(request.getParameter(&quot;dataDiNascita&quot;));</span>
+<span class="fc" id="L50">                    }catch (IllegalArgumentException e){</span>
+<span class="fc" id="L51">                        throw new RuntimeException(&quot;la Data di Nascita non rispetta il formato&quot;);</span>
+<span class="fc" id="L52">                    }</span>
+<span class="fc" id="L53">                    int gender= Integer.parseInt(request.getParameter(&quot;gender&quot;));</span>
+<span class="fc" id="L54">                    utenteResult=serviceA.registrazioneUtente(gender,nome,cognome,email,password,datadiNascita);</span>
+<span class="fc" id="L55">                    CarrelloBean carrelloSessione= (CarrelloBean) session.getAttribute(&quot;carrello&quot;);</span>
+<span class="fc" id="L56">                    serviceA.salvaCarrelloSessione(utenteResult,carrelloSessione);</span>
+<span class="fc" id="L57">                    session.setAttribute(&quot;messaggio&quot;,&quot;registrazione utente andata a buon fine&quot;);</span>
+<span class="fc" id="L58">                }else</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">                if(tipoUtente.compareToIgnoreCase(&quot;scolaresca&quot;)==0){</span>
+<span class="fc" id="L60">                    String istituto=request.getParameter(&quot;istituto&quot;);</span>
+<span class="fc" id="L61">                    utenteResult= serviceA.registrazioneScolaresca(email,password,istituto);</span>
+<span class="fc" id="L62">                    CarrelloBean carrelloSessione= (CarrelloBean) session.getAttribute(&quot;carrello&quot;);</span>
+<span class="fc" id="L63">                    serviceA.salvaCarrelloSessione(utenteResult,carrelloSessione);</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">                    if(carrelloSessione!=null){</span>
+<span class="nc" id="L65">                        serviceA.applicaScontoScuola(carrelloSessione);</span>
+<span class="nc" id="L66">                        session.setAttribute(&quot;carrello&quot;,carrelloSessione);</span>
+                    }
+<span class="fc" id="L68">                    session.setAttribute(&quot;messaggio&quot;,&quot;registrazione scolaresca andata a buon fine&quot;);</span>
+<span class="fc" id="L69">                }</span>
+                else
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">                if(tipoUtente.compareToIgnoreCase(&quot;organizzatore&quot;)==0){</span>
+<span class="fc" id="L72">                    String nome=request.getParameter(&quot;nome&quot;);</span>
+<span class="fc" id="L73">                    String cognome=request.getParameter(&quot;cognome&quot;);</span>
+                    Date datadiNascita;
+                    try{
+<span class="fc" id="L76">                        datadiNascita=Date.valueOf(request.getParameter(&quot;dataDiNascita&quot;));</span>
+<span class="fc" id="L77">                    }catch (IllegalArgumentException e){</span>
+<span class="fc" id="L78">                        throw new RuntimeException(&quot;la Data di Nascita non rispetta il formato&quot;);</span>
+<span class="fc" id="L79">                    }</span>
+<span class="fc" id="L80">                    int gender= Integer.parseInt(request.getParameter(&quot;gender&quot;));</span>
+<span class="fc" id="L81">                    String biografia=request.getParameter(&quot;biografia&quot;);</span>
+<span class="fc" id="L82">                    String iban=request.getParameter(&quot;iban&quot;);</span>
+<span class="fc" id="L83">                    utenteResult=serviceA.registrazioneOrganizzatore(gender,iban,nome,cognome,email,password,biografia,datadiNascita);</span>
+<span class="fc" id="L84">                    session.removeAttribute(&quot;carrello&quot;);</span>
+<span class="fc" id="L85">                    session.setAttribute(&quot;messaggio&quot;,&quot;registrazione organizzatore andata a buon fine&quot;);</span>
+                }else{ //admin?????
+                    //errore
+                }
+<span class="fc" id="L89">                session.setAttribute(&quot;selezionato&quot;,utenteResult);</span>
+
+<span class="fc" id="L91">            callDispatcher(request,response,&quot;/index.html&quot;);</span>
+
+        }
+<span class="fc" id="L94">        }catch (RuntimeException e){</span>
+<span class="fc" id="L95">            session.setAttribute(&quot;messaggio&quot;,e.getMessage());</span>
+<span class="fc" id="L96">            callDispatcher(request,response,&quot;/index.html&quot;);</span>
+<span class="fc" id="L97">        }</span>
+
+<span class="fc" id="L99">    }</span>
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<span class="nc" id="L102">        doPost(request,response);</span>
+<span class="nc" id="L103">    }</span>
+
+    private void callDispatcher(HttpServletRequest request, HttpServletResponse response,String address) throws ServletException, IOException {
+<span class="fc" id="L106">        RequestDispatcher dispatcher = request.getRequestDispatcher(address);</span>
+<span class="fc" id="L107">        dispatcher.forward(request, response);</span>
+<span class="fc" id="L108">    }</span>
+    private void callReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {
+<span class="nc" id="L110">        String address=request.getHeader(&quot;referer&quot;); //gli da fastidio, devi completamente separare dispatcher e referer</span>
+<span class="nc bnc" id="L111" title="All 6 branches missed.">        if(address==null || address.contains(&quot;/registrazione-controller&quot;) || address.trim().isEmpty()){</span>
+<span class="nc" id="L112">            address=&quot;.&quot;;</span>
+        }
+<span class="nc" id="L114">        response.sendRedirect(address);</span>
+<span class="nc" id="L115">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

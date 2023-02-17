@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GestioneEventiServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SalernArteWebsite</a> &gt; <a href="index.source.html" class="el_package">gestioneEventi.service</a> &gt; <span class="el_source">GestioneEventiServiceImpl.java</span></div><h1>GestioneEventiServiceImpl.java</h1><pre class="source lang-java linenums">package gestioneEventi.service;
+
+import model.dao.*;
+import model.entity.CarrelloBean;
+import model.entity.EventoBean;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.Part;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.List;
+import model.entity.CarrelloBean.BigliettoQuantita;
+import model.entity.OrganizzatoreBean;
+import model.entity.UtenteRegistratoBean;
+
+public class GestioneEventiServiceImpl implements GestioneEventiService{
+    private EventoDAO daoEvento;
+    private BigliettoDAO daoBiglietto;
+
+    private static final long  MEGABYTE = 1024L * 1024L;
+<span class="fc" id="L27">    public GestioneEventiServiceImpl() {</span>
+<span class="fc" id="L28">        daoEvento= new EventoDAOImpl();</span>
+<span class="fc" id="L29">        daoBiglietto=new BigliettoDAOImpl();</span>
+<span class="fc" id="L30">    }</span>
+<span class="fc" id="L31">    public GestioneEventiServiceImpl(EventoDAO daoEv,BigliettoDAO daoBigl){</span>
+<span class="fc" id="L32">        daoEvento=daoEv;</span>
+<span class="fc" id="L33">        daoBiglietto=daoBigl;</span>
+<span class="fc" id="L34">    }</span>
+
+    public boolean richiediInserimentoEvento(int idOrganizzatore,String nome, String tipoEvento, String descrizione, String pathContext,Part filePhoto, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede){
+        try{
+<span class="fc" id="L38">            Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());</span>
+<span class="pc bpc" id="L39" title="2 of 8 branches missed.">            if( dataFine.before(dataInizio) || dataFine.getTime()==dataInizio.getTime() || dataInizio.before(dataAttuale) || dataInizio.getTime()==dataAttuale.getTime()){</span>
+<span class="fc" id="L40">                throw  new RuntimeException(&quot;impostazioni data inserite non valide&quot;);</span>
+            }
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">            if(nome==null || !nome.matches(&quot;^[0-9°A-zÀ-ù ‘-]{1,50}$&quot;))</span>
+<span class="fc" id="L43">                throw new RuntimeException(&quot;formato nome evento errato&quot;);</span>
+
+<span class="pc bpc" id="L45" title="1 of 4 branches missed.">            if(descrizione==null || !descrizione.matches(&quot;^[\\s\\S]{1,1000}$&quot;))</span>
+<span class="fc" id="L46">                throw new RuntimeException(&quot;formato descrizione evento errato&quot;);</span>
+<span class="fc bfc" id="L47" title="All 4 branches covered.">            if(tipoEvento.compareToIgnoreCase(&quot;mostra&quot;)!=0 &amp;&amp; tipoEvento.compareToIgnoreCase(&quot;teatro&quot;)!=0){</span>
+<span class="fc" id="L48">                throw new RuntimeException(&quot;formato tipo evento errato&quot;);</span>
+            }
+<span class="fc bfc" id="L50" title="All 4 branches covered.">            if(numBiglietti &lt;=0 || prezzoBiglietto&lt;= 0)</span>
+<span class="fc" id="L51">                throw new RuntimeException(&quot;formato numero biglietto e/o prezzo biglietti errato&quot;);</span>
+<span class="pc bpc" id="L52" title="1 of 4 branches missed.">            if(sede==null || !sede.matches(&quot;^[\\s\\S]{1,100}$&quot;)){</span>
+<span class="fc" id="L53">                throw new RuntimeException(&quot;formato sede evento errato&quot;);</span>
+            }
+<span class="pc bpc" id="L55" title="1 of 4 branches missed.">            if(indirizzo==null || !indirizzo.matches(&quot;^[\\s\\S]{1,100}$&quot;)){</span>
+<span class="fc" id="L56">                throw new RuntimeException(&quot;formato indirizzo errato&quot;);</span>
+            }
+<span class="fc" id="L58">            String path = &quot;./immaginiEventi/&quot; + filePhoto.getSubmittedFileName();</span>
+<span class="fc" id="L59">            BufferedImage bi= ImageIO.read(filePhoto.getInputStream());</span>
+<span class="pc bpc" id="L60" title="1 of 6 branches missed.">            if( filePhoto.getSize()/MEGABYTE&gt;15  ||  bi.getWidth()&gt; 1024 || bi.getHeight()&gt;768){</span>
+<span class="fc" id="L61">                throw new RuntimeException(&quot;formato file foto non corretto&quot;);</span>
+            }
+<span class="fc" id="L63">            saveImage(filePhoto.getInputStream(),pathContext);</span>
+
+<span class="fc" id="L65">            EventoBean bean= new EventoBean(idOrganizzatore,dataInizio,dataFine,nome,path,descrizione,indirizzo,sede,numBiglietti,getTypeEvento(tipoEvento));</span>
+<span class="fc" id="L66">            daoEvento.doSave(bean);</span>
+<span class="fc" id="L67">            creaBiglietti(numBiglietti,bean.getId(),prezzoBiglietto);</span>
+<span class="fc" id="L68">            return true;</span>
+<span class="nc" id="L69">        } catch (IOException e) {</span>
+<span class="nc" id="L70">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    @Override
+    public boolean richiediModificaEvento(int idEvDaModificare, UtenteRegistratoBean utenteLoggato, String nome, String tipoEvento, String descrizione, String pathContext, Part filePhoto, int numBiglietti, double prezzoBiglietto, Date dataInizio, Date dataFine, String indirizzo, String sede) {
+        //controllo autorizzazione utente operazione
+<span class="fc" id="L77">        controllaPermessiOrganizzatore(utenteLoggato);</span>
+        //controllo sul formato dei dati
+         try{
+<span class="pc bpc" id="L80" title="1 of 4 branches missed.">             if(dataFine.before(dataInizio) || dataFine.getTime()==dataInizio.getTime() ){</span>
+<span class="fc" id="L81">                throw  new RuntimeException(&quot;impostazioni data inserite non valide&quot;);</span>
+             }
+<span class="pc bpc" id="L83" title="1 of 4 branches missed.">             if(nome==null || !nome.matches(&quot;^[0-9°A-zÀ-ù ‘-]{1,50}$&quot;))</span>
+<span class="fc" id="L84">                 throw new RuntimeException(&quot;formato nome evento errato&quot;);</span>
+
+<span class="pc bpc" id="L86" title="1 of 4 branches missed.">             if(descrizione==null || !descrizione.matches(&quot;^[\\s\\S]{1,1000}$&quot;))</span>
+<span class="fc" id="L87">                 throw new RuntimeException(&quot;formato descrizione evento errato&quot;);</span>
+
+<span class="fc bfc" id="L89" title="All 4 branches covered.">             if(tipoEvento.compareToIgnoreCase(&quot;mostra&quot;)!=0 &amp;&amp; tipoEvento.compareToIgnoreCase(&quot;teatro&quot;)!=0){</span>
+<span class="fc" id="L90">                 throw new RuntimeException(&quot;formato tipo evento errato&quot;);</span>
+             }
+<span class="fc bfc" id="L92" title="All 4 branches covered.">             if(numBiglietti &lt;=0 || prezzoBiglietto&lt;= 0)</span>
+<span class="fc" id="L93">                throw new RuntimeException(&quot;formato numero biglietto e/o prezzo biglietti errato&quot;);</span>
+
+<span class="pc bpc" id="L95" title="1 of 4 branches missed.">             if(sede==null || !sede.matches(&quot;^[\\s\\S]{1,100}$&quot;)){</span>
+<span class="fc" id="L96">                 throw new RuntimeException(&quot;formato sede evento errato&quot;);</span>
+             }
+<span class="pc bpc" id="L98" title="1 of 4 branches missed.">             if(indirizzo==null || !indirizzo.matches(&quot;^[\\s\\S]{1,100}$&quot;)){</span>
+<span class="fc" id="L99">                 throw new RuntimeException(&quot;formato indirizzo errato&quot;);</span>
+             }
+            //retrieve evento da modificare per fare alcuni controlli
+<span class="fc" id="L102">            EventoBean eventoDaModificare= daoEvento.doRetrieveById(idEvDaModificare);</span>
+            //controlla se il path foto modifica esiste altrimenti prendi quello vecchio
+<span class="fc" id="L104">            String path=&quot;&quot;;</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            if(pathContext.isEmpty()){</span>
+<span class="fc" id="L106">                path=eventoDaModificare.getPath();</span>
+            }else{
+                //se il path foto modifica esiste fai save photo
+<span class="fc" id="L109">                path = &quot;./immaginiEventi/&quot; + filePhoto.getSubmittedFileName();</span>
+<span class="fc" id="L110">                BufferedImage bi= ImageIO.read(filePhoto.getInputStream());</span>
+
+<span class="pc bpc" id="L112" title="3 of 6 branches missed.">                if( filePhoto.getSize()/MEGABYTE&gt;15  ||  bi.getWidth()&gt; 1024 || bi.getHeight()&gt;768){</span>
+<span class="fc" id="L113">                    throw new RuntimeException(&quot;formato file foto non corretto&quot;);</span>
+                }
+<span class="nc" id="L115">                saveImage(filePhoto.getInputStream(),pathContext);</span>
+            }
+
+             // crea un evento temp con i dati modificati e id ovviamente diverso da quello orginario
+<span class="fc" id="L119">            EventoBean newEvento= new EventoBean(utenteLoggato.getId(),dataInizio,dataFine,nome,path,descrizione,indirizzo,sede,numBiglietti,getTypeEvento(tipoEvento));</span>
+<span class="fc" id="L120">            daoEvento.doSave(newEvento);</span>
+            //la creazione dei biglietti avverrà in accetta modifica da parte dell'admin
+             // crea un'istanza di richiesta modifica
+<span class="fc" id="L123">             daoEvento.doSaveRichiestaModificaEv(eventoDaModificare.getId(),newEvento.getId(),prezzoBiglietto);</span>
+<span class="fc" id="L124">            return true;</span>
+<span class="nc" id="L125">        }catch (IOException e){</span>
+<span class="nc" id="L126">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    private void creaBiglietti(int numBiglietti,int idEvento, double prezzoBiglietto){
+        //creo tanti biglietti quanto il num inserito e li carico
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        for (int i = 0; i &lt; numBiglietti; i++) {</span>
+<span class="fc" id="L133">            daoBiglietto.doSave(idEvento,prezzoBiglietto);</span>
+        }
+<span class="fc" id="L135">    }</span>
+
+    @Override
+    public boolean attivaEvento(int idEvento, String tipoUtente) {
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if(tipoUtente.compareToIgnoreCase(&quot;amministratore&quot;)!=0){</span>
+<span class="fc" id="L140">            throw new RuntimeException(&quot;operazione non autorizzata&quot;); //myexception</span>
+        }
+<span class="fc" id="L142">        daoEvento.doUpdateAttivazioneEvento(idEvento,true);</span>
+<span class="fc" id="L143">        return true;</span>
+    }
+
+    public boolean rimuoviEvento(int idEvento, UtenteRegistratoBean utente){
+<span class="fc bfc" id="L147" title="All 4 branches covered.">        if(utente.getTipoUtente().compareToIgnoreCase(&quot;amministratore&quot;)!=0 &amp;&amp; utente.getTipoUtente().compareToIgnoreCase(&quot;organizzatore&quot;)!=0){</span>
+<span class="fc" id="L148">            throw new RuntimeException(&quot;operazione non autorizzata&quot;); //myexception</span>
+        }
+        //nel acso di rifiuto inseirmento l'evento viene rimosso. nel caso di rifiuta modifica no,
+        // si riporta allo stato di prima e si avvisa l'organizzatore
+        //metodo chiamato anche se l'ìorganizzatore elimina l'evento
+<span class="fc" id="L153">        EventoBean evDaEliminare= daoEvento.doRetrieveById(idEvento);</span>
+<span class="fc" id="L154">        deleteImage(evDaEliminare.getPath());</span>
+<span class="fc" id="L155">        daoEvento.doDelete(idEvento);</span>
+<span class="fc" id="L156">        return true;</span>
+    }
+
+    @Override
+    public boolean accettaModifica(int idEvento, String tipoUtente) {
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if(tipoUtente.compareTo(&quot;amministratore&quot;)!=0){</span>
+<span class="fc" id="L162">            throw new RuntimeException(&quot;operazione non autorizzata&quot;); //myexception</span>
+        }
+        //accetto al modifica poi trovo e cancello l'evento con i dati vecchi e in cascade si cancellerà la richiesta
+<span class="fc" id="L165">        int idEventoPreModifica=daoEvento.retrieveEventoFromidEventoModifica(idEvento);</span>
+<span class="fc" id="L166">        daoEvento.doUpdateAttivazioneEvento(idEvento,true);</span>
+<span class="fc" id="L167">        EventoBean eventoPre=daoEvento.doRetrieveById(idEventoPreModifica);</span>
+<span class="fc" id="L168">        EventoBean eventoPost=daoEvento.doRetrieveById(idEvento);</span>
+
+<span class="fc" id="L170">        double nuovoPrezzoBiglietto=daoBiglietto.doRetrievePrezzoBiglByRichiestaModifica(eventoPost.getId());</span>
+<span class="fc" id="L171">        daoBiglietto.updatePrezzoBigliettoEvento(eventoPost.getId(),nuovoPrezzoBiglietto);</span>
+
+<span class="fc" id="L173">        daoBiglietto.doUpdateBigliettiModificaEvento(eventoPre,eventoPost);</span>
+        //attenzione al pathfoto se è diversp. da eliminare quello vecchio
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if(eventoPre.getPath().compareTo(eventoPost.getPath())!=0){</span>
+<span class="nc" id="L176">            deleteImage(eventoPre.getPath());</span>
+        }
+<span class="fc" id="L178">        daoEvento.doDelete(idEventoPreModifica);</span>
+<span class="fc" id="L179">        return true;</span>
+    }
+
+    @Override
+    public boolean rifiutaModifica(int idEvento, String tipoUtente) {
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        if(tipoUtente.compareTo(&quot;amministratore&quot;)!=0){</span>
+<span class="fc" id="L185">            throw new RuntimeException(&quot;operazione non autorizzata&quot;); //myexception</span>
+        }
+        //rifiuto la modifica quindi elimino temp e riporto evento originale ad attivo
+<span class="fc" id="L188">        int idEventoPreModifica=daoEvento.retrieveEventoFromidEventoModifica(idEvento);</span>
+<span class="fc" id="L189">        daoEvento.doUpdateAttivazioneEvento(idEventoPreModifica,true);</span>
+        //se i path non coincidono vuol dire che è stata
+        // salvata anche la foto dell'evento post modifica e va eliminata
+<span class="fc" id="L192">        EventoBean eventoPre=daoEvento.doRetrieveById(idEventoPreModifica);</span>
+<span class="fc" id="L193">        EventoBean eventoPost=daoEvento.doRetrieveById(idEvento);</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        if(eventoPre.getPath().compareTo(eventoPost.getPath())!=0){</span>
+<span class="nc" id="L195">            deleteImage(eventoPost.getPath());</span>
+        }
+<span class="fc" id="L197">        daoEvento.doDelete(idEvento);</span>
+<span class="fc" id="L198">        return true;</span>
+    }
+
+    @Override
+    public EventoBean retrieveEventoById(int idEvento) {
+<span class="fc" id="L203">        EventoBean result= daoEvento.doRetrieveById(idEvento);</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        if(result==null){</span>
+<span class="fc" id="L205">            throw new RuntimeException(&quot;Si è verificato un errore, l'evento selezionato non esiste &quot;);</span>
+        }
+<span class="fc" id="L207">        return result;</span>
+    }
+
+    @Override
+    public OrganizzatoreBean retriveBioOrganizzatore(int idOrg) {
+<span class="nc" id="L212">        OrganizzatoreDAOImpl daoOrg=new OrganizzatoreDAOImpl();</span>
+<span class="nc" id="L213">        return daoOrg.doRetrieveById(idOrg);</span>
+    }
+
+    @Override
+    public List&lt;EventoBean&gt; retrieveEventiOrganizzatore(UtenteRegistratoBean utente){
+<span class="nc" id="L218">        controllaPermessiOrganizzatore(utente);</span>
+<span class="nc" id="L219">        return daoEvento.doRetrieveByOrganizzatore(utente.getId());</span>
+    }
+
+    @Override
+    public List&lt;EventoBean&gt; retrieveRichiesteInserimento(String tipoUtente) {
+<span class="pc bpc" id="L224" title="2 of 4 branches missed.">        if(tipoUtente==null || tipoUtente.compareToIgnoreCase(&quot;amministratore&quot;)!=0){</span>
+<span class="fc" id="L225">            throw  new RuntimeException(&quot;operazione non autorizzata&quot;); // errore my exception</span>
+        }
+<span class="nc" id="L227">        return daoEvento.doRetrieveAllRichiesteInserimento();</span>
+    }
+
+    @Override
+    public List&lt;EventoBean&gt; retrieveRichiesteModifica(String tipoUtente) {
+<span class="nc bnc" id="L232" title="All 4 branches missed.">        if(tipoUtente==null || tipoUtente.compareToIgnoreCase(&quot;amministratore&quot;)!=0){</span>
+<span class="nc" id="L233">            throw  new RuntimeException(&quot;operazione non autorizzata&quot;); // errore my exception</span>
+        }
+<span class="nc" id="L235">        return daoEvento.doRetrieveAllRichiesteModifiche();</span>
+    }
+
+
+
+    @Override
+    public void checkQuantitaCarrello(EventoBean evento, CarrelloBean carrelloSessione) {
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">        if (carrelloSessione != null) {</span>
+<span class="nc" id="L243">            BigliettoQuantita biQta=carrelloSessione.get(evento.getId());</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">            if (biQta != null) {</span>
+<span class="nc" id="L245">                int qtaCarr= evento.getNumBiglietti()-biQta.getQuantita();</span>
+<span class="nc" id="L246">                    evento.setNumBiglietti(qtaCarr);</span>
+            }
+        }
+<span class="fc" id="L249">    }</span>
+
+    @Override
+    public boolean checkScaduta(EventoBean evento) {
+<span class="fc" id="L253">        Date dataAttuale= new Date(Calendar.getInstance().getTimeInMillis());</span>
+<span class="pc bpc" id="L254" title="1 of 2 branches missed.">        if(evento.getDataFine().before(dataAttuale)){</span>
+<span class="nc" id="L255">            return true;</span>
+        }
+<span class="fc" id="L257">        return  false;</span>
+    }
+
+    @Override
+    public double getPrezzoEvento(int idEvento) {
+<span class="fc" id="L262">        List&lt;EventoBean&gt; eventiModifica = daoEvento.doRetrieveAllRichiesteModifiche();</span>
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">        for (EventoBean e : eventiModifica) {</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">            if (e.getId() == idEvento) return daoBiglietto.doRetrievePrezzoBiglByRichiestaModifica(idEvento);</span>
+<span class="nc" id="L265">        }</span>
+<span class="fc" id="L266">        return daoBiglietto.doRetrievePrezzoBigliettoByEvento(idEvento);</span>
+    }
+    public List&lt;EventoBean&gt; ricercaEventiByNomeOrDescrizione(String query){
+<span class="fc bfc" id="L269" title="All 2 branches covered.">        if(!query.matches(&quot;^[0-9°A-zÀ-ù ‘-]*\\*$&quot;)){</span>
+<span class="fc" id="L270">            throw new RuntimeException(&quot;errore formato ricerca&quot;);</span>
+        }
+<span class="fc" id="L272">        return daoEvento.doRetrieveByNomeOrDescrizione(query);</span>
+    }
+    public List&lt;EventoBean&gt; retrieveEventiByTipo(String tipoEvento){
+<span class="nc bnc" id="L275" title="All 2 branches missed.">        if(tipoEvento.compareToIgnoreCase(&quot;teatro&quot;)==0){</span>
+<span class="nc" id="L276">            return daoEvento.doRetrieveAllByTeatroAttiviNonScaduti();</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        }else if(tipoEvento.compareToIgnoreCase(&quot;mostra&quot;)==0){</span>
+<span class="nc" id="L278">            return  daoEvento.doRetrieveAllByMostraAttiviNonScaduti();</span>
+        }else{
+<span class="nc" id="L280">            throw new RuntimeException(&quot;operazione non riconoscita&quot;);</span>
+        }
+    }
+    public List&lt;EventoBean&gt; retrieveTuttiEventiNonScadutiAttivi(){
+<span class="nc" id="L284">       return  daoEvento.doRetrieveAllEventiAttiviNonScaduti();</span>
+    }
+
+    private boolean getTypeEvento(String tipoEvento){
+<span class="pc bpc" id="L288" title="1 of 3 branches missed.">        switch (tipoEvento){</span>
+<span class="fc" id="L289">            case &quot;teatro&quot;: return true;</span>
+<span class="fc" id="L290">            case &quot;mostra&quot;: return false;</span>
+<span class="nc" id="L291">            default: throw new RuntimeException(&quot;formato tipo evento errato&quot;);</span>
+        }
+    }
+
+    public static void saveImage(InputStream in,String path){
+<span class="fc" id="L296">        File file=new File(path);</span>
+        try {
+<span class="fc" id="L298">            Files.copy(in,file.toPath(), StandardCopyOption.REPLACE_EXISTING);</span>
+<span class="nc" id="L299">        } catch (IOException e) {</span>
+<span class="nc" id="L300">            e.printStackTrace();</span>
+<span class="fc" id="L301">        }</span>
+<span class="fc" id="L302">    }</span>
+
+    public static void deleteImage(String path){
+<span class="fc" id="L305">        File file=new File(path);</span>
+        try {
+<span class="fc" id="L307">            Files.delete(file.toPath());</span>
+<span class="nc" id="L308">        } catch (IOException e) {</span>
+<span class="nc" id="L309">            e.printStackTrace();</span>
+<span class="fc" id="L310">        }</span>
+<span class="fc" id="L311">    }</span>
+
+    private void controllaPermessiOrganizzatore(UtenteRegistratoBean utenteLoggato){
+<span class="pc bpc" id="L314" title="2 of 4 branches missed.">        if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase(&quot;organizzatore&quot;)!=0){</span>
+<span class="nc" id="L315">            throw new RuntimeException(&quot;operazione non autorizzata&quot;);</span>
+        }
+<span class="fc" id="L317">    }</span>
+    private void controllaPermessiAmministratore(UtenteRegistratoBean utenteLoggato){
+<span class="nc bnc" id="L319" title="All 4 branches missed.">        if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase(&quot;amministratore&quot;)!=0){</span>
+<span class="nc" id="L320">            throw new RuntimeException(&quot;operazione non autorizzata&quot;);</span>
+        }
+<span class="nc" id="L322">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

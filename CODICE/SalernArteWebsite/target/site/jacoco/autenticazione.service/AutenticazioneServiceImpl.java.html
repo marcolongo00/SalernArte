@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AutenticazioneServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SalernArteWebsite</a> &gt; <a href="index.source.html" class="el_package">autenticazione.service</a> &gt; <span class="el_source">AutenticazioneServiceImpl.java</span></div><h1>AutenticazioneServiceImpl.java</h1><pre class="source lang-java linenums">package autenticazione.service;
+
+import model.dao.*;
+import model.entity.*;
+
+import java.sql.Date;
+import java.util.*;
+
+import model.entity.CarrelloBean.BigliettoQuantita;
+
+
+public class AutenticazioneServiceImpl implements AutenticazioneService{
+    private UtenteRegistratoDAO daoU;
+    private AmministratoreDAOImpl daoAmm;
+    private OrganizzatoreDAOImpl daoOrg;
+    private UtenteDAOImpl daoUtente;
+    private ScolarescaDAOImpl daoScol;
+    private AcquistoDAO daoAcq;
+<span class="fc" id="L19">    public AutenticazioneServiceImpl() {</span>
+<span class="fc" id="L20">        daoOrg = new OrganizzatoreDAOImpl();</span>
+<span class="fc" id="L21">        daoUtente = new UtenteDAOImpl();</span>
+<span class="fc" id="L22">        daoScol = new ScolarescaDAOImpl();</span>
+<span class="fc" id="L23">        daoAmm = new AmministratoreDAOImpl();</span>
+<span class="fc" id="L24">        daoAcq=new AcquistoDAOImpl();</span>
+<span class="fc" id="L25">    }</span>
+
+    public AutenticazioneServiceImpl(ScolarescaDAOImpl daoScol, OrganizzatoreDAOImpl daoOrg, UtenteDAOImpl daoUtente, AmministratoreDAOImpl daoAmm)
+<span class="fc" id="L28">    {</span>
+<span class="fc" id="L29">        this.daoScol = daoScol;</span>
+<span class="fc" id="L30">        this.daoOrg = daoOrg;</span>
+<span class="fc" id="L31">        this.daoUtente = daoUtente;</span>
+<span class="fc" id="L32">        this.daoAmm = daoAmm;</span>
+<span class="fc" id="L33">        daoAcq=new AcquistoDAOImpl();</span>
+<span class="fc" id="L34">    }</span>
+
+    @Override
+    public UtenteRegistratoBean loginUtente(String email, String passwordNotHash, String tipoUtente) {
+        //if null throw exception per tutti
+<span class="pc bpc" id="L39" title="1 of 4 branches missed.">        if(tipoUtente!=null &amp;&amp; tipoUtente.compareToIgnoreCase(&quot;utente&quot;)==0){</span>
+<span class="fc" id="L40">            return daoUtente.doRetrieveByEmailPassword(email,passwordNotHash);</span>
+        }else
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">        if(tipoUtente!=null &amp;&amp; tipoUtente.compareToIgnoreCase(&quot;scolaresca&quot;)==0){</span>
+<span class="fc" id="L43">            return daoScol.doRetrieveByEmailPassword(email,passwordNotHash);</span>
+        }
+        else
+<span class="pc bpc" id="L46" title="1 of 4 branches missed.">        if(tipoUtente!=null &amp;&amp; tipoUtente.compareToIgnoreCase(&quot;organizzatore&quot;)==0){</span>
+<span class="fc" id="L47">            return daoOrg.doRetrieveByEmailPassword(email,passwordNotHash);</span>
+        }else
+<span class="pc bpc" id="L49" title="2 of 4 branches missed.">        if(tipoUtente!=null &amp;&amp; tipoUtente.compareToIgnoreCase(&quot;amministratore&quot;)==0){</span>
+<span class="fc" id="L50">            return daoAmm.doRetrieveByEmailPassword(email,passwordNotHash);</span>
+        }
+<span class="nc" id="L52">        return null;</span>
+    }
+    @Override
+    public List&lt;UtenteRegistratoBean&gt; retrieveAllUtentiSistema(UtenteRegistratoBean utenteLoggato) {
+<span class="nc bnc" id="L56" title="All 4 branches missed.">        if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase(&quot;amministratore&quot;)!=0){</span>
+<span class="nc" id="L57">            throw new RuntimeException(&quot;operazione non autorizzata&quot;);</span>
+        }
+<span class="nc" id="L59">        List&lt;UtenteRegistratoBean&gt; allUtenti= new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L60">        allUtenti.addAll(daoUtente.doRetrieveAll());</span>
+<span class="nc" id="L61">        allUtenti.addAll(daoScol.doRetrieveAll());</span>
+<span class="nc" id="L62">        allUtenti.addAll(daoOrg.doRetrieveAll());</span>
+<span class="nc" id="L63">        allUtenti.addAll(daoAmm.doRetrieveAll());</span>
+
+<span class="nc" id="L65">        return  allUtenti;</span>
+    }
+
+    @Override
+    public List&lt;AcquistoBean&gt; retrieveListaOrdiniUtente(UtenteRegistratoBean utenteLoggato, int idUtente) {
+<span class="nc bnc" id="L70" title="All 4 branches missed.">        if(utenteLoggato==null || utenteLoggato.getTipoUtente().compareToIgnoreCase(&quot;organizzatore&quot;)==0){</span>
+<span class="nc" id="L71">            throw  new RuntimeException(&quot;Richiesta Illegale&quot;);</span>
+        }
+<span class="nc" id="L73">        List&lt;AcquistoBean&gt; ordini= daoAcq.doRetrieveListaAcquistiByIdUtente(idUtente);</span>
+
+<span class="nc" id="L75">        Collections.reverse(ordini); //per avere la lista in ordine dal più recente</span>
+<span class="nc" id="L76">        return ordini;</span>
+    }
+
+
+    public UtenteRegistratoBean updateUtente(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String nome, String cognome, Date dataDiNascita, int gender) {
+<span class="fc" id="L81">        boolean isHash = false;</span>
+<span class="pc bpc" id="L82" title="1 of 4 branches missed.">        if (email == null || !email.matches(&quot;^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$&quot;)) {</span>
+<span class="fc" id="L83">            throw new RuntimeException(&quot;Email non valida.&quot;);</span>
+        }
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">        if (passwordNoHash.isEmpty()) {</span>
+            //se non viene inserita la password non dve eessere cambiata e si inserisce la vecchia
+<span class="nc" id="L87">            isHash = true;</span>
+<span class="nc" id="L88">            passwordNoHash = utenteLoggato.getPasswordHash();</span>
+        }else {
+            //altrimenti controllare il formato password inserito
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">            if(!passwordNoHash.matches(&quot;^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$&quot;)){</span>
+<span class="nc" id="L92">                throw new RuntimeException(&quot;Password non valida.&quot;);</span>
+            }
+        }
+<span class="pc bpc" id="L95" title="2 of 6 branches missed.">        if (nome == null || nome.isEmpty() || !nome.matches(&quot;^[ a-zA-Z\u00C0-\u00ff]{1,50}$&quot;)) {</span>
+            //regEx per stringa senza numeri
+<span class="fc" id="L97">            throw new RuntimeException(&quot;Nome non valido.&quot;);</span>
+        }
+
+<span class="pc bpc" id="L100" title="2 of 6 branches missed.">        if (cognome == null || cognome.isEmpty() || !cognome.matches(&quot;^[ a-zA-Z\u00C0-\u00ff]{1,50}$&quot;)) {</span>
+            //regEx per stringa senza numeri
+<span class="fc" id="L102">            throw new RuntimeException(&quot;Cognome non valido.&quot;);</span>
+        }
+<span class="fc" id="L104">        Date dataAttuale = new Date(Calendar.getInstance().getTimeInMillis());</span>
+        //se il formato data non è corretto sarà il parse nell'areaUtentecontroller a dare errore
+<span class="fc bfc" id="L106" title="All 4 branches covered.">        if (dataDiNascita.after(dataAttuale) || dataDiNascita.toLocalDate().isEqual(dataAttuale.toLocalDate())) {</span>
+<span class="fc" id="L107">            throw new RuntimeException(&quot;impostazioni data di nascita inserite non valide&quot;);</span>
+        }
+<span class="pc bpc" id="L109" title="2 of 6 branches missed.">        if (gender != 0 &amp;&amp; gender != 1 &amp;&amp; gender != 2) {</span>
+<span class="fc" id="L110">            throw new RuntimeException(&quot;dati per genere non corretti&quot;);</span>
+        }
+<span class="fc" id="L112">        UtenteBean utenteAggiornato = new UtenteBean(utenteLoggato.getId(), gender, nome, cognome, email, passwordNoHash, dataDiNascita, isHash);</span>
+<span class="fc" id="L113">        daoUtente.doUpdate(utenteAggiornato);</span>
+<span class="fc" id="L114">        return utenteAggiornato;</span>
+    }
+    @Override
+    public UtenteRegistratoBean updateAmministratore(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String nome, String cognome) {
+<span class="fc" id="L118">        boolean isHash = false;</span>
+<span class="pc bpc" id="L119" title="1 of 4 branches missed.">        if (email == null || !email.matches(&quot;^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$&quot;)) {</span>
+<span class="fc" id="L120">            throw new RuntimeException(&quot;Email non valida.&quot;);</span>
+        }
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (passwordNoHash.isEmpty()) {</span>
+            //se non viene inserita la password non dve eessere cambiata e si inserisce la vecchia
+<span class="nc" id="L124">            isHash = true;</span>
+<span class="nc" id="L125">            passwordNoHash = utenteLoggato.getPasswordHash();</span>
+        }else {
+            //altrimenti controllare il formato password inserito
+<span class="fc bfc" id="L128" title="All 2 branches covered.">            if(!passwordNoHash.matches(&quot;^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$&quot;)){</span>
+<span class="fc" id="L129">                throw new RuntimeException(&quot;Password non valida.&quot;);</span>
+            }
+        }
+<span class="pc bpc" id="L132" title="2 of 6 branches missed.">        if (nome == null || nome.isEmpty() || !nome.matches(&quot;^[ a-zA-Z\u00C0-\u00ff]{1,50}$&quot;)) {</span>
+            //regEx per stringa senza numeri
+<span class="fc" id="L134">            throw new RuntimeException(&quot;Nome non valido.&quot;);</span>
+        }
+
+<span class="pc bpc" id="L137" title="2 of 6 branches missed.">        if (cognome == null || cognome.isEmpty() || !cognome.matches(&quot;^[ a-zA-Z\u00C0-\u00ff]{1,50}$&quot;)) {</span>
+            //regEx per stringa senza numeri
+<span class="fc" id="L139">            throw new RuntimeException(&quot;Cognome non valido.&quot;);</span>
+        }
+<span class="fc" id="L141">        AmministratoreBean utenteAggiornato = new AmministratoreBean(utenteLoggato.getId(),nome,cognome,email,passwordNoHash,isHash);</span>
+<span class="fc" id="L142">        daoAmm.doUpdate(utenteAggiornato);</span>
+<span class="fc" id="L143">        return utenteAggiornato;</span>
+    }
+
+    @Override
+    public UtenteRegistratoBean updateScolaresca(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String istituto) {
+<span class="fc" id="L148">        boolean isHash = false;</span>
+<span class="pc bpc" id="L149" title="1 of 4 branches missed.">        if (email == null || !email.matches(&quot;^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$&quot;)) {</span>
+<span class="fc" id="L150">            throw new RuntimeException(&quot;Email non valida.&quot;);</span>
+        }
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        if (passwordNoHash.isEmpty()) {</span>
+            //se non viene inserita la password non dve eessere cambiata e si inserisce la vecchia
+<span class="nc" id="L154">            isHash = true;</span>
+<span class="nc" id="L155">            passwordNoHash = utenteLoggato.getPasswordHash();</span>
+        }else {
+            //altrimenti controllare il formato password inserito
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            if(!passwordNoHash.matches(&quot;^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$&quot;)){</span>
+<span class="fc" id="L159">                throw new RuntimeException(&quot;Password non valida.&quot;);</span>
+            }
+
+        }
+<span class="pc bpc" id="L163" title="2 of 6 branches missed.">        if (istituto == null || istituto.isEmpty() || !istituto.matches(&quot;^[ a-zA-Z\u00C0-\u00ff]{1,100}$&quot;)) {</span>
+<span class="fc" id="L164">            throw new RuntimeException(&quot;Istituto non valido.&quot;);</span>
+        }
+<span class="fc" id="L166">        ScolarescaBean utenteAggiornato = new ScolarescaBean(utenteLoggato.getId(),email,passwordNoHash,istituto,isHash);</span>
+<span class="fc" id="L167">        daoScol.doUpdate(utenteAggiornato);</span>
+<span class="fc" id="L168">        return utenteAggiornato;</span>
+    }
+
+    @Override
+    public UtenteRegistratoBean updateOrganizzatore(UtenteRegistratoBean utenteLoggato, String email, String passwordNoHash, String nome, String cognome, Date dataDiNascita, int gender, String biografia, String iban) {
+<span class="fc" id="L173">        boolean isHash = false;</span>
+<span class="pc bpc" id="L174" title="1 of 4 branches missed.">        if (email == null || !email.matches(&quot;^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w+){1,100}$&quot;)) {</span>
+<span class="fc" id="L175">            throw new RuntimeException(&quot;Email non valida.&quot;);</span>
+        }
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">        if (passwordNoHash.isEmpty()) {</span>
+            //se non viene inserita la password non dve eessere cambiata e si inserisce la vecchia
+<span class="nc" id="L179">            isHash = true;</span>
+<span class="nc" id="L180">            passwordNoHash = utenteLoggato.getPasswordHash();</span>
+        }else {
+            //altrimenti controllare il formato password inserito
+<span class="fc bfc" id="L183" title="All 2 branches covered.">            if(!passwordNoHash.matches(&quot;^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$&quot;)){</span>
+<span class="fc" id="L184">                throw new RuntimeException(&quot;Password non valida.&quot;);</span>
+            }
+        }
+<span class="pc bpc" id="L187" title="2 of 6 branches missed.">        if (nome == null || nome.isEmpty() || !nome.matches(&quot;^[ a-zA-Z\u00C0-\u00ff]{1,50}$&quot;)) {</span>
+            //regEx per stringa senza numeri
+<span class="fc" id="L189">            throw new RuntimeException(&quot;Nome non valido.&quot;);</span>
+        }
+
+<span class="pc bpc" id="L192" title="2 of 6 branches missed.">        if (cognome == null || cognome.isEmpty() || !cognome.matches(&quot;^[ a-zA-Z\u00C0-\u00ff]{1,50}$&quot;)) {</span>
+            //regEx per stringa senza numeri
+<span class="fc" id="L194">            throw new RuntimeException(&quot;Cognome non valido.&quot;);</span>
+        }
+<span class="fc" id="L196">        Date dataAttuale = new Date(Calendar.getInstance().getTimeInMillis());</span>
+<span class="fc bfc" id="L197" title="All 4 branches covered.">        if (dataDiNascita.after(dataAttuale) || dataDiNascita.toLocalDate().isEqual(dataAttuale.toLocalDate())) {</span>
+<span class="fc" id="L198">            throw new RuntimeException(&quot;impostazioni data di nascita inserite non valide&quot;);</span>
+        }
+<span class="pc bpc" id="L200" title="2 of 6 branches missed.">        if (gender != 0 &amp;&amp; gender != 1 &amp;&amp; gender != 2) {</span>
+<span class="fc" id="L201">            throw new RuntimeException(&quot;dati per genere non corretti&quot;);</span>
+        }
+<span class="pc bpc" id="L203" title="1 of 4 branches missed.">        if (biografia == null || biografia.isEmpty()) {</span>
+            //BASTA CHE ABBIA ALMENO UN CARATTERE
+<span class="fc" id="L205">            throw new RuntimeException(&quot;Biografia non valido.&quot;);</span>
+        }
+<span class="pc bpc" id="L207" title="2 of 6 branches missed.">        if (iban == null || iban.isEmpty() || !iban.matches(&quot;^(it|IT)[0-9]{2}[A-Za-z][0-9]{10}[0-9A-Za-z]{12}$&quot;)) {</span>
+            //regEx per iban italia
+<span class="fc" id="L209">            throw new RuntimeException(&quot;Iban non valido.&quot;);</span>
+        }
+<span class="fc" id="L211">        OrganizzatoreBean utenteAggiornato = new OrganizzatoreBean(utenteLoggato.getId(), gender, iban, nome, cognome, email, passwordNoHash, biografia,dataDiNascita,isHash);</span>
+<span class="fc" id="L212">        daoOrg.doUpdate(utenteAggiornato);</span>
+<span class="fc" id="L213">        return utenteAggiornato;</span>
+    }
+
+    @Override
+    public void recuperaPassword(String emailTo) {
+        //DA FARE
+
+<span class="nc" id="L220">    }</span>
+    public void eliminaProfiloUtente(UtenteRegistratoBean utenteLoggato){
+<span class="nc bnc" id="L222" title="All 2 branches missed.">        if(utenteLoggato==null) throw new RuntimeException(&quot;operazione non autorizzata&quot;);</span>
+<span class="nc" id="L223">        daoUtente.doDelete(utenteLoggato.getId());</span>
+<span class="nc" id="L224">    }</span>
+    @Override
+    public CarrelloBean mergeCarrelloSessioneAndCarrelloDBAfterLogin(UtenteRegistratoBean utenteRegistratoBean, CarrelloBean carrelloSessione) {
+        //da testare
+<span class="fc" id="L228">        CarrelloDAO daoCarr= new CarrelloDAOImpl();</span>
+<span class="pc bpc" id="L229" title="3 of 4 branches missed.">        if(carrelloSessione!=null &amp;&amp; !carrelloSessione.getProdotti().isEmpty()){</span>
+<span class="nc" id="L230">            CarrelloBean saved=daoCarr.doRetrieveByIdUtente(utenteRegistratoBean.getId());</span>
+<span class="nc" id="L231">            Collection&lt;BigliettoQuantita&gt; prodotti=carrelloSessione.getProdotti();</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">                for (BigliettoQuantita bi: prodotti) {</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">                    if(saved.contains(bi)){</span>
+<span class="nc bnc" id="L234" title="All 2 branches missed.">                        if(bi.getQuantita() != saved.get(bi.getProdotto().getId()).getQuantita())</span>
+<span class="nc" id="L235">                            daoCarr.doUpdateQuantita(utenteRegistratoBean.getId(),bi);</span>
+                    }else{
+<span class="nc" id="L237">                        daoCarr.doSave(utenteRegistratoBean.getId(),bi);</span>
+                    }
+<span class="nc" id="L239">                }</span>
+        }
+<span class="fc" id="L241">        return daoCarr.doRetrieveByIdUtente(utenteRegistratoBean.getId()) ;</span>
+    }
+    public void applicaScontoScuola(CarrelloBean carrello){
+        double scontoDaApplicare;
+        double prezzoscontato;
+<span class="fc" id="L246">        Collection&lt;BigliettoQuantita&gt; prodotti=carrello.getProdotti();</span>
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        for (BigliettoQuantita bi: prodotti) {</span>
+<span class="nc" id="L248">            scontoDaApplicare= bi.getPrezzoBigl()*30/100;</span>
+<span class="nc" id="L249">            prezzoscontato= bi.getPrezzoBigl()-scontoDaApplicare;</span>
+<span class="nc" id="L250">            bi.setPrezzoBigl(prezzoscontato);</span>
+<span class="nc" id="L251">        }</span>
+<span class="fc" id="L252">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
