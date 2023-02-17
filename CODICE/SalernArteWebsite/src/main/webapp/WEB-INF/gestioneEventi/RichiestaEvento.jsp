@@ -21,7 +21,7 @@
         <div class="sinistra">
             <input type="text" id='validaTitle' name="nome"  placeholder="Nome">
             <div id="radioTypeEvento">
-                <input type="radio" id="mostraType" name="tipoEvento" value="mostra">
+                <input type="radio" id="mostraType" name="tipoEvento" value="mostra" checked>
                 <label for="mostraType">Mostra</label>
                 <input type="radio" id="teatroType" name="tipoEvento" value="teatro">
                 <label for="teatroType">Teatro</label>

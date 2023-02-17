@@ -149,8 +149,8 @@ public class GestioneEventiController extends HttpServlet {
             int numBiglietti=Integer.parseInt(request.getParameter("numBiglietti"));
             double prezzo=Double.parseDouble(request.getParameter("prezzo"));
             Part filePhoto=request.getPart("path");
-            if (!(filePhoto != null )) {
-                throw new IOException("path non valido");
+            if (filePhoto.getSubmittedFileName().isEmpty()) {
+                throw new RuntimeException("path non valido");
             }
             if(ImageIO.read(filePhoto.getInputStream())== null) throw new IOException();
 
@@ -201,7 +201,7 @@ public class GestioneEventiController extends HttpServlet {
                     String descrizione=request.getParameter("descrizioneMod");
                     Part filePhoto=request.getPart("pathMod");
                     String pathSave;
-                    if (filePhoto != null ) {
+                    if (!filePhoto.getSubmittedFileName().isEmpty()) {
                         pathSave=getServletContext().getAttribute("pathNewEventi")+filePhoto.getSubmittedFileName();
                     }else{
                         pathSave=""; //<------ inserire old pathsave
