@@ -22,7 +22,7 @@ public class JSONUpdateQuantitaCarrello extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         GestioneAcquistiService service= new GestioneAcquistiServiceImpl();
-        boolean result=true;// serviva per la notifica di errore, rivedi poi
+        boolean result=true;
         int idE=Integer.parseInt(request.getParameter("idE"));
         int qta=Integer.parseInt(request.getParameter("qta"));
         try{

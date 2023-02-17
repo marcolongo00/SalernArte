@@ -27,7 +27,7 @@ public class GestioneAcquistiController extends HttpServlet {
         session.removeAttribute("messaggio");
         try{
         if(request.getParameter("goToCarrello")!=null){
-            boolean alertCarrello=false; //in teoria gestito, testare
+            boolean alertCarrello=false;
             if(carrello==null && utente==null){
                 carrello=new CarrelloBean();
 
@@ -80,10 +80,7 @@ public class GestioneAcquistiController extends HttpServlet {
         }
         String finalizzaAcquisto=request.getParameter("finalizzaAcquisto");
         if(finalizzaAcquisto!=null){
-            //finto controllo dati carta!!!
-
             service.acquistaProdotti(carrello,utente);
-            //session.setAttribute("notificaAll", "Acquisto completato");
             session.setAttribute("carrello", new CarrelloBean(utente.getId()));
             //se utente fosse null non si sarebbe potuto fare l'acquisto
             session.setAttribute("messaggio", "Acquisto avvenuto con successo");

@@ -111,8 +111,7 @@ public class RegistrazioneServiceimpl implements RegistrazioneService{
     public void salvaCarrelloSessione(UtenteRegistratoBean utenteRegistrato, CarrelloBean carrelloSessione){
         CarrelloDAO daoCarr= new CarrelloDAOImpl();
         if(carrelloSessione!=null && !carrelloSessione.getProdotti().isEmpty()){
-            //CarrelloBean saved=daoCarr.doRetrieveByIdUtente(utenteRegistratoBean.getId());
-            Collection<CarrelloBean.BigliettoQuantita> prodotti=carrelloSessione.getProdotti();
+             Collection<CarrelloBean.BigliettoQuantita> prodotti=carrelloSessione.getProdotti();
             for (CarrelloBean.BigliettoQuantita bi: prodotti) {
                 daoCarr.doSave(utenteRegistrato.getId(),bi);
             }

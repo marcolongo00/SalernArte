@@ -83,8 +83,7 @@ public class RegistrazioneController extends HttpServlet {
                     utenteResult=serviceA.registrazioneOrganizzatore(gender,iban,nome,cognome,email,password,biografia,datadiNascita);
                     session.removeAttribute("carrello");
                     session.setAttribute("messaggio","registrazione organizzatore andata a buon fine");
-                }else{ //admin?????
-                    //errore
+                }else{
                 }
                 session.setAttribute("selezionato",utenteResult);
 
@@ -107,7 +106,7 @@ public class RegistrazioneController extends HttpServlet {
         dispatcher.forward(request, response);
     }
     private void callReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String address=request.getHeader("referer"); //gli da fastidio, devi completamente separare dispatcher e referer
+        String address=request.getHeader("referer");
         if(address==null || address.contains("/registrazione-controller") || address.trim().isEmpty()){
             address=".";
         }

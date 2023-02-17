@@ -35,8 +35,7 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
 
     @Override
     public UtenteRegistratoBean loginUtente(String email, String passwordNotHash, String tipoUtente) {
-        //if null throw exception per tutti
-        if(tipoUtente!=null && tipoUtente.compareToIgnoreCase("utente")==0){
+         if(tipoUtente!=null && tipoUtente.compareToIgnoreCase("utente")==0){
             return daoUtente.doRetrieveByEmailPassword(email,passwordNotHash);
         }else
         if(tipoUtente!=null && tipoUtente.compareToIgnoreCase("scolaresca")==0){
@@ -201,7 +200,6 @@ public class AutenticazioneServiceImpl implements AutenticazioneService{
             throw new RuntimeException("dati per genere non corretti");
         }
         if (biografia == null || biografia.isEmpty()) {
-            //BASTA CHE ABBIA ALMENO UN CARATTERE
             throw new RuntimeException("Biografia non valido.");
         }
         if (iban == null || iban.isEmpty() || !iban.matches("^(it|IT)[0-9]{2}[A-Za-z][0-9]{10}[0-9A-Za-z]{12}$")) {

@@ -63,10 +63,6 @@ public class GestioneAcquistiServiceImpl implements GestioneAcquistiService{
                 }
             }
         }
-        //ok ma che succcede se l'evento non è attivo ma era già stato inserito in un carrello??? magari anche a livello di operazioni in cui si va a rendere non attivo un evento va cancellato anche nei carrelli utenti o bo
-        /*for(Integer id:eventiToRemove){
-            carrelloSessione.remove(id); //rimuove solo quelli scaduti a livello di data
-        }*/
         return(alertCarrello || controlloEventiNonAttivi(carrelloSessione));
     }
     public boolean controlloEventiNonAttivi(CarrelloBean carrello){
