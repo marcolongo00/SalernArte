@@ -230,7 +230,7 @@ public class GestioneEventiController extends HttpServlet {
 
                     //operazioni con service
                     serviceE.richiediModificaEvento(idEventoPreChange,utenteLoggato,titolo,tipo,descrizione,pathSave,filePhoto,numBiglietti,prezzo,dataInizio,dataFine,indirizzo,sede);
-                    request.setAttribute("messaggio","esecuzione richeistaModifcia andata a buon fine");
+                    session.setAttribute("messaggio","esecuzione richiesta Modifica andata a buon fine");
                     callReferer(request,response);
                 }
         }catch (RuntimeException e){

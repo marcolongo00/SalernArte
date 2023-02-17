@@ -400,7 +400,7 @@ public class GestioneEventiControllerTest {
         daoOrg.doDelete(ut.getId());
         Mockito.when(mockedRequest.getParameter("richiestaModEventoOrg")).thenReturn(null);
         //??
-        Mockito.verify(mockedRequest).setAttribute("messaggio","esecuzione richeistaModifcia andata a buon fine");
+        Mockito.verify(session).setAttribute("messaggio","esecuzione richiesta Modifica andata a buon fine");
     }
     /** Operazione di riferimento nel Test Plan: Ricerca Eventi
      * Caso: corretto

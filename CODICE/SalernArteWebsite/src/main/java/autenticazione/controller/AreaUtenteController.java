@@ -58,10 +58,11 @@ public class AreaUtenteController extends HttpServlet {
             String tipo = utenteLoggato.getTipoUtente();
             String password= request.getParameter("password");
             String passwordConferma= request.getParameter("passwordConferma");
-            if(!password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )){
+
+            if(!password.isEmpty() && !password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )){
                 throw new RuntimeException("La password vecchia non è valida");
             }
-            if(!passwordConferma.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )){
+            if(!passwordConferma.isEmpty() && !passwordConferma.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{6,30}$" )){
                 throw new RuntimeException("La password conferma non rispetta il formato");
             }
             if(!password.isEmpty() && !passwordConferma.isEmpty() && password.compareToIgnoreCase(passwordConferma)!=0)

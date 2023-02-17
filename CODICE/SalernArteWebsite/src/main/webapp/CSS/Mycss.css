@@ -127,17 +127,6 @@ a.header{
     margin-top: 7px;
 }
 
-a:hover:not(.header):not(.sopraIcon2):not(.logFrase):not(.noOpacityhover):not(.sopraIconMex){
-    opacity: 0.4; /*se vai sopra col cursore l'opacità diminuisce*/
-}
-
-a.logFrase:hover{
-    opacity: 0.5;
-}
-
-a.sopraIcon2:hover{
-    opacity: 0.2;
-}
 
 #show{
     visibility: hidden;
