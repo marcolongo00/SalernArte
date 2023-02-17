@@ -232,9 +232,9 @@ public class GestioneEventiControllerTest {
         Mockito.when(mockedRequest.getParameter("tipoEvMod")).thenReturn("teatro");
         Mockito.when(mockedRequest.getParameter("descrizioneMod")).thenReturn("descrizione evento");
         Mockito.when(mockedServletContext.getAttribute("pathNewEventi")).thenReturn(pathReal);
-
+        byte[] array= new byte[0];
         try {
-            Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(null);
+            Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(new MockPart("nome","",array));
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ServletException e) {
@@ -282,8 +282,9 @@ public class GestioneEventiControllerTest {
         Mockito.when(mockedRequest.getParameter("titoloEvMod")).thenReturn("nomeEvento");
         Mockito.when(mockedRequest.getParameter("tipoEvMod")).thenReturn("teatro");
         Mockito.when(mockedRequest.getParameter("descrizioneMod")).thenReturn("descrizione evento");
+        byte[] array= new byte[0];
         try {
-            Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(null);
+            Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(new MockPart("nome","",array));
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ServletException e) {
@@ -374,8 +375,9 @@ public class GestioneEventiControllerTest {
         Mockito.when(mockedRequest.getParameter("titoloEvMod")).thenReturn("nomeEvento");
         Mockito.when(mockedRequest.getParameter("tipoEvMod")).thenReturn("teatro");
         Mockito.when(mockedRequest.getParameter("descrizioneMod")).thenReturn("descrizione evento");
+        byte[] array= new byte[0];
         try {
-            Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(null);
+            Mockito.when(mockedRequest.getPart("pathMod")).thenReturn(new MockPart("nome","",array));
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ServletException e) {

@@ -199,6 +199,7 @@ public class GestioneEventiController extends HttpServlet {
                     String titolo=request.getParameter("titoloEvMod");
                     String tipo=request.getParameter("tipoEvMod");
                     String descrizione=request.getParameter("descrizioneMod");
+
                     Part filePhoto=request.getPart("pathMod");
                     String pathSave;
                     if (!filePhoto.getSubmittedFileName().isEmpty()) {
